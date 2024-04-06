@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+    <title>Document</title>
+</head>
+<body>
+    
+
+    
+    <h1>main</h1>
+    <div class="rooms-div">
+        {% for room in rooms %}
+            <input type="button" class="rooms" value="{{ room }}">
+        {% endfor %}
+    </div>
+    <button id="leave-room">leave room</button>
+    <div id="message-all"></div>
+    <input type="text" name="message" class="message-box" id="message-box" placeholder="message">
+    <button id="send-button">send</button>
+    <script type="text/javascript">
+        const messageBox = document.querySelector("#message-box"),
+              messageAll = document.querySelector("#message-all"),
+              sendButton = document.querySelector("#send-button");
+        
+        const rooms = document.querySelectorAll(".rooms");
+        const leaveRoomButton = document.querySelector("#leave-room");
+        
+        let currentRoom;
+
+        let socket = io();
+
+        socket.on("message", (data) => {
+            const messageP = document.createElement("p");
+            messageP.innerText = data;
+            messageAll.appendChild(messageP);
+        });
+
+        
+        rooms.forEach((element) => {
+            element.addEventListener("click", function () {
+                currentRoom = element.value;
+                joinRoom(currentRoom);
+            });
+        });
+        
+        
+        leaveRoomButton.addEventListener("click", function () {
+            if (currentRoom != null)
+            {
+                leaveRoom(currentRoom);
+            }
+        });
+
+        const sendMessage = (room) => {
+            socket.emit("message", {"data" : messageBox.value, "room" : currentRoom});
+            messageBox.value = "";
+        };
+        
+        const leaveRoom = (room) => {
+            socket.emit("leave", {"username" : "12345", "room" : room});
+        };
+
+        const joinRoom = (room) => {
+            socket.emit("join", {"username" : "12345", "room" : room});
+        };
+        
+
+        sendButton.addEventListener("click", sendMessage);
+    </script>
+</body>
+</html>
