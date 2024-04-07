@@ -1,4 +1,6 @@
 import  { FC, useState } from 'react'
+import { useAppDispatch } from '../hooks/redux-hoock'
+import { fetchLogin, fetchRegistration } from '../store/acthion'
 
 const LoginForm:FC=()=> {
 
@@ -6,6 +8,7 @@ const LoginForm:FC=()=> {
     const [password,setPassword] = useState<string>("")
     const [login,setLogin] = useState<string>("")
     const [isLog, setIsLog] = useState<boolean>(false)
+    const dispatch = useAppDispatch()
 
   return (
 
@@ -18,7 +21,7 @@ const LoginForm:FC=()=> {
             <input type="text" placeholder='email' value={email} onChange={(e)=>setEmail(e.target.value)}/>
             <label htmlFor="">Password</label>
             <input type="text" placeholder='password' value={password} onChange={(e)=>setPassword(e.target.value)}/>
-            <button>LOGIN</button>
+            <button onClick={()=>dispatch(fetchLogin({email,password}))}>LOGIN</button>
         </form>
          : 
         <form className='form'>
@@ -30,7 +33,7 @@ const LoginForm:FC=()=> {
             <input type="text" placeholder='password' value={password} onChange={(e)=>setPassword(e.target.value)}/>
             <label htmlFor="">REPassword</label>
             <input type="text" placeholder='password' value={password} onChange={(e)=>setPassword(e.target.value)}/>
-            <button>REGISTRATHION</button>
+            <button onClick={()=>dispatch(fetchRegistration({email,password}))}>REGISTRATHION</button>
         </form>
         }
       

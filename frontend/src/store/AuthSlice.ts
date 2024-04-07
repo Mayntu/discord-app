@@ -1,36 +1,27 @@
-import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { ActionReducerMapBuilder, PayloadAction,  createSlice } from "@reduxjs/toolkit";
 import { IUser } from "../models/IUser";
-import { IAuthLogin } from "../models/request/AuthRequest";
-import { AuthService } from "../services/AuhService";
+import { fetchLogin, fetchRegistration } from "./acthion";
+
 
 
 type TAuth= {
     user:  IUser,
     isAuth : boolean,
     isLoading : boolean
-
+    error? : string | null
+    
 }
 
 
 const initialState : TAuth= {
     user: {} as IUser,
     isAuth : false,
-    isLoading : false
+    isLoading : false,
+    error : ""
 }
 
-const fetchLogin = createAsyncThunk(
-    'users/fetchlogin',
-    async (payload: IAuthLogin, thunkAPI) => {
-      try {
-        const response = await AuthService.login(payload.email,payload.password)
-        console.log(response.data)
-        localStorage.setItem('token',response.data.accessToken)
 
-      } catch (error: any) {
-        return thunkAPI.rejectWithValue(error?.message)
-      }
-    },
-  )
+
 
 const authSlice = createSlice({
     name: "auth",
@@ -46,9 +37,23 @@ const authSlice = createSlice({
             state.isLoading = payload
         }
     },
-    extraReducers:(builder)=>{
-        builder.addCase(fetchLogin.fulfilled,(state,action)=>{
-           
+    extraReducers:(builder: ActionReducerMapBuilder<TAuth>)=>{
+        builder.addCase(fetchLogin.fulfilled,(state : TAuth,action : PayloadAction<any>)=>{
+           state.user = action.payload.user
+           state.isAuth = true
+           state.isLoading = false
+           state.error = ""
+        }).addCase(fetchRegistration.fulfilled,(state : TAuth,action : PayloadAction<any>)=>{
+            state.user = action.payload.user
+            state.isAuth = true
+            state.isLoading = false
+            state.error = ""
+        }).addCase(fetchLogin.pending,(state : TAuth,action : PayloadAction<any>)=>{
+            state.isLoading = true
+            state.error = ""
+         }).addCase(fetchLogin.rejected,(state : TAuth,action : PayloadAction<any>)=>{
+            state.isLoading = false
+            state.error = action.payload
         })
     }
 })

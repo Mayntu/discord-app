@@ -1,15 +1,19 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+
 import './App.css'
 import LoginForm from './components/LoginForm'
+import { useAppSelector } from './hooks/redux-hoock'
 
 function App() {
- 
+  
+  const {user,isAuth,isLoading,error} = useAppSelector(state=> state.auth)
+
 
   return (
     <>
-      <LoginForm/>
+    {isLoading && <>...Loading</>}
+    {error && <h1 style={{color: "red"}}>{error}</h1>}
+    {!isAuth &&  <LoginForm/>}
+     
     </>
   )
 }
