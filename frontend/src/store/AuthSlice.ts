@@ -1,5 +1,7 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { IUser } from "../models/IUser";
+import { IAuthLogin } from "../models/request/AuthRequest";
+import { AuthService } from "../services/AuhService";
 
 
 type TAuth= {
@@ -9,12 +11,26 @@ type TAuth= {
 
 }
 
+
 const initialState : TAuth= {
     user: {} as IUser,
     isAuth : false,
     isLoading : false
 }
 
+const fetchLogin = createAsyncThunk(
+    'users/fetchlogin',
+    async (payload: IAuthLogin, thunkAPI) => {
+      try {
+        const response = await AuthService.login(payload.email,payload.password)
+        console.log(response.data)
+        localStorage.setItem('token',response.data.accessToken)
+
+      } catch (error: any) {
+        return thunkAPI.rejectWithValue(error?.message)
+      }
+    },
+  )
 
 const authSlice = createSlice({
     name: "auth",
@@ -30,8 +46,10 @@ const authSlice = createSlice({
             state.isLoading = payload
         }
     },
-    extraReducers:(bilder)=>{
-        
+    extraReducers:(builder)=>{
+        builder.addCase(fetchLogin.fulfilled,(state,action)=>{
+           
+        })
     }
 })
 
