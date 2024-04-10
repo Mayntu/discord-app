@@ -6,8 +6,8 @@ from server.utils import generate_jwt
 
 
 def api_auth(request):
-    if request.POST:
-        data = request.POST
+    if request.method == "POST":
+        data = request.json()
         login    : str = data.get("login")
         password : str = data.get("password")
 
@@ -30,8 +30,8 @@ def api_auth(request):
 
 
 def api_reg(request):
-    if request.POST:
-        data = request.POST
+    if request.method == "POST":
+        data = request.json()
         mail     : str = data.get("mail")
         login    : str = data.get("login")
         password : str = data.get("password")
