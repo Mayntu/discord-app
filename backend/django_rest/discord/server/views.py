@@ -2,12 +2,13 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from server.models import User
 from server.utils import generate_jwt
+import json
 
 
 
 def api_auth(request):
     if request.method == "POST":
-        data = request.json()
+        data : dict = json.loads(request.body)
         login    : str = data.get("login")
         password : str = data.get("password")
 
@@ -31,7 +32,7 @@ def api_auth(request):
 
 def api_reg(request):
     if request.method == "POST":
-        data = request.json()
+        data : dict = request.body
         mail     : str = data.get("mail")
         login    : str = data.get("login")
         password : str = data.get("password")
