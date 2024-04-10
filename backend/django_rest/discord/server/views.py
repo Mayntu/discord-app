@@ -32,7 +32,7 @@ def api_auth(request):
 
 def api_reg(request):
     if request.method == "POST":
-        data : dict = request.body
+        data : dict = json.loads(request.body)
         mail     : str = data.get("mail")
         login    : str = data.get("login")
         password : str = data.get("password")
