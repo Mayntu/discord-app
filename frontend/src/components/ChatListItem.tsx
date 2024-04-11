@@ -1,6 +1,7 @@
 import  { FC } from 'react'
 import { IUserChat } from '../models/IUserChat'
 import avatar from "../assets/sonic.jpg"
+import { Link, NavLink } from 'react-router-dom'
 
 
 interface ChatListItemProps{
@@ -10,7 +11,24 @@ interface ChatListItemProps{
 
 
 const ChatListItem: FC<ChatListItemProps>=({chat})=> {
+
+
+    
   return (
+    <>
+     <NavLink to={`/${chat.id}`}
+    //    className={({ isActive, isPending, isTransitioning }) =>
+    //     [
+    //     //   isPending ? "pending" : "pending-link",
+    //       isActive ? "active" : "active-link",
+    //       isTransitioning ? "transitioning" : "",
+    //     ].join(" ")
+
+    //   }
+      className={({ isActive, isPending }) =>
+        isPending ? "pending-link" : isActive ? "active" : "active-link"
+      }
+     >
     <div className='chat-container'>
         <div className="avatar">
             <img src={avatar} alt="" />
@@ -24,6 +42,8 @@ const ChatListItem: FC<ChatListItemProps>=({chat})=> {
             </div>
         </div>
     </div>
+    </NavLink>
+    </>
   )
 }
 

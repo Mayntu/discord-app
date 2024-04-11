@@ -5,13 +5,23 @@ import './index.css'
 import { Provider } from 'react-redux'
 import store from './store/index.ts'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
+import MessageContainer from './components/MessageContainer.tsx'
+import LoginForm from './components/LoginForm.tsx'
 
 
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element : <App/>
+    element : <App/>,
+    children:[
+      {index: true,element: <MessageContainer/>,},
+      {path: "/:chatid",element: <MessageContainer/>,}
+    ]
+  },
+  {
+    path: "/login",
+    element: <LoginForm/>,
   }
 ])
 

@@ -3,5 +3,6 @@ export interface  IUserChat {
     name : string,
     status : boolean,
     text? : string,
-    messagecount : number
+    messagecount : number,
+    id : number
 }

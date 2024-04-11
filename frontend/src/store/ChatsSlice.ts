@@ -8,8 +8,25 @@ type TChats = {
 
 const initialState: TChats= {
     chats: [{
+        id:1,
         avatar : "src\assets\sonic.jpg",
         name: "Sonic",
+        status : false,
+        text : "Hello world",
+        messagecount : 0
+    },
+    {
+        id:2,
+        avatar : "src\assets\sonic.jpg",
+        name: "Amy",
+        status : false,
+        text : "Hello world",
+        messagecount : 0
+    },
+    {
+        id:3,
+        avatar : "src\assets\sonic.jpg",
+        name: "Blaze",
         status : false,
         text : "Hello world",
         messagecount : 0
