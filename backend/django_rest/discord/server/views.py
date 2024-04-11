@@ -8,17 +8,21 @@ import json
 
 def api_auth(request):
     if request.method == "POST":
+        for i in range(0, 5): print(json.loads(request.body))
         data : dict = json.loads(request.body)
         login    : str = data.get("login")
         password : str = data.get("password")
 
         user_bool : bool = User.objects.filter(login=login, password=password).exists()
 
+        
+        print(user_bool)
+
         if user_bool:
             user : User = User.objects.get(login=login, password=password)
 
             token : str = generate_jwt(
-                uuid=user.uuid,
+                uuid=str(user.uuid),
                 login=user.login,
                 password=user.password,
             )
@@ -32,25 +36,26 @@ def api_auth(request):
 
 def api_reg(request):
     if request.method == "POST":
+        for i in range(0, 5): print(json.loads(request.body))
         data : dict = json.loads(request.body)
-        mail     : str = data.get("mail")
+        email     : str = data.get("email")
         login    : str = data.get("login")
         password : str = data.get("password")
 
-        user_bool = User.objects.filter(login=login) | User.objects.filter(mail=mail)
+        user_bool = User.objects.filter(login=login) | User.objects.filter(email=email)
         user_bool : bool = user_bool.exists()
 
         if not user_bool:
-            user : User = User.objects.create(mail=mail, login=login, password=password)
+            user : User = User.objects.create(email=email, login=login, password=password)
 
             token : str = generate_jwt(
-                uuid=user.uuid,
+                uuid=str(user.uuid),
                 login=user.login,
                 password=user.password,
             )
 
             return JsonResponse(data={"result" : True, "token" : token}, safe=True)
         
-        return JsonResponse(data={"result" : False, "error" : "login or mail already exists on server"})
+        return JsonResponse(data={"result" : False, "error" : "login or email already exists on server"})
     
     return JsonResponse(data={"result" : False, "error" : "method not allowed"})

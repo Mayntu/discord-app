@@ -10,11 +10,24 @@
     
     <button onclick="send()"></button>
     <script>
-        function send()
+        const REGISTRATION_API = "http://127.0.0.1:8000/api/v1/registration/"
+        async function send()
         {
-            fetch("/api/v1/registration/", () => {
-                
-            })
+            let response = await fetch(
+                REGISTRATION_API,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type" : "application/json"
+                    },
+                    body: JSON.stringify({
+                        "login" : "login",
+                        "password" : "password",
+                        "email" : "email",
+                    }),
+                },
+            ).then(response => response.json());
+            console.log(response);
         }
     </script>
 </body>
