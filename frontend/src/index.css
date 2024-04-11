@@ -74,3 +74,25 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+
+
+.chat-container{
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  
+}
+
+.chat-container:hover{
+  background-color: #56595c;
+}
+.avatar img{
+  max-width: 50px;
+  border-radius: 100px;
+
+}
+
+.content-chat{
+  margin-left: 20px;
+}
