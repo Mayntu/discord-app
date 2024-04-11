@@ -64,8 +64,9 @@ def api_reg(request):
 
 def api_get_users_chats(request):
     print(request.headers)
-    data  : dict = json.loads(request.headers)
-    token : str  = data.get("token")
+    data  : dict = request.headers
+    token : str  = data.get("Authorization").replace('"', "")
+    # print(token)
     token_content = get_token(token=token)
     if not token_content:
         return JsonResponse(data={"result" : False, "result2" : "not valid token"})
@@ -76,6 +77,7 @@ def api_get_users_chats(request):
     try:
         user : User = User.objects.get(pk=uuid)
         user_chats = user.chats.all()
+        print(user_chats)
         data_ : dict = {}
         for user_chat in user_chats:
             for user_ in user_chat.users.all():

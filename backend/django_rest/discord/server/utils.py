@@ -24,7 +24,7 @@ def get_token(token : str) -> bool | dict:
     if token:
         try:
             data = jwt.decode(
-                token=token,
+                jwt=token,
                 key=SECRET_KEY,
             )
             return data
