@@ -24,7 +24,7 @@ const LoginForm:FC=()=> {
             <button onClick={()=>dispatch(fetchLogin({email,password}))}>LOGIN</button>
         </form>
          : 
-        <form className='form'>
+        <>
             <label htmlFor="">Email</label>
             <input type="text" placeholder='email' value={email} onChange={(e)=>setEmail(e.target.value)}/>
             <label htmlFor="">Login</label>
@@ -33,8 +33,8 @@ const LoginForm:FC=()=> {
             <input type="text" placeholder='password' value={password} onChange={(e)=>setPassword(e.target.value)}/>
             <label htmlFor="">REPassword</label>
             <input type="text" placeholder='password' value={password} onChange={(e)=>setPassword(e.target.value)}/>
-            <button onClick={()=>dispatch(fetchRegistration({email,password}))}>REGISTRATHION</button>
-        </form>
+            <button onClick={()=>dispatch(fetchRegistration({email,password,login}))}>REGISTRATHION</button>
+            </>
         }
       
         

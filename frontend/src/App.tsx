@@ -7,7 +7,7 @@ function App() {
   
   const {user,isAuth,isLoading,error} = useAppSelector(state=> state.auth)
 
-
+  
   return (
     <>
     {isLoading && <>...Loading</>}

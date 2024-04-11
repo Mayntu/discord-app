@@ -21,7 +21,7 @@ import { AuthService } from "../services/AuhService"
     'users/fetchRegistration',
     async (payload: IAuthLogin, thunkAPI) => {
       try {
-        const response = await AuthService.registration(payload.email,payload.password)
+        const response = await AuthService.registration(payload.email,payload.password,payload.login)
         console.log(response.data)
         localStorage.setItem('token',response.data.accessToken)
 
