@@ -39,7 +39,7 @@ const authSlice = createSlice({
     },
     extraReducers:(builder: ActionReducerMapBuilder<TAuth>)=>{
         builder.addCase(fetchLogin.fulfilled,(state : TAuth,action : PayloadAction<any>)=>{
-        
+            console.log(action.payload,"payload")
            state.user = action.payload.user
            state.isAuth = true
            state.isLoading = false

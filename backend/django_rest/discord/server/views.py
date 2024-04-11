@@ -73,9 +73,9 @@ def api_get_users_chats(request):
     
 
     uuid = token_content.get("uuid")
-    chat : Chat = Chat.objects.create()
-    chat.users.add(User.objects.get(pk=uuid))
-    User.objects.get(pk=uuid).chats.add(chat)
+    # chat : Chat = Chat.objects.create()
+    # chat.users.add(User.objects.get(pk=uuid))
+    # User.objects.get(pk=uuid).chats.add(chat)
 
     try:
         user : User = User.objects.get(pk=uuid)
@@ -84,7 +84,7 @@ def api_get_users_chats(request):
         data_ : dict = {}
         for user_chat in user_chats:
             for user_ in user_chat.users.all():
-                data_[user_chat.uuid] = {
+                data_[str(user_chat.uuid)] = {
                     "uuid" : user_.uuid,
                     "login" : user_.login,
                     "avatar" : user_.avatar,
