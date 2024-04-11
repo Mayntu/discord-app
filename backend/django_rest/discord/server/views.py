@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from server.models import User
-from server.utils import generate_jwt
+from server.utils import generate_jwt, get_token
 import json
 
 
@@ -27,7 +27,7 @@ def api_auth(request):
                 password=user.password,
             )
 
-            return JsonResponse(data={"result" : True, "token" : token}, safe=True)
+            return JsonResponse(data={"result" : True, "uuid" : user.uuid, "login" : user.login, "token" : token}, safe=True)
         
         return JsonResponse(data={"result" : False, "error" : "not valid login or password"})
     
@@ -59,3 +59,32 @@ def api_reg(request):
         return JsonResponse(data={"result" : False, "error" : "login or email already exists on server"})
     
     return JsonResponse(data={"result" : False, "error" : "method not allowed"})
+
+
+
+def api_get_users_chats(request):
+    print(request.headers)
+    data  : dict = json.loads(request.headers)
+    token : str  = data.get("token")
+    token_content = get_token(token=token)
+    if not token_content:
+        return JsonResponse(data={"result" : False, "result2" : "not valid token"})
+    
+
+    uuid = token_content.get("uuid")
+
+    try:
+        user : User = User.objects.get(pk=uuid)
+        user_chats = user.chats.all()
+        data_ : dict = {}
+        for user_chat in user_chats:
+            for user_ in user_chat.users.all():
+                data_[user_chat.uuid] = {
+                    "uuid" : user_.uuid,
+                    "login" : user_.login,
+                    "avatar" : user_.avatar,
+                    "status" : user_.is_online,
+                }
+        return JsonResponse(data={"result" : True, "data" : data_})
+    except Exception as e:
+        return JsonResponse(data={"result" : False, "error" : f"user not found {e}"})
