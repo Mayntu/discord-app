@@ -75,8 +75,8 @@ def api_get_users_chats(request):
     uuid = token_content.get("uuid")
     chat : Chat = Chat.objects.create()
     chat.users.add(User.objects.get(pk=uuid))
-    # chat.save()
-    print(User.objects.get(pk=uuid).chats)
+    User.objects.get(pk=uuid).chats.add(chat)
+
     try:
         user : User = User.objects.get(pk=uuid)
         user_chats = user.chats.all()
