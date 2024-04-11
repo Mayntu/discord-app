@@ -16,15 +16,15 @@ const LoginForm:FC=()=> {
         <p>для смены логин регистрация жми по слову </p>
         <h3 onClick={()=>setIsLog((prev)=>!prev)}>{isLog ? "login"  : "Registrathion"}</h3> 
         {isLog ?  
-         <form className='form'> 
+         <> 
             <label htmlFor="">Email</label>
             <input type="text" placeholder='email' value={email} onChange={(e)=>setEmail(e.target.value)}/>
             <label htmlFor="">Password</label>
             <input type="text" placeholder='password' value={password} onChange={(e)=>setPassword(e.target.value)}/>
             <button onClick={()=>dispatch(fetchLogin({email,password}))}>LOGIN</button>
-        </form>
+        </>
          : 
-        <form className='form'>
+        <>
             <label htmlFor="">Email</label>
             <input type="text" placeholder='email' value={email} onChange={(e)=>setEmail(e.target.value)}/>
             <label htmlFor="">Login</label>
@@ -34,7 +34,7 @@ const LoginForm:FC=()=> {
             <label htmlFor="">REPassword</label>
             <input type="text" placeholder='password' value={password} onChange={(e)=>setPassword(e.target.value)}/>
             <button onClick={()=>dispatch(fetchRegistration({email,password}))}>REGISTRATHION</button>
-        </form>
+        </>
         }
       
         
