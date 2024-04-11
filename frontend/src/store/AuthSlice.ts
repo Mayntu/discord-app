@@ -35,11 +35,6 @@ const authSlice = createSlice({
         },
         setLoading(state,{payload}:PayloadAction<boolean>){
             state.isLoading = payload
-        },
-        reg(state,{payload}:PayloadAction<string>){
-            if(payload == "reg"){
-                state.isAuth = true
-            }
         }
     },
     extraReducers:(builder: ActionReducerMapBuilder<TAuth>)=>{
@@ -53,7 +48,7 @@ const authSlice = createSlice({
             state.isAuth = true
             state.isLoading = false
             state.error = ""
-        }).addCase(fetchLogin.pending,(state : TAuth)=>{
+        }).addCase(fetchLogin.pending,(state : TAuth,action : PayloadAction<any>)=>{
             state.isLoading = true
             state.error = ""
          }).addCase(fetchLogin.rejected,(state : TAuth,action : PayloadAction<any>)=>{
@@ -63,6 +58,6 @@ const authSlice = createSlice({
     }
 })
 
-export const {reg}  = authSlice.actions
+
 
 export default authSlice.reducer;

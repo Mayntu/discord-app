@@ -22,7 +22,7 @@ import { AuthService } from "../services/AuhService"
     async (payload: IAuthRegistration, thunkAPI) => {
       try {
         console.log(payload)
-        const response = await AuthService.registration(payload.email,payload.login,payload.password,payload.login)
+        const response = await AuthService.registration(payload.email,payload.login,payload.password)
         console.log(response.data)
         localStorage.setItem('token',response.data.accessToken)
 
