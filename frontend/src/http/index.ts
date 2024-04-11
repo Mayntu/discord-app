@@ -8,8 +8,7 @@ export const API_URL = `http://127.0.0.1:8000/`
 
 const $api = axios.create({
     withCredentials : true,
-    baseURL: API_URL,
-    headers: {"Access-Control-Allow-Origin": "*"}
+    baseURL: API_URL
 })
 
 

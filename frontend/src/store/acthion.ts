@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit"
-import { IAuthLogin } from "../models/request/AuthRequest"
+import { IAuthLogin, IAuthRegistration } from "../models/request/AuthRequest"
 import { AuthService } from "../services/AuhService"
 
 
@@ -7,7 +7,7 @@ import { AuthService } from "../services/AuhService"
     'users/fetchlogin',
     async (payload: IAuthLogin, thunkAPI) => {
       try {
-        const response = await AuthService.login(payload.email,payload.password)
+        const response = await AuthService.login(payload.login,payload.password)
         console.log(response.data)
         localStorage.setItem('token',response.data.accessToken)
 
@@ -19,9 +19,10 @@ import { AuthService } from "../services/AuhService"
 
   export const fetchRegistration = createAsyncThunk(
     'users/fetchRegistration',
-    async (payload: IAuthLogin, thunkAPI) => {
+    async (payload: IAuthRegistration, thunkAPI) => {
       try {
-        const response = await AuthService.registration(payload.email,payload.password)
+        console.log(payload)
+        const response = await AuthService.registration(payload.email,payload.login,payload.password)
         console.log(response.data)
         localStorage.setItem('token',response.data.accessToken)
 

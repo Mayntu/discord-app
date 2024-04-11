@@ -8,11 +8,15 @@ import json
 
 def api_auth(request):
     if request.method == "POST":
+        for i in range(0, 5): print(json.loads(request.body))
         data : dict = json.loads(request.body)
         login    : str = data.get("login")
         password : str = data.get("password")
 
         user_bool : bool = User.objects.filter(login=login, password=password).exists()
+
+        
+        print(user_bool)
 
         if user_bool:
             user : User = User.objects.get(login=login, password=password)

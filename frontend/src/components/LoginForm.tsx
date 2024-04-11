@@ -17,11 +17,11 @@ const LoginForm:FC=()=> {
         <h3 onClick={()=>setIsLog((prev)=>!prev)}>{isLog ? "login"  : "Registrathion"}</h3> 
         {isLog ?  
          <> 
-            <label htmlFor="">Email</label>
-            <input type="text" placeholder='email' value={email} onChange={(e)=>setEmail(e.target.value)}/>
+            <label htmlFor="">Login</label>
+            <input type="text" placeholder='login' value={login} onChange={(e)=>setLogin(e.target.value)}/>
             <label htmlFor="">Password</label>
             <input type="text" placeholder='password' value={password} onChange={(e)=>setPassword(e.target.value)}/>
-            <button onClick={()=>dispatch(fetchLogin({email,password}))}>LOGIN</button>
+            <button onClick={()=>dispatch(fetchLogin({login,password}))}>LOGIN</button>
         </>
          : 
         <>
@@ -33,7 +33,7 @@ const LoginForm:FC=()=> {
             <input type="text" placeholder='password' value={password} onChange={(e)=>setPassword(e.target.value)}/>
             <label htmlFor="">REPassword</label>
             <input type="text" placeholder='password' value={password} onChange={(e)=>setPassword(e.target.value)}/>
-            <button onClick={()=>dispatch(fetchRegistration({email,password}))}>REGISTRATHION</button>
+            <button onClick={()=>dispatch(fetchRegistration({login,email,password}))}>REGISTRATHION</button>
         </>
         }
       
