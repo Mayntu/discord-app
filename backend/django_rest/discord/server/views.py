@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import JsonResponse
-from server.models import User
+from server.models import Chat, User
 from server.utils import generate_jwt, get_token
 import json
 
@@ -73,6 +73,9 @@ def api_get_users_chats(request):
     
 
     uuid = token_content.get("uuid")
+    chat : Chat = Chat.objects.create()
+    chat.users.add(User.objects.get(pk=uuid))
+    chat.save()
 
     try:
         user : User = User.objects.get(pk=uuid)
