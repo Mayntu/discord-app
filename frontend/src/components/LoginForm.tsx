@@ -1,5 +1,5 @@
-import  { FC, useState } from 'react'
-import { useAppDispatch } from '../hooks/redux-hoock'
+import  { FC, useEffect, useState } from 'react'
+import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock'
 import { fetchLogin, fetchRegistration } from '../store/acthion'
 
 const LoginForm:FC=()=> {
@@ -9,7 +9,13 @@ const LoginForm:FC=()=> {
     const [login,setLogin] = useState<string>("")
     const [isLog, setIsLog] = useState<boolean>(false)
     const dispatch = useAppDispatch()
-    
+    const {isAuth} = useAppSelector(state=>state.auth)
+
+    useEffect(()=>{
+      if(isAuth){
+
+      }
+    },[])
    
    
   return (

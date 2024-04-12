@@ -18,7 +18,6 @@ function App() {
   useEffect(()=>{
     if(localStorage.getItem("token")){
       dispatch(setIsAuth(true))
-      navigate("/")
     }else{
       navigate("/login")
     }
@@ -41,8 +40,6 @@ function App() {
     {isLoading && <>...Loading</>}
     {error && <h1 style={{color: "red"}}>{error}</h1>}
     <main>
-    {!isAuth &&  <LoginForm/>}
-    {/* <LoginForm></LoginForm> */}
       <section className='container-chat'>
           {isAuth && <ChatList/>}
           <Outlet></Outlet>
