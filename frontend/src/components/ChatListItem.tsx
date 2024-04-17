@@ -2,6 +2,8 @@ import  { FC } from 'react'
 import { IUserChat } from '../models/IUserChat'
 import avatar from "../assets/sonic.jpg"
 import { Link, NavLink } from 'react-router-dom'
+import { useAppDispatch } from '../hooks/redux-hoock'
+import { fetchGetUserChats } from '../store/acthion'
 
 
 interface ChatListItemProps{
@@ -10,9 +12,11 @@ interface ChatListItemProps{
 
 
 
+
+
 const ChatListItem: FC<ChatListItemProps>=({chat})=> {
 
-
+  const dispatch = useAppDispatch()
     
   return (
     <>
@@ -29,7 +33,7 @@ const ChatListItem: FC<ChatListItemProps>=({chat})=> {
         isPending ? "pending-link" : isActive ? "active" : "active-link"
       }
      >
-    <div className='chat-container'>
+    <div className='chat-container' onClick={()=>{dispatch(fetchGetUserChats())}}>
         <div className="avatar">
             <img src={avatar} alt="" />
         </div>

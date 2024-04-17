@@ -5,7 +5,7 @@ import $api from "../http";
 
 export class ChatService {
     static async getChatsUsers():Promise<AxiosResponse<any>>{
-        return $api.get<any>("/api/v1/getchats")
+        return $api.get<any>("api/v1/getUsersChats")
     }
 
 
