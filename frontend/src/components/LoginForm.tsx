@@ -21,9 +21,11 @@ const LoginForm:FC=()=> {
   return (
 
     <div className='container-form'>
-        <div className="block-form">
-        <p>для смены логин регистрация жми по слову </p>
-        <h3 onClick={()=>setIsLog((prev)=>!prev)}>{isLog ? "login"  : "Registrathion"}</h3> 
+        <div className={isLog ? "block-form  " : "block-form "} >
+          <div className="block-form-name">
+            <p className={isLog ? "active ": ""} onClick={()=>setIsLog(true)}>login</p>
+            <p className={isLog ? "" : "active"} onClick={()=>setIsLog(false)}>Registrathion</p>
+          </div>
         {isLog ?  
          <> 
          <div className="form">
