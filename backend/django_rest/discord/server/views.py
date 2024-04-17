@@ -88,13 +88,18 @@ def api_get_users_chats(request):
         print(user_chats)
         data_ : dict = {}
         for user_chat in user_chats:
+            data_[str(user_chat.uuid)] = {}
             for user_ in user_chat.users.all():
-                data_[str(user_chat.uuid)] = {
-                    "uuid" : user_.uuid,
-                    "login" : user_.login,
-                    "avatar" : user_.avatar,
-                    "status" : user_.is_online,
+                user_dict = {
+                    str(user_.uuid) : {
+                        "uuid" : str(user_.uuid),
+                        "login" : user_.login,
+                        "avatar" : user_.avatar,
+                        "status" : user_.is_online,
+                    },
                 }
+                data_[str(user_chat.uuid)].update(user_dict)
+        print(data_)
         return JsonResponse(data={"result" : True, "data" : data_})
     except Exception as e:
         return JsonResponse(data={"result" : False, "error" : f"user not found {e}"})
