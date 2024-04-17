@@ -9,7 +9,7 @@ import { ChatService } from "../services/ChatService"
     async (payload: IAuthLogin, thunkAPI) => {
       try {
         const response = await AuthService.login(payload.login,payload.password)
-        console.log(response.data)
+        console.log(response.data,"login")
         localStorage.setItem('token',response.data.token)
       } catch (error: any) {
         return thunkAPI.rejectWithValue(error?.message)
