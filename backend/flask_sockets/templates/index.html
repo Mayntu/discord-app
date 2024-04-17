@@ -11,34 +11,114 @@
 
     
     <h1>main</h1>
-    <div class="rooms-div">
+    <div class="rooms-box">
         {% for room in rooms %}
-            <input type="button" class="rooms" value="{{ room }}">
+            <input type="button" class="room" value="{{ room }}">
         {% endfor %}
     </div>
     <button id="leave-room">leave room</button>
     <div id="message-all"></div>
     <input type="text" name="message" class="message-box" id="message-box" placeholder="message">
     <button id="send-button">send</button>
+
+    
+    <p id="user-token"></p>
+
+
+
     <script type="text/javascript">
         const messageBox = document.querySelector("#message-box"),
               messageAll = document.querySelector("#message-all"),
               sendButton = document.querySelector("#send-button");
         
-        const rooms = document.querySelectorAll(".rooms");
+        let roomsBox = document.querySelector(".rooms-box"),
+              rooms = document.querySelectorAll(".room");
         const leaveRoomButton = document.querySelector("#leave-room");
+
+        const userTokenUI = document.querySelector("#user-token");
+
+
+        const API_GET_USERS_CHATS = "http://127.0.0.1:8000/api/v1/getUsersChats";
+
+
+
+
+        let token = localStorage.getItem("token");
         
         let currentRoom;
 
         let socket = io();
 
+        
+        const getUserChats = async () => {
+            let response = await fetch(
+                API_GET_USERS_CHATS,
+                {
+                    method: "GET",
+                    headers: {
+                        "Authorization": localStorage.getItem("token")
+                    },
+                }
+            ).then((response) => response.json());
+            let chats = response["data"];
+            let chat_ids = Object.keys(chats);
+            chat_ids.forEach((element) => {
+                let chat = chats[element];
+                let user_id = chat["uuid"];
+                let login = chat["login"];
+                let avatar = chat["avatar"];
+                let status = chat["status"];
+
+
+                let box = document.createElement("div");
+                let chatID = document.createElement("p");
+                let userLogin = document.createElement("h1");
+                let img = document.createElement("img");
+                let buttonJoin = document.createElement("input");
+                buttonJoin.type = "button";
+                buttonJoin.value = element;
+
+
+                chatID.innerHTML = "chat id: " + element;
+                userLogin.innerHTML = "chat member login: " + login;
+
+
+                box.appendChild(chatID);
+                box.appendChild(userLogin);
+                box.appendChild(img);
+                box.appendChild(buttonJoin);
+
+
+                buttonJoin.classList.add("room");
+
+
+                roomsBox.appendChild(box);
+                buttonJoin.addEventListener("click", function () {
+                    console.log("click");
+                    currentRoom = buttonJoin.value;
+                    joinRoom(currentRoom);
+                });
+            })
+        }
+
+        
+        getUserChats();
+
+        
+        // localStorage.setItem("token", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1dWlkIjoiMjJhYzA5NjUtMGE3YS00ODYxLTg2OTQtYjQzMzU4MDkwYjA3IiwibG9naW4iOiJsb2dpbjI1IiwicGFzc3dvcmQiOiJwYXNzd29yZCJ9.mqIXal2CE-GC4f5Qcron08CmlTYjrORlLfqPjPmCY88")
+        userTokenUI.innerHTML = localStorage.getItem("token");
+
+
+
         socket.on("message", (data) => {
             const messageP = document.createElement("p");
             messageP.innerText = data;
             messageAll.appendChild(messageP);
+            console.log(data);
         });
 
         
+        rooms = document.querySelectorAll(".room");
         rooms.forEach((element) => {
             element.addEventListener("click", function () {
                 currentRoom = element.value;
@@ -55,16 +135,17 @@
         });
 
         const sendMessage = (room) => {
-            socket.emit("message", {"data" : messageBox.value, "room" : currentRoom});
+            socket.emit("message", {"data" : messageBox.value, "chat_id" : currentRoom, "token" : token});
             messageBox.value = "";
         };
         
         const leaveRoom = (room) => {
-            socket.emit("leave", {"username" : "12345", "room" : room});
+            socket.emit("leave", {"username" : "12345", "chat_id" : room});
         };
 
         const joinRoom = (room) => {
-            socket.emit("join", {"username" : "12345", "room" : room});
+            socket.emit("join", {"username" : "12345", "chat_id" : room});
+            console.log("new user joined the room");
         };
         
 
