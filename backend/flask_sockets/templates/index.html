@@ -61,14 +61,13 @@
                 }
             ).then((response) => response.json());
             let chats = response["data"];
+            // console.log(chats);
             let chat_ids = Object.keys(chats);
             chat_ids.forEach((element) => {
                 let chat = chats[element];
-                let user_id = chat["uuid"];
-                let login = chat["login"];
-                let avatar = chat["avatar"];
-                let status = chat["status"];
 
+                let users_ids = Object.keys(chats[element]);
+                let users = chats[element];
 
                 let box = document.createElement("div");
                 let chatID = document.createElement("p");
@@ -78,9 +77,23 @@
                 buttonJoin.type = "button";
                 buttonJoin.value = element;
 
+                users_ids.forEach((value) => {
+                    let user = users[value];
+
+
+                    let user_id = user["uuid"];
+                    let login = user["login"];
+                    let avatar = user["avatar"];
+                    let status = user["status"];
+
+
+
+                    userLogin.innerHTML += ", " + login;
+                });
+
+
 
                 chatID.innerHTML = "chat id: " + element;
-                userLogin.innerHTML = "chat member login: " + login;
 
 
                 box.appendChild(chatID);
