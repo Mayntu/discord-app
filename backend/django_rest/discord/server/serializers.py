@@ -1,11 +1,17 @@
 from rest_framework import serializers
-from server.models import User, Chat
+from server.models import User, Message, Chat
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('uuid', 'login','password', 'email')
 
+
+
+class MessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Message
+        fields = ("uuid", "from_user_id", "chat_id", "content", "media", "timestamp")
 
 
 

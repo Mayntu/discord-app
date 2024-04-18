@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from server.models import User, Message, Chat
+from server.serializers import UserSerializer, MessageSerializer
 from server.utils import generate_jwt, get_token
 import json
 
@@ -96,6 +97,7 @@ def api_get_users_chats(request):
                         "login" : user_.login,
                         "avatar" : user_.avatar,
                         "status" : user_.is_online,
+                        "is_current" : str(user_.uuid) == str(uuid)
                     },
                 }
                 data_[str(user_chat.uuid)].update(user_dict)
@@ -162,3 +164,39 @@ def api_save_message(request):
 
     
     return JsonResponse(data={"result" : True})
+
+
+
+def api_get_chat_messages(request):
+    print(request.headers)
+    headers : dict = request.headers
+
+    token : str = headers.get("Authorization") or "."
+    token : str = token.replace('"', "")
+    token_content : dict = get_token(
+        token=token
+    )
+
+    if token_content:
+        print(request.body)
+        data : dict = json.loads(request.body)
+
+        chat_id      : str = data.get("chat_id")
+        
+        chat : Chat = Chat.objects.get(uuid=chat_id)
+
+        
+        messages = chat.messages.all()
+
+
+        messages_serializer = MessageSerializer(messages, many=True)
+
+        messages_ : list = messages_serializer.data
+
+
+        return JsonResponse(data={"result" : True, "messages" : messages_}, safe=False)
+    
+    return JsonResponse(data={"result" : False})
+
+
+
