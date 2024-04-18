@@ -1,11 +1,14 @@
 from flask import Flask, render_template
 from flask_socketio import SocketIO, send, join_room, leave_room
+# from flask_cors import CORS
 import requests
 
 
 app : Flask = Flask(__name__)
 app.config["SECRET"] = "awklgnklangkljagknaw"
-socketio : SocketIO = SocketIO(app, cors_allowed_origin="*")
+socketio : SocketIO = SocketIO(app, cors_allowed_origins="*")
+
+# cors = CORS(app=app, origins="http://localhost:5173", supports_credentials=True)
 ROOMS : list = ["lounge", "news", "games", "coding"]
 
 

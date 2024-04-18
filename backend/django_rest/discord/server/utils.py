@@ -3,7 +3,7 @@ import jwt
 
 
 
-def generate_jwt(uuid : str, login : str, password : str) -> str | int:
+def generate_jwt(uuid : str, login : str, password : str):
     if uuid and login and password:
         context : dict = {
             "uuid" : uuid,
@@ -20,7 +20,7 @@ def generate_jwt(uuid : str, login : str, password : str) -> str | int:
     return 1
 
 
-def get_token(token : str) -> bool | dict:
+def get_token(token : str):
     if token:
         try:
             data = jwt.decode(
