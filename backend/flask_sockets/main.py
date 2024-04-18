@@ -38,7 +38,6 @@ def leave(data):
 
 @app.route("/", methods=["GET", "POST"])
 def view():
-    print(requests.post("http://127.0.0.1:8000/api/v1/getChatMessages", data={"token" : "awertyu", "chat_id" : "6dc5d949-d47a-4121-a5e6-a3596a75178b"}).json())
     # save_message(token="",text="mgwakgma", from_user_id="", chat_id="")
     return render_template("index.html", rooms=ROOMS)
 
