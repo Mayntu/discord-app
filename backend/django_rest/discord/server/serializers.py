@@ -4,7 +4,7 @@ from server.models import User, Message, Chat
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('uuid', 'login','password', 'email')
+        fields = ('uuid', 'email', 'login','password', 'avatar', 'is_online')
 
 
 

@@ -200,3 +200,38 @@ def api_get_chat_messages(request):
 
 
 
+def api_find_users(request):
+    try:
+        headers : dict = request.headers
+
+        token : str = headers.get("Authorization")
+        token : str = token.replace('"', "")
+        token_content : dict = get_token(
+            token=token
+        )
+
+        if token_content:
+            data  : dict = json.loads(request.body)
+
+            login : str = data.get("login")
+
+
+            users_results : list = []
+            users : list = User.objects.all()
+
+            for user in users:
+                if login in user.login:
+                    user_result : dict = {
+                        "uuid" : user.uuid,
+                        "login" : user.login,
+                        "avatar" : user.avatar,
+                        "is_online" : user.is_online,
+                    }
+                    users_results.append(user_result)
+            
+
+            return JsonResponse(data={"result" : True, "users_results" : users_results})
+        return JsonResponse(data={"result" : False, "error" : "not valid token"})
+    except Exception as e:
+        print(e)
+        return JsonResponse(data={"result" : False, "error" : f"error has occurred {e}" + str(e)})
