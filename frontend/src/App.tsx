@@ -7,7 +7,8 @@ import { useAppDispatch, useAppSelector } from './hooks/redux-hoock'
 import { setIsAuth } from './store/AuthSlice'
 import MessageContainer from './components/MessageContainer'
 import { Outlet, redirect, useNavigate } from 'react-router-dom'
-import { socket } from './socket';
+
+
 function App() {
   
   const {isAuth,isLoading,error} = useAppSelector(state=> state.auth)
@@ -26,7 +27,7 @@ function App() {
  ///api/v1/getchats
   const dispatch = useAppDispatch()
   useEffect(()=>{
-    socket.emit("connection")
+    
     console.log()
     localStorage.setItem("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1dWlkIjoiODk0MWZjZTMtY2Q2Yy00ZjdlLThlMWEtNjg3YTliM2JiYWE3IiwibG9naW4iOiJ3b3dvdyIsInBhc3N3b3JkIjoiMTIzNDUifQ.2FiXrLQeYEZMJCVZyD31gFL_mmkaptEOoXPOzvgWNHs")
     if(localStorage.getItem("token")){

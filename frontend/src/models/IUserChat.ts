@@ -1,8 +1,16 @@
-export interface  IUserChat {
+export interface IUserChatT  {
     avatar : string,
-    name : string,
+    login : string,
     status : boolean,
     text? : string,
     messagecount : number,
-    id : number
+    uuid : string,
+    is_current : boolean
+}
+
+
+export interface  IUserChat {
+    id: string;
+    users : Array<IUserChatT>
+ 
 }

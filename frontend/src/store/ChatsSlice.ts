@@ -1,36 +1,20 @@
 import { ActionReducerMapBuilder, PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { IUserChat } from "../models/IUserChat";
-import { fetchGetUserChats } from "./acthion";
+import { IUserChat, IUserChatT } from "../models/IUserChat";
+import { fetchGetChatMessage, fetchGetUserChats } from "./acthion";
+import { getChats } from "../hooks/getChat";
 
 type TChats = {
-    chats : IUserChat[]
+    socketChat : IUserChat[],
+    chatMessages : any,
+    users : any,
+    getMessage : any
 }
 
 const initialState: TChats= {
-    chats: [{
-        id:1,
-        avatar : "src\assets\sonic.jpg",
-        name: "Sonic",
-        status : false,
-        text : "Hello world",
-        messagecount : 0
-    },
-    {
-        id:2,
-        avatar : "src\assets\sonic.jpg",
-        name: "Amy",
-        status : false,
-        text : "Hello world",
-        messagecount : 0
-    },
-    {
-        id:3,
-        avatar : "src\assets\sonic.jpg",
-        name: "Blaze",
-        status : false,
-        text : "Hello world",
-        messagecount : 0
-    }]
+    socketChat : [],
+    chatMessages : [],
+    users : [],
+    getMessage: []
 }
 
 
@@ -38,15 +22,24 @@ const chatsSlice = createSlice({
     name : "chats",
     initialState,
     reducers:{
-
+        addUsersChat(state,acthion: PayloadAction<IUserChatT[]>){
+            let userIAm = acthion.payload.find(user => user.is_current == true) 
+            state.users = userIAm
+            
+        }
     },
     extraReducers: (builder:  ActionReducerMapBuilder<TChats>)=>{
-        builder.addCase(fetchGetUserChats.fulfilled,(state : TChats,action : PayloadAction<any>)=>{
-
+        builder.addCase(fetchGetUserChats.fulfilled,(state : TChats,{payload} : PayloadAction<any>)=>{
+            let s = getChats(payload.data)
+            state.socketChat = s
+            console.log(s)
+        }).addCase(fetchGetChatMessage.fulfilled,(state,{payload}: PayloadAction<any>)=>{
+            console.log(payload.messages,"pay,mas")
+            state.getMessage = payload.messages
         })
     }
 })
 
-
+export const {addUsersChat} = chatsSlice.actions
 
 export default chatsSlice.reducer

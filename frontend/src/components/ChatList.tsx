@@ -1,18 +1,25 @@
-import  { FC, useRef, useState } from 'react'
-import { useAppSelector } from '../hooks/redux-hoock'
+import  { FC, useEffect, useState } from 'react'
+import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock'
 import ChatListItem from './ChatListItem'
 import icon from "../assets/icons8.png"
 import SettingsBlock from './SettingsBlock'
 import { CSSTransition } from 'react-transition-group'
+import { fetchGetUserChats } from '../store/acthion'
 
 
 
 
 const ChatList:FC=()=> {
-    const chats = useAppSelector(state=>state.chat.chats)
-    const [isSettings,setIsSettings] = useState<boolean>(true)
-    const [isCss,setIsCss] = useState<boolean>(false)
-    const nodRef = useRef(null)
+  useEffect(()=>{
+    dispatch(fetchGetUserChats())
+  },[])
+  const [isSettings,setIsSettings] = useState<boolean>(true)
+  const [isCss,setIsCss] = useState<boolean>(false)
+  const dispatch = useAppDispatch()
+  const chats2 = useAppSelector(state=>state.chat.socketChat)
+
+
+
   return (
     <>
     
@@ -25,7 +32,7 @@ const ChatList:FC=()=> {
             }}/>
           <input type="search" placeholder='serch'/>
        </div>
-      {chats.map(chat=><ChatListItem chat={chat} key={chat.name}/>)}
+        {chats2.map(i=>(<ChatListItem key={i.id} chat={i.users[0]} chatId={i.id} chatsUser={i.users}/>))}
       </div>}
             
       <CSSTransition in={!isSettings}   timeout={3000} classNames="alert"  unmountOnExit>

@@ -33,11 +33,25 @@ import { ChatService } from "../services/ChatService"
 
 
   export const fetchGetUserChats = createAsyncThunk(
-    'users/ fetchGetUserChats',
-    async (payload, thunkAPI) => {
+    'users/fetchGetUserChats',
+    async (_, thunkAPI) => {
       try {
         const response = await ChatService.getChatsUsers()
         console.log(response.data)
+        return response.data
+      } catch (error: any) {
+        return thunkAPI.rejectWithValue(error?.message)
+      }
+    },
+  )
+
+  
+  export const fetchGetChatMessage = createAsyncThunk(
+    'users/fetchGetChatMessage',
+    async (_, thunkAPI) => {
+      try {
+        const response = await ChatService.getChatMessage()
+        console.log(response.data,"chatMessage")
         return response.data
       } catch (error: any) {
         return thunkAPI.rejectWithValue(error?.message)

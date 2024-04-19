@@ -261,7 +261,53 @@ input{
   height: 100vh;
   background-color: #242424;
   background-image: url("./assets/Rectangle\ 59.png");
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  color: white;
+}
+.message-container input{
+width: 70%;
+}
+
+.get-message-cantainer{
+  overflow:auto;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  width: 80%;
+  flex-grow: 2;
+  justify-content: flex-start;
+  align-items: flex-start;
+  border: 1px solid red;
+}
+
+
+.message-input-container{
+  width: 80%;
+  display: flex;
+  padding: 20px;
+  border: 1px solid pink;
+}
+.message-input-container button{
+  margin-left: 10px;
 }
 
 
 
+.message{
+  gap: 5px;
+  display: flex;
+  align-items: center;
+  padding:5px ;
+  align-self: flex-start;
+  max-width: 400px;
+  border: 1px solid green;
+  background-color: white;
+  color: black;
+}
+
+.my-message{
+  align-self: flex-end;
+}
