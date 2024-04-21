@@ -1,10 +1,10 @@
 import React from 'react'
 
-const SaerchBlock:FC {
-
+const SaerchBlockUser=()=> {
   return (
- <></>
+    <div>SaerchBlock</div>
   )
 }
 
-export default  
+
+export default
