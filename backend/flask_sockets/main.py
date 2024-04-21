@@ -39,7 +39,9 @@ def handle_message(message):
     print(message)
     if message != "User connected!":
         result : dict = save_message(token=token, text=message, from_user_id="", chat_id=chat_id)
+        print(result)
         message : str = dumps(result["message_data"])
+        print(message)
         send(message=message, room=chat_id)
 
 
@@ -76,6 +78,7 @@ def save_message(token : str, text : str, from_user_id : str, chat_id : str) -> 
         "media" : "",
     }
     result = requests.post("http://127.0.0.1:8000/api/v1/saveMessage", data=data)
+    print(result)
     return result.json()
 
 
