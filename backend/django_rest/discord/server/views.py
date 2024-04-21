@@ -109,17 +109,29 @@ def api_get_users_chats(request):
 
 
 def api_create_chat(request):
-    data : dict = request.POST
+    data : dict = json.loads(request.headers)
 
 
     token : str = data.get("token")
-    from_user_id : str = data.get("from_user_id")
-    users_ids : list = data.get("users_ids")
+    token_content : dict = get_token(
+        token=token
+    )
 
-    owner : User = User.objects.get(uuid=from_user_id)
+    if not token_content:
+        return JsonResponse(data={"result" : False, "error" : "not valid token"})
+    
+    
+    data : dict = json.loads(request.body)
+
+    
+    from_user_id : str = token_content.get("uuid")
+    users_ids : list = data.get("users_ids") if isinstance(data.get("users_ids"), list) else [data.get("users_ids")]
+
+
+    current_user : User = User.objects.get(uuid=from_user_id)
     members : list = [User.objects.get(uuid=user) for user in users_ids]
     
-    users : list = [*owner, *members]
+    users : list = [current_user, *members]
 
     chat : Chat = Chat.objects.create(users=users)
 

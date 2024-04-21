@@ -26,3 +26,17 @@ class Chat(models.Model):
     uuid = models.UUIDField(default=uuid4, primary_key=True, verbose_name="UUID")
     users = models.ManyToManyField(User)
     messages = models.ManyToManyField(Message, blank=True)
+
+
+
+class ServerChatRoom(models.Model):
+    uuid = models.UUIDField(default=uuid4, primary_key=True, verbose_name="UUID")
+    messages = models.ManyToManyField(Message, blank=True)
+
+
+class Server(models.Model):
+    uuid = models.UUIDField(default=uuid4, primary_key=True, verbose_name="UUID")
+    owner_id = models.CharField(max_length=256, blank=False, verbose_name="owner")
+    users = models.ManyToManyField(User, blank=True, verbose_name="users")
+    chat_rooms = models.ManyToManyField(ServerChatRoom, verbose_name="chat_rooms")
+    avatar = models.ImageField(verbose_name="avatar")
