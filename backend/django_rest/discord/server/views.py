@@ -175,7 +175,7 @@ def api_save_message(request):
     message_data : dict = {}
     message_data["uuid"] = message.uuid
     message_data["from_user_id"] = message.from_user_id
-    message_data["chat_id"] = message.chat_id
+    message_data["chat_id"] = message.chat_id.uuid
     message_data["content"] = message.content
     message_data["media"] = message.media
     message_data["timestamp"] = message.timestamp
