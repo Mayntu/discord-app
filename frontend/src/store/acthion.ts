@@ -34,11 +34,16 @@ import { ChatService } from "../services/ChatService"
 
   export const fetchGetUserChats = createAsyncThunk(
     'users/fetchGetUserChats',
-    async (_, thunkAPI) => {
+    async (payload: string, thunkAPI) => {
       try {
         const response = await ChatService.getChatsUsers()
         console.log(response.data)
-        return response.data
+        if(payload){
+          return {data: response.data,users : payload }
+        }else{
+          return {data:response.data}
+        }
+      
       } catch (error: any) {
         return thunkAPI.rejectWithValue(error?.message)
       }
@@ -48,9 +53,9 @@ import { ChatService } from "../services/ChatService"
   
   export const fetchGetChatMessage = createAsyncThunk(
     'users/fetchGetChatMessage',
-    async (_, thunkAPI) => {
+    async (payload:string, thunkAPI) => {
       try {
-        const response = await ChatService.getChatMessage()
+        const response = await ChatService.getChatMessage(payload)
         console.log(response.data,"chatMessage")
         return response.data
       } catch (error: any) {
@@ -59,6 +64,18 @@ import { ChatService } from "../services/ChatService"
     },
   )
 
+  export const fetchFindChat = createAsyncThunk(
+    'users/fetchFindChat',
+    async (payload:string, thunkAPI) => {
+      try {
+        const response = await ChatService.postFindChat(payload)
+        console.log(response.data,"findChat")
+        return response.data
+      } catch (error: any) {
+        return thunkAPI.rejectWithValue(error?.message)
+      }
+    },
+  )
 
 
 

@@ -9,9 +9,11 @@ export class ChatService {
     }
 
 
-    static async getChatMessage():Promise<AxiosResponse<any>>{
-        return $api.post<any>("api/v1/getChatMessages",{chat_id : "6dc5d949-d47a-4121-a5e6-a3596a75178b"})
+    static async getChatMessage(chat_id: string):Promise<AxiosResponse<any>>{
+        return $api.post<any>("api/v1/getChatMessages",{chat_id : chat_id})
     }
 
-
+    static async postFindChat(login : string):Promise<AxiosResponse<any>>{
+        return $api.post<any>("api/v1/findUsers",{login})
+    }
 }

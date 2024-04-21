@@ -311,3 +311,13 @@ width: 70%;
 .my-message{
   align-self: flex-end;
 }
+
+/* find container start */
+.find-container{
+  width: 100%;
+  background-color: #a39d9d;
+  display: flex;
+  flex-direction: row;
+}
+
+/* find container end */

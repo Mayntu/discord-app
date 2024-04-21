@@ -4,20 +4,31 @@ import ChatListItem from './ChatListItem'
 import icon from "../assets/icons8.png"
 import SettingsBlock from './SettingsBlock'
 import { CSSTransition } from 'react-transition-group'
-import { fetchGetUserChats } from '../store/acthion'
+import { fetchFindChat, fetchGetUserChats } from '../store/acthion'
+import { useParams } from 'react-router-dom'
+
 
 
 
 
 const ChatList:FC=()=> {
+  const {chatid} = useParams()
+  const findUsers = useAppSelector(state=>state.chat.searcChat)
   useEffect(()=>{
-    dispatch(fetchGetUserChats())
+   dispatch(fetchGetUserChats(""))
   },[])
   const [isSettings,setIsSettings] = useState<boolean>(true)
-  const [isCss,setIsCss] = useState<boolean>(false)
+  // const [isCss,setIsCss] = useState<boolean>(false)
   const dispatch = useAppDispatch()
   const chats2 = useAppSelector(state=>state.chat.socketChat)
 
+  
+  const seacrhChat = (e:any)=>{
+    // if(e.target.value){
+      dispatch(fetchFindChat(e.target.value))
+    // }
+    
+  }
 
 
   return (
@@ -28,10 +39,21 @@ const ChatList:FC=()=> {
         <div className="search">
           <img src={icon} alt=""  className='icon' onClick={()=>{
             setIsSettings(false)
-            setIsCss(true)
+            // setIsCss(true)
             }}/>
-          <input type="search" placeholder='serch'/>
+          <input type="search" placeholder='serch' onChange={(e)=>{seacrhChat(e)}}/>
        </div>
+       {/* {findUsers.length} */}
+       {findUsers.length !== 0 ? findUsers.map(user=>(
+        <div className="find-container">
+          <img src={user.avatar} alt="" />
+          <p>{user.login}</p>
+        </div>
+      ))
+        
+        : null}
+        
+        
         {chats2.map(i=>(<ChatListItem key={i.id} chat={i.users[0]} chatId={i.id} chatsUser={i.users}/>))}
       </div>}
             

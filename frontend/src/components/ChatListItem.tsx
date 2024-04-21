@@ -1,10 +1,8 @@
-import  { FC } from 'react'
-import {  IUserChat, IUserChatT } from '../models/IUserChat'
+import  { FC} from 'react'
+import { IUserChatT } from '../models/IUserChat'
 import avatar from "../assets/sonic.jpg"
 import {  NavLink } from 'react-router-dom'
 import { useAppDispatch } from '../hooks/redux-hoock'
-import { fetchGetUserChats } from '../store/acthion'
-import { socket } from '../socket'
 import { addUsersChat } from '../store/ChatsSlice'
 
 
@@ -20,13 +18,17 @@ interface ChatListItemProps{
 
 const ChatListItem: FC<ChatListItemProps>=({chat,chatId,chatsUser})=> {
   const dispatch = useAppDispatch()
+
+
  
+
   // const joinRoom = (room:any) => {
   //   socket.emit("join", {"username" : "12345", "chat_id" : room});
   //   console.log("new user joined the room");
   // };    
   
 
+  
 
   return (
     <>
@@ -39,6 +41,7 @@ const ChatListItem: FC<ChatListItemProps>=({chat,chatId,chatsUser})=> {
       }}
      >
     <div className='chat-container' onClick={()=>{
+      
       }}>
         <div className="avatar">
             <img src={avatar} alt="" />
