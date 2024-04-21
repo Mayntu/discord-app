@@ -1,6 +1,7 @@
-from flask import Flask, render_template
-from flask_socketio import SocketIO, send, join_room, leave_room
+from flask import Flask, render_template, request
+from flask_socketio import SocketIO, emit, send, join_room, leave_room
 # from flask_cors import CORS
+from json import dumps, loads
 import requests
 
 
@@ -11,6 +12,23 @@ socketio : SocketIO = SocketIO(app, cors_allowed_origins="*")
 # cors = CORS(app=app, origins="http://localhost:5173", supports_credentials=True)
 ROOMS : list = ["lounge", "news", "games", "coding"]
 
+ONLINE_USERS : list = []
+
+
+@socketio.on("user_connected")
+def user_connected(data):
+    token : str = data.get("token")
+    make_user_online(token)
+    ONLINE_USERS.append(token)
+    emit("connected", {"data" : "user connected"})
+
+
+
+@socketio.on("disconnect")
+def user_disconnected():
+    print("disconnected")
+    emit("disconnected", {"data" : "user disconnected"})
+
 
 @socketio.on("message")
 def handle_message(message):
@@ -20,8 +38,9 @@ def handle_message(message):
     message = message["data"]
     print(message)
     if message != "User connected!":
+        result : dict = save_message(token=token, text=message, from_user_id="", chat_id=chat_id)
+        message : str = dumps(result["message_data"])
         send(message=message, room=chat_id)
-        save_message(token=token, text=message, from_user_id="", chat_id=chat_id)
 
 
 @socketio.on("join")
@@ -43,6 +62,11 @@ def view():
 
 
 
+def make_user_online(token : str) -> None:
+    requests.post("http://127.0.0.1:8000/api/v1/makeUserOnline", data={"token" : token})
+
+
+
 def save_message(token : str, text : str, from_user_id : str, chat_id : str) -> None:
     data : dict = {
         "token" : token,
@@ -52,7 +76,7 @@ def save_message(token : str, text : str, from_user_id : str, chat_id : str) -> 
         "media" : "",
     }
     result = requests.post("http://127.0.0.1:8000/api/v1/saveMessage", data=data)
-    print(result.json())
+    return result.json()
 
 
 

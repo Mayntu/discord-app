@@ -1,5 +1,14 @@
 from django.urls import path
-from server.views import api_auth, api_reg,api_get_users_chats, api_save_message, api_get_chat_messages, api_find_users
+from server.views import (
+    api_auth,
+    api_reg,
+    api_get_users_chats,
+    api_save_message,
+    api_get_chat_messages,
+    api_find_users,
+    api_create_chat,
+    api_make_user_online,
+)
 
 
 urlpatterns : list = [
@@ -9,4 +18,6 @@ urlpatterns : list = [
     path("api/v1/saveMessage", api_save_message, name="api_save_message"),
     path("api/v1/getChatMessages", api_get_chat_messages, name="api_get_chat_messages"),
     path("api/v1/findUsers", api_find_users, name="api_find_users"),
+    path("api/v1/createChat", api_create_chat, name="api_create_chat"),
+    path("api/v1/makeUserOnline", api_make_user_online, name="api_make_user_online"),
 ]

@@ -172,10 +172,18 @@ def api_save_message(request):
     message.save()
 
 
+    message_data : dict = {}
+    message_data["uuid"] = message.uuid
+    message_data["from_user_id"] = message.from_user_id
+    message_data["chat_id"] = message.chat_id
+    message_data["content"] = message.content
+    message_data["media"] = message.media
+    message_data["timestamp"] = message.timestamp
+
     chat.messages.add(message)
 
     
-    return JsonResponse(data={"result" : True})
+    return JsonResponse(data={"result" : True, "message_data" : message_data})
 
 
 
@@ -247,3 +255,24 @@ def api_find_users(request):
     except Exception as e:
         print(e)
         return JsonResponse(data={"result" : False, "error" : f"error has occurred {e}" + str(e)})
+
+
+
+def api_make_user_online(request):
+    data : dict = request.POST
+
+    token : str = data.get("token")
+
+    token_content : dict = get_token(
+        token=token
+    )
+
+    if token_content:
+        user_uuid : str = token_content.get("uuid")
+        user : User = User.objects.get(uuid=user_uuid)
+        user.is_online = True
+
+        return JsonResponse(data={"result" : True, "user_id" : user.uuid})
+    
+    
+    return JsonResponse(data={"result" : False, "error" : "not valid token"})

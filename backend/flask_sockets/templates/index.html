@@ -49,6 +49,9 @@
 
         let socket = io();
 
+
+        socket.emit("user_connected", {"token" : localStorage.getItem("token")});
+
         
         const getUserChats = async () => {
             let response = await fetch(
@@ -163,6 +166,8 @@
         
 
         sendButton.addEventListener("click", sendMessage);
+
+        
     </script>
 </body>
 </html>
