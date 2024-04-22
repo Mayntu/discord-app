@@ -139,6 +139,9 @@ def api_create_chat(request):
     chat : Chat = Chat.objects.create()
     chat.users.add(*users)
 
+    
+    current_user.chats.add(chat)
+
 
 
     return JsonResponse(data={"result" : True, "chat_id" : chat.uuid})
