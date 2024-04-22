@@ -195,6 +195,7 @@ input{
   padding: 5px;
   animation-duration: 10s;
   transition: 10s;
+  overflow: auto;
 }
 .settings-container{
   /* display: none; */

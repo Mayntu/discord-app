@@ -47,14 +47,15 @@ const  MessageContainer : FC=()=> {
 
     
    useEffect(()=>{ 
-    // получаю сообщения вопрос от кого?
+    // получаю сообщения
     if(chatid){
       socket.on("message", (data:any) => {
         data = JSON.parse(data)
         console.log(data)
-        setMessageArray((prev)=>[...prev,{content: data.content, from_user_id : data.from_user_id, uuid : Math.random() * 100000 | 0}]) 
+        setMessageArray((prev)=>[...prev,{content: data.content, from_user_id : data.from_user_id, uuid : data.uuid}]) 
       });
     }
+
   },[chatid])
  
  

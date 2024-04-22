@@ -31,6 +31,7 @@ const ChatList:FC=()=> {
     
   }
 
+  
 
   return (
     <>
@@ -45,9 +46,9 @@ const ChatList:FC=()=> {
           <input type="search" placeholder='serch' onChange={(e)=>{seacrhChat(e)}}/>
        </div>
        {/* {findUsers.length} */}
-       {findUsers?.length !== 0 ? 
+       {findUsers?.length !== 0  && findUsers ? 
         <div className="find-container">
-        {findUsers.map(user=>(  <SaerchBlockUser user={user}/>))}
+        {findUsers.map(user=>(<SaerchBlockUser user={user}/>))}
         </div>
    
         

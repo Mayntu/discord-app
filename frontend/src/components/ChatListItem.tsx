@@ -1,8 +1,8 @@
-import  { FC} from 'react'
+import  { FC, useEffect, useState} from 'react'
 import { IUserChatT } from '../models/IUserChat'
 import avatar from "../assets/sonic.jpg"
 import {  NavLink } from 'react-router-dom'
-import { useAppDispatch } from '../hooks/redux-hoock'
+import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock'
 import { addUsersChat } from '../store/ChatsSlice'
 
 
@@ -19,8 +19,8 @@ interface ChatListItemProps{
 const ChatListItem: FC<ChatListItemProps>=({chat,chatId,chatsUser})=> {
   const dispatch = useAppDispatch()
 
-
- 
+  const [noMe,setNoME] = useState({login:""})
+  // let noMe = {login: ""}
 
   // const joinRoom = (room:any) => {
   //   socket.emit("join", {"username" : "12345", "chat_id" : room});
@@ -29,6 +29,14 @@ const ChatListItem: FC<ChatListItemProps>=({chat,chatId,chatsUser})=> {
   
 
   
+  const findNoMe=()=>{
+    setNoME(chatsUser.find(user=>user.is_current !== true))
+  }
+
+
+  useEffect(()=>{
+    findNoMe()
+  },[])
 
   return (
     <>
@@ -41,14 +49,13 @@ const ChatListItem: FC<ChatListItemProps>=({chat,chatId,chatsUser})=> {
       }}
      >
     <div className='chat-container' onClick={()=>{
-      
       }}>
         <div className="avatar">
             <img src={avatar} alt="" />
         </div>
         <div className="content-chat">
             <div className="row-content-chat">
-                {chat.login} {chat.status}
+                {noMe?.login} {chat.status}
             </div>
             <div className="row-content-chat">
                 {chat.text}

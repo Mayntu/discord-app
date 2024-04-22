@@ -27,9 +27,7 @@ function App() {
  ///api/v1/getchats
   const dispatch = useAppDispatch()
   useEffect(()=>{
-    
-    console.log()
-    localStorage.setItem("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1dWlkIjoiODk0MWZjZTMtY2Q2Yy00ZjdlLThlMWEtNjg3YTliM2JiYWE3IiwibG9naW4iOiJ3b3dvdyIsInBhc3N3b3JkIjoiMTIzNDUifQ.2FiXrLQeYEZMJCVZyD31gFL_mmkaptEOoXPOzvgWNHs")
+    // localStorage.setItem("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1dWlkIjoiODk0MWZjZTMtY2Q2Yy00ZjdlLThlMWEtNjg3YTliM2JiYWE3IiwibG9naW4iOiJ3b3dvdyIsInBhc3N3b3JkIjoiMTIzNDUifQ.2FiXrLQeYEZMJCVZyD31gFL_mmkaptEOoXPOzvgWNHs")
     if(localStorage.getItem("token")){
       dispatch(setIsAuth(true))
     }else{
