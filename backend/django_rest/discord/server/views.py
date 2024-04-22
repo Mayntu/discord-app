@@ -133,7 +133,11 @@ def api_create_chat(request):
     
     users : list = [current_user, *members]
 
-    chat : Chat = Chat.objects.create(users=users)
+
+    print(users)
+
+    chat : Chat = Chat.objects.create()
+    chat.users.add(*users)
 
 
 
