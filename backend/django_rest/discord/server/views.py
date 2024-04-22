@@ -137,7 +137,7 @@ def api_create_chat(request):
 
 
 
-    return JsonResponse(data={"result" : True, "chat_id" : chat.id})
+    return JsonResponse(data={"result" : True, "chat_id" : chat.uuid})
 
     
 
