@@ -112,7 +112,7 @@ def api_create_chat(request):
     data : dict = request.headers
 
 
-    token : str = data.get("token")
+    token : str = data.get("Authorization").replace('"', "")
     token_content : dict = get_token(
         token=token
     )
