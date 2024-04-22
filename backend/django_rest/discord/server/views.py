@@ -109,7 +109,7 @@ def api_get_users_chats(request):
 
 
 def api_create_chat(request):
-    data : dict = json.loads(request.headers)
+    data : dict = request.headers
 
 
     token : str = data.get("token")
