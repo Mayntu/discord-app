@@ -1,6 +1,8 @@
 import  { FC, ReactNode } from 'react'
 import avatar from "../assets/sonic.jpg"
-import { useAppSelector } from '../hooks/redux-hoock'
+import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock'
+import { addUserInChat, addUsersChat } from '../store/ChatsSlice'
+import { useParams } from 'react-router-dom'
 interface MessageProps{
     children : ReactNode
     classUser : string
@@ -9,8 +11,11 @@ interface MessageProps{
 
 
 const  Message: FC<MessageProps>=({classUser,children})=> {
+  const {chatId}  = useParams()
   const me = useAppSelector(state=>state.chat.users)
-
+  // const dispatch = useAppDispatch()
+  // dispatch(addUserInChat(chatId))
+  // console.log(children)
   // console.log(me,"me")
   // console.log(classUser)
   return (

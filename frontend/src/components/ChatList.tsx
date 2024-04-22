@@ -6,6 +6,7 @@ import SettingsBlock from './SettingsBlock'
 import { CSSTransition } from 'react-transition-group'
 import { fetchFindChat, fetchGetUserChats } from '../store/acthion'
 import { useParams } from 'react-router-dom'
+import SaerchBlockUser from './SaerchBlock'
 
 
 
@@ -15,8 +16,8 @@ const ChatList:FC=()=> {
   const {chatid} = useParams()
   const findUsers = useAppSelector(state=>state.chat.searcChat)
   useEffect(()=>{
-   dispatch(fetchGetUserChats(""))
-  },[])
+   dispatch(fetchGetUserChats(chatid))
+  },[chatid])
   const [isSettings,setIsSettings] = useState<boolean>(true)
   // const [isCss,setIsCss] = useState<boolean>(false)
   const dispatch = useAppDispatch()
@@ -44,12 +45,11 @@ const ChatList:FC=()=> {
           <input type="search" placeholder='serch' onChange={(e)=>{seacrhChat(e)}}/>
        </div>
        {/* {findUsers.length} */}
-       {findUsers.length !== 0 ? findUsers.map(user=>(
+       {findUsers?.length !== 0 ? 
         <div className="find-container">
-          <img src={user.avatar} alt="" />
-          <p>{user.login}</p>
+        {findUsers.map(user=>(  <SaerchBlockUser user={user}/>))}
         </div>
-      ))
+   
         
         : null}
         

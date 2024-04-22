@@ -78,4 +78,17 @@ import { ChatService } from "../services/ChatService"
   )
 
 
+  export const fetchCreateChat = createAsyncThunk(
+    'users/fetchFindChat',
+    async (payload:string, thunkAPI) => {
+      try {
+        const response = await ChatService.postCreateChat(payload)
+        console.log(response.data,"create")
+        return response.data
+      } catch (error: any) {
+        return thunkAPI.rejectWithValue(error?.message)
+      }
+    },
+  )
+
 

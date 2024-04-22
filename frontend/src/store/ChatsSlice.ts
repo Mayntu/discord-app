@@ -28,11 +28,11 @@ const chatsSlice = createSlice({
             console.log(userIAm,"noFetch")
             state.users = userIAm
         },
-        // addUserInChat(state,acthion: PayloadAction<string>){
-        //     console.log(state.socketChat)
-        //     let userIAm = state.socketChat.find(chat=>chat.id == acthion.payload)
-        //     console.log(userIAm,acthion.payload,state.socketChat, "userIem")
-        // }
+        addUserInChat(state,acthion: PayloadAction<string>){
+            console.log(state.socketChat)
+            let userIAm = state.socketChat.find(chat=>chat.id == acthion.payload)
+            console.log(userIAm,acthion.payload,state.socketChat, "userIem")
+        }
     },
     extraReducers: (builder:  ActionReducerMapBuilder<TChats>)=>{
         builder.addCase(fetchGetUserChats.fulfilled,(state :TChats,{payload} : PayloadAction<any>)=>{
@@ -51,6 +51,6 @@ const chatsSlice = createSlice({
     }
 })
 
-export const {addUsersChat} = chatsSlice.actions
+export const {addUsersChat,addUserInChat} = chatsSlice.actions
 
 export default chatsSlice.reducer

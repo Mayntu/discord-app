@@ -318,6 +318,14 @@ width: 70%;
   background-color: #a39d9d;
   display: flex;
   flex-direction: row;
-}
+  gap: 5px;
+  flex-wrap: wrap;
 
+}
+.find-container-user{
+  border:1px solid #1059FF;
+}
+.find-container-user:hover{
+  border:1px solid #38ff10;
+}
 /* find container end */

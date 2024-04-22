@@ -16,4 +16,8 @@ export class ChatService {
     static async postFindChat(login : string):Promise<AxiosResponse<any>>{
         return $api.post<any>("api/v1/findUsers",{login})
     }
+
+    static async postCreateChat(uuid : string):Promise<AxiosResponse<any>>{
+        return $api.post<any>("api/v1/createChat",{users_ids: uuid})
+    }
 }

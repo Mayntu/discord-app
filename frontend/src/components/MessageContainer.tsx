@@ -15,21 +15,7 @@ const  MessageContainer : FC=()=> {
   const [messageText,setMessageText] = useState<string>("")
   const [messageArray,setMessageArray] = useState<any[]>([])
   const dispatch = useAppDispatch()
-  const user = useAppSelector(state=>state.chat.users)
   const message = useAppSelector(state=>state.chat.getMessage)
-
-
-  useEffect(()=>{
-    joinRoom(chatid)
-  },[])
-
-  useEffect(()=>{
-    getMessage()
-  },[])
-
-  useEffect(()=>{
-    {message && setMessageArray(message)}
-    },[message])
 
   const getMessage = async ()=>{
     chatid && await dispatch(fetchGetChatMessage(chatid))
@@ -38,6 +24,20 @@ const  MessageContainer : FC=()=> {
   const joinRoom = (room:any) => {
     socket.emit("join", {"username" : "12345", "chat_id" : room});
   };
+
+  useEffect(()=>{
+    console.log("room")
+    joinRoom(chatid)
+  },[chatid])
+
+ useEffect(()=>{
+    getMessage()
+  },[chatid])
+
+  useEffect(()=>{
+    {message && setMessageArray(message)}
+    },[message])
+
 
   const sendMessage = () => {
     // отправляю сообщение 
@@ -49,12 +49,13 @@ const  MessageContainer : FC=()=> {
    useEffect(()=>{ 
     // получаю сообщения вопрос от кого?
     if(chatid){
-      socket.on("message", (data:string) => {
-        console.log(data, "dataMesage")
-        setMessageArray((prev)=>[...prev,{content: data, from_user_id : "6dc5d949-d47a-4121-a5e6-a3596a75178b", uuid : Math.random() * 100000 | 0}]) 
+      socket.on("message", (data:any) => {
+        data = JSON.parse(data)
+        console.log(data)
+        setMessageArray((prev)=>[...prev,{content: data.content, from_user_id : data.from_user_id, uuid : Math.random() * 100000 | 0}]) 
       });
     }
-  },[])
+  },[chatid])
  
  
 
