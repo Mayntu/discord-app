@@ -7,6 +7,7 @@ import store from './store/index.ts'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import MessageContainer from './components/MessageContainer.tsx'
 import LoginForm from './components/LoginForm.tsx'
+import Test from './components/Test.tsx'
 
 
 
@@ -22,6 +23,9 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <LoginForm/>,
+  },{
+    path: "/test",
+    element: <Test/>
   }
 ])
 

@@ -21,5 +21,10 @@ export class ChatService {
         return $api.post<any>("api/v1/createChat",{users_ids: uuid})
     }
 
-    
+                        // все что нужно отправить
+    static async test(uuid : string):Promise<AxiosResponse<any>>{
+                                        // если get ничего не надо 
+                                        // если post просто объект axios все сам сделает
+        return $api.post<any>("адрес",{users_ids: uuid})
+    }
 }

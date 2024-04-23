@@ -391,3 +391,22 @@ width: 70%;
   display: flex;
   flex-direction: column;
 }
+
+.test{
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.test input{
+  border: 1px solid black;
+}
+
+.test p {
+  font-size: 20px;
+  color: black;
+  
+}

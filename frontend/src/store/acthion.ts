@@ -92,4 +92,16 @@ import { ChatService } from "../services/ChatService"
     },
   )
 
+  export const fetchTest = createAsyncThunk(
+    'users/fetchTest',
+    async (payload:string, thunkAPI) => {
+      try {
+        const response = await ChatService.test(payload)
+        console.log(response.data,"test")
+        return response.data
+      } catch (error: any) {
+        return thunkAPI.rejectWithValue(error?.message)
+      }
+    },
+  )
 

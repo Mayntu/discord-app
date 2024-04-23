@@ -1,6 +1,6 @@
 import { ActionReducerMapBuilder, PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { IUserChat, IUserChatT } from "../models/IUserChat";
-import { fetchFindChat, fetchGetChatMessage, fetchGetUserChats } from "./acthion";
+import { fetchFindChat, fetchGetChatMessage, fetchGetUserChats, fetchTest } from "./acthion";
 import { getChats } from "../hooks/getChat";
 
 
@@ -9,13 +9,15 @@ type TChats = {
     users : IUserChatT,
     getMessage : any,
     searcChat : IUserChatT[],
+    test : any
 }
 
 const initialState: TChats= {
     socketChat : [],
     users : {} as IUserChatT,
     getMessage: [],
-    searcChat: []
+    searcChat: [],
+    test : []
 }
 
 
@@ -50,6 +52,9 @@ const chatsSlice = createSlice({
         }).addCase(fetchFindChat.fulfilled,(state,{payload}:PayloadAction<any>)=>{
             // console.log(payload.users_results,"pay")
             state.searcChat = payload.users_results
+        }).addCase(fetchTest.fulfilled,(state,{payload}:PayloadAction<any>)=>{
+            // console.log(payload.users_results,"pay")
+            state.test = JSON.stringify(payload)
         })
     }
 })
