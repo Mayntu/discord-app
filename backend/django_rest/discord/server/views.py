@@ -256,10 +256,7 @@ def api_find_users(request):
             for user in users:
                 if not user == user_getter:
                     for user_chat in user_getter.chats.all():
-                        print("="*50)
-                        print(user, user_chat.users.all())
-                        print("="*25)
-                        if not user in user_chat.users.all():
+                        if not user in user_chat.users.filter(user=user):
                             if login in user.login:
                                 user_result : dict = {
                                     "uuid" : user.uuid,
