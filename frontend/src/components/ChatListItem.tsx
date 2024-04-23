@@ -41,15 +41,16 @@ const ChatListItem: FC<ChatListItemProps>=({chat,chatId,chatsUser})=> {
   return (
     <>
      <NavLink to={`/${chatId}`}
-      className={({ isActive, isPending }) =>
-        isPending ? "pending-link" : isActive ? "active" : "active-link"
-      }
+     className='chat-container'
+      // className={({ isActive, isPending }) =>
+      //   isPending ? "pending-link" : isActive ? "active" : "active-link"
+      // }
       onClick={()=>{
         dispatch(addUsersChat(chatsUser))
       }}
      >
-    <div className='chat-container' onClick={()=>{
-      }}>
+    {/* <div className='chat-container' onClick={()=>{
+      }}> */}
         <div className="avatar">
             <img src={avatar} alt="" />
         </div>
@@ -60,7 +61,7 @@ const ChatListItem: FC<ChatListItemProps>=({chat,chatId,chatsUser})=> {
             <div className="row-content-chat">
                 {chat.text}
             </div>
-        </div>
+        {/* </div> */}
     </div>
     </NavLink>
     </>
