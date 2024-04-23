@@ -242,19 +242,23 @@ def api_find_users(request):
 
             login : str = data.get("login")
 
+            user_uuid : str = token_content.get("uuid")
+            user_getter : User = User.objects.get(uuid=user_uuid)
+
 
             users_results : list = []
             users : list = User.objects.all()
 
             for user in users:
-                if login in user.login:
-                    user_result : dict = {
-                        "uuid" : user.uuid,
-                        "login" : user.login,
-                        "avatar" : user.avatar,
-                        "is_online" : user.is_online,
-                    }
-                    users_results.append(user_result)
+                if not user == user_getter:
+                    if login in user.login:
+                        user_result : dict = {
+                            "uuid" : user.uuid,
+                            "login" : user.login,
+                            "avatar" : user.avatar,
+                            "is_online" : user.is_online,
+                        }
+                        users_results.append(user_result)
             
 
             return JsonResponse(data={"result" : True, "users_results" : users_results})
