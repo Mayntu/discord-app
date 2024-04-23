@@ -143,6 +143,10 @@ def api_create_chat(request):
     current_user.chats.add(chat)
 
 
+    for member in members:
+        member.chats.add(chat)
+
+
 
     return JsonResponse(data={"result" : True, "chat_id" : chat.uuid})
 
