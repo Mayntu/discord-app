@@ -2,7 +2,7 @@ import  { FC, useEffect, useState} from 'react'
 import { IUserChatT } from '../models/IUserChat'
 import avatar from "../assets/sonic.jpg"
 import {  NavLink } from 'react-router-dom'
-import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock'
+import { useAppDispatch} from '../hooks/redux-hoock'
 import { addUsersChat } from '../store/ChatsSlice'
 
 
@@ -19,7 +19,7 @@ interface ChatListItemProps{
 const ChatListItem: FC<ChatListItemProps>=({chat,chatId,chatsUser})=> {
   const dispatch = useAppDispatch()
 
-  const [noMe,setNoME] = useState({login:""})
+  const [noMe,setNoME] = useState({})
   // let noMe = {login: ""}
 
   // const joinRoom = (room:any) => {
