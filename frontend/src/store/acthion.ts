@@ -11,6 +11,7 @@ import { ChatService } from "../services/ChatService"
         const response = await AuthService.login(payload.login,payload.password)
         console.log(response.data,"login")
         localStorage.setItem('token',response.data.token)
+        return response.data
       } catch (error: any) {
         return thunkAPI.rejectWithValue(error?.message)
       }
@@ -22,7 +23,7 @@ import { ChatService } from "../services/ChatService"
     async (payload: IAuthRegistration, thunkAPI) => {
       try {
         const response = await AuthService.registration(payload.email,payload.login,payload.password)
-        console.log(response.data)
+        console.log(response.data,"fetchRegistration")
         localStorage.setItem('token',response.data.token)
         return response.data
       } catch (error: any) {
@@ -37,7 +38,7 @@ import { ChatService } from "../services/ChatService"
     async (payload: string, thunkAPI) => {
       try {
         const response = await ChatService.getChatsUsers()
-        console.log(response.data)
+        console.log(response.data,"fetchGetUserChats")
         if(payload){
           return {data: response.data,users : payload }
         }else{

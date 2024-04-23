@@ -1,6 +1,7 @@
 import  { FC, useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock'
 import { fetchLogin, fetchRegistration } from '../store/acthion'
+import { useNavigate } from 'react-router-dom'
 
 const LoginForm:FC=()=> {
 
@@ -10,12 +11,14 @@ const LoginForm:FC=()=> {
     const [isLog, setIsLog] = useState<boolean>(false)
     const dispatch = useAppDispatch()
     const {isAuth} = useAppSelector(state=>state.auth)
+    const navigate = useNavigate()
+
 
     useEffect(()=>{
       if(isAuth){
-
+        navigate("/")
       }
-    },[])
+    },[isAuth])
    
    
   return (
@@ -48,7 +51,6 @@ const LoginForm:FC=()=> {
             <label htmlFor="">REPassword</label>
             <input type="text" placeholder='password' value={password} onChange={(e)=>setPassword(e.target.value)}/>
             <button onClick={()=>{dispatch(fetchRegistration({login,email,password}))
-          console.log(localStorage.getItem("token"))
           }}>REGISTRATHION</button>
           </div>
         </>

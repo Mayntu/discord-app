@@ -7,8 +7,7 @@ import { addUsersChat } from '../store/ChatsSlice'
 
 
 interface ChatListItemProps{
-    chatId : string
-    chat : IUserChatT,
+    chatId : string,
     chatsUser :  IUserChatT[]
 }
 
@@ -16,19 +15,12 @@ interface ChatListItemProps{
 
 
 
-const ChatListItem: FC<ChatListItemProps>=({chat,chatId,chatsUser})=> {
+const ChatListItem: FC<ChatListItemProps>=({chatId,chatsUser})=> {
   const dispatch = useAppDispatch()
 
-  const [noMe,setNoME] = useState({})
-  // let noMe = {login: ""}
-
-  // const joinRoom = (room:any) => {
-  //   socket.emit("join", {"username" : "12345", "chat_id" : room});
-  //   console.log("new user joined the room");
-  // };    
   
-
-  
+  const [noMe,setNoME] = useState<IUserChatT>()
+    
   const findNoMe=()=>{
     setNoME(chatsUser.find(user=>user.is_current !== true))
   }
@@ -49,20 +41,17 @@ const ChatListItem: FC<ChatListItemProps>=({chat,chatId,chatsUser})=> {
         dispatch(addUsersChat(chatsUser))
       }}
      >
-    {/* <div className='chat-container' onClick={()=>{
-      }}> */}
         <div className="avatar">
             <img src={avatar} alt="" />
         </div>
         <div className="content-chat">
             <div className="row-content-chat">
-                {noMe?.login} {chat.status}
+                {noMe?.login} {noMe?.status}
             </div>
             <div className="row-content-chat">
-                {chat.text}
+                {noMe?.text}
             </div>
-        {/* </div> */}
-    </div>
+        </div>
     </NavLink>
     </>
   )

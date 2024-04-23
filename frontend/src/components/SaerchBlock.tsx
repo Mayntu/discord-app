@@ -1,8 +1,8 @@
-import { AnyListenerPredicate } from '@reduxjs/toolkit'
-import React, {FC} from 'react'
+
+import {FC} from 'react'
 import { useAppDispatch } from '../hooks/redux-hoock'
 import { fetchCreateChat, fetchGetUserChats } from '../store/acthion'
-
+import avatar from "../assets/noUser.png"
 interface SaerchBlockUserProps{
   user : any
 }
@@ -17,7 +17,7 @@ const SaerchBlockUser:FC<SaerchBlockUserProps>=({user})=> {
       dispatch(fetchCreateChat(user.uuid))
       dispatch(fetchGetUserChats(""))
       }}>
-          <img src={user.avatar} alt="" />
+          <img src={avatar} alt="" />
           <p>{user.login}</p>
       </div>
   )

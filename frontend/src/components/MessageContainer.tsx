@@ -3,7 +3,6 @@ import { useParams } from 'react-router-dom'
 import backImage from "../assets/Rectangle 59.png"
 import { socket } from '../socket';
 import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock';
-
 import { fetchGetChatMessage } from '../store/acthion';
 import Message from './Message';
 
@@ -26,7 +25,7 @@ const  MessageContainer : FC=()=> {
   };
 
   useEffect(()=>{
-    console.log("room")
+    // console.log("room")
     joinRoom(chatid)
   },[chatid])
 
@@ -36,7 +35,7 @@ const  MessageContainer : FC=()=> {
 
   useEffect(()=>{
     {message && setMessageArray(message)}
-    },[message])
+  },[message])
 
 
   const sendMessage = () => {
@@ -51,11 +50,11 @@ const  MessageContainer : FC=()=> {
     if(chatid){
       socket.on("message", (data:any) => {
         data = JSON.parse(data)
-        console.log(data)
-        setMessageArray((prev)=>[...prev,{content: data.content, from_user_id : data.from_user_id, uuid : data.uuid}]) 
+        // console.log(data)
+        setMessageArray((prev)=>[...prev,{content: data.content, from_user_id : data.from_user_id, uuid : data.uuid,timestamp : data.timestamp}]) 
       });
     }
-
+    // из-за зависимости с params socket накладываеться на предыдущий и просходит отправка кучи сообщений  решение?
   },[chatid])
  
  
@@ -63,12 +62,11 @@ const  MessageContainer : FC=()=> {
 
   return (
     <>
-   
       <div className='message-container' style={{backgroundImage : `url(${backImage})`}}>
           {chatid  &&
           <>   
             <div className="get-message-cantainer">
-              {messageArray.map(ms=><Message key={ms.uuid} classUser={ms.from_user_id}>{ms.content}</Message>)}
+              {messageArray.map(ms=><Message key={ms.uuid} classUser={ms.from_user_id} time={ms.timestamp}>{ms.content}</Message>)}
             </div>
             <div className="message-input-container">
               <input placeholder='iwjdijwijd' onChange={(e)=>setMessageText(e.target.value)} value={messageText}></input>
@@ -76,11 +74,7 @@ const  MessageContainer : FC=()=> {
             </div>
           </>  
             }
-     
-          
-         
-        
-      
+            {!chatid && <p>Hello add chat</p>}
       </div>
 
      
