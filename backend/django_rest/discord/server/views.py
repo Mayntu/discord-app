@@ -347,7 +347,7 @@ def api_change_profile_avatar(request):
     headers : dict = request.headers
 
     
-    token : str = headers.get("token")
+    token : str = headers.get("Authorization").replace('"', "")
     token_content : dict = get_token(token=token)
 
     
