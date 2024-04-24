@@ -27,4 +27,8 @@ export class ChatService {
                                         // если post просто объект axios все сам сделает
         return $api.post<any>("адрес",{users_ids: uuid})
     }
+
+    static async saveM(media : any):Promise<AxiosResponse<any>>{
+        return $api.post<any>("api/v1/saveMessage",{media, token : localStorage.getItem("token")})
+    }
 }

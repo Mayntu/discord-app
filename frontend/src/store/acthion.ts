@@ -105,3 +105,18 @@ import { ChatService } from "../services/ChatService"
     },
   )
 
+
+  export const fetchMedia = createAsyncThunk(
+    'users/fetchMedia',
+    async (payload:any, thunkAPI) => {
+      try {
+        const response = await ChatService.saveM(payload)
+        console.log(response.data,"media")
+        return response.data
+      } catch (error: any) {
+        return thunkAPI.rejectWithValue(error?.message)
+      }
+    },
+  )
+
+
