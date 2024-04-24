@@ -1,5 +1,6 @@
-from discord.settings import SECRET_KEY
+from discord.settings import SECRET_KEY, BASE_DIR
 import jwt
+import uuid
 
 
 
@@ -33,3 +34,17 @@ def get_token(token : str):
             return False
     
     return False
+
+
+def handle_upload_file(file) -> str:
+    filename : str = str(uuid.uuid4())
+    file_extension : str = filename.split(".")[-1]
+
+    _path : str = f"{BASE_DIR.parent.parent.parent}/media/images/{filename}.{file_extension}"
+
+    with open(file=_path, mode="wb") as _file:
+        for _chunk in file.chunks():
+            _file.write(_chunk)
+    
+
+    return _path

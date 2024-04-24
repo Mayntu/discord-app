@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from server.models import User, Message, Chat
 from server.serializers import UserSerializer, MessageSerializer
-from server.utils import generate_jwt, get_token
+from server.utils import generate_jwt, get_token, handle_upload_file
 import json
 
 
@@ -171,6 +171,8 @@ def api_save_message(request):
     text : str = data.get("text")
     img : str = data.get("media")
 
+    media : str = handle_upload_file(file=img)
+
 
     print("chat id: " + chat_id, "from user id: " + from_user_id, "text: " + text, "media: " + img)
 
@@ -180,7 +182,7 @@ def api_save_message(request):
     message.chat_id = chat
     message.from_user_id = from_user_id
     message.content = text
-    message.media = img
+    message.media = media
     message.save()
 
 
