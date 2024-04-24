@@ -326,6 +326,13 @@ def api_get_users_info(request):
     token_content : dict = get_token(token=token)
 
     if token_content:
-        return JsonResponse(data={"result" : True, "token_content" : token_content})
+        user_uuid : str = token_content.get("uuid")
+
+        user : User = User.objects.get(pk=user_uuid)
+
+        user_serializer : UserSerializer = UserSerializer(user, many=False)
+        user_data : dict = user_serializer.data
+
+        return JsonResponse(data={"result" : True, "user_data" : user_data})
     
-    return JsonResponse(data={"result" : False, "message" : "Not valid token"})
+    return JsonResponse(data={"result" : False, "message" : "not valid token"})

@@ -40,7 +40,7 @@ logoaut нужно сделать выход из аккаунта я могу �
 ;     {uuid: '5f57b501-d75f-44e3-bf28-82f5a41e5de2', login: 'blaze220', avatar: '', status: true, is_current: false},
 ;     {uuid: '53a2d47e-2a94-4ea3-9f1d-8d78e34d8147', login: 'sonic123', avatar: '', status: true, is_current: true}
 ;         ]
-;     }] // сделано
+;     }] //
 ; //
 
 
