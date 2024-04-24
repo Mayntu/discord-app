@@ -103,7 +103,7 @@ def api_get_users_chats(request):
         print("========="*20)
         print(result)
         print("========="*20)
-        return JsonResponse(data={"result" : True, "data" : data_}, safe=False)
+        return JsonResponse(data={"result" : True, "data" : result}, safe=False)
     except Exception as e:
         return JsonResponse(data={"result" : False, "error" : f"user not found {e}"})
 
