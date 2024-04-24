@@ -32,18 +32,19 @@ const chatsSlice = createSlice({
         },
         addUserInChat(state,acthion: PayloadAction<string>){
             // console.log(state.socketChat)
-            let userIAm = state.socketChat.find(chat=>chat.id == acthion.payload)
+            let userIAm = state.socketChat.find(chat=>chat.uuid == acthion.payload)
             // console.log(userIAm,acthion.payload,state.socketChat, "userIem")
         }
     },
     extraReducers: (builder:  ActionReducerMapBuilder<TChats>)=>{
         // получение чатов 
         builder.addCase(fetchGetUserChats.fulfilled,(state :TChats,{payload} : PayloadAction<any>)=>{
-            let s = getChats(payload.data.data)
-            state.socketChat = s
+            console.log(payload.data)
+            // let s = getChats(payload.data.data)
+            state.socketChat = payload.data.data
             // console.log(s)
             if(payload.users){
-                state.users = state.socketChat.find(chat=>chat.id == payload.users)?.users.find(user => user.is_current == true)
+                state.users = state.socketChat.find(chat=>chat.uuid == payload.users)?.users.find(user => user.is_current == true)
             }
         })
         // сообщения

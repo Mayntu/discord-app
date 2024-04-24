@@ -31,6 +31,7 @@ const ChatList:FC=()=> {
       dispatch(fetchFindChat(e))
   }
 
+  console.log(chats2)
   
 
   return (
@@ -52,7 +53,7 @@ const ChatList:FC=()=> {
           </div>
         : null}
         {/* отображение item чатов */}
-        {chats2.map(i=>(<ChatListItem key={i.id}  chatId={i.id} chatsUser={i.users}/>))}
+        {chats2.map(i=>(<ChatListItem key={i.uuid}  chatId={i.uuid} chatsUser={i.users}/>))}
       </div>}
             
       <CSSTransition in={!isSettings}   timeout={3000} classNames="alert"  unmountOnExit>

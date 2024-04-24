@@ -10,7 +10,7 @@ export interface IUserChatT  {
 
 
 export interface  IUserChat {
-    id: string;
+    uuid: string;
     users : Array<IUserChatT>
  
 }
