@@ -15,7 +15,7 @@ const Test=()=> {
         return
       }
       const formData = new FormData()
-      formData.append("file",file)
+      formData.append("file",file[0])
       dispatch(fetchMedia(formData))
     }
   return (

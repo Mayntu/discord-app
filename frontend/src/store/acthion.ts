@@ -110,6 +110,7 @@ import { ChatService } from "../services/ChatService"
     'users/fetchMedia',
     async (payload:any, thunkAPI) => {
       try {
+        console.log(payload)
         const response = await ChatService.saveM(payload)
         console.log(response.data,"media")
         return response.data

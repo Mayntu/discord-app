@@ -29,6 +29,10 @@ export class ChatService {
     }
 
     static async saveM(media : any):Promise<AxiosResponse<any>>{
-        return $api.post<any>("api/v1/saveMessage",{media, token : localStorage.getItem("token")})
+        return $api.post<any>("api/v1/changeProfileAvatar",{media},{
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+        })
     }
 }
