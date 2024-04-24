@@ -90,7 +90,8 @@ def api_get_users_chats(request):
         data_ : dict = {}
         result : list = []
         for user_chat in user_chats:
-            result.append({"uuid" : str(user_chat.uuid), "users" : []})
+            temp = []
+            temp.append({"uuid" : str(user_chat.uuid), "users" : []})
             for user_ in user_chat.users.all():
                 user_dict = {
                     "uuid" : str(user_.uuid),
@@ -99,7 +100,8 @@ def api_get_users_chats(request):
                     "status" : user_.is_online,
                     "is_current" : str(user_.uuid) == str(uuid)
                 }
-                result[0]["users"].append(user_dict)
+                temp[0]["users"].append(user_dict)
+            result.append(temp)
         print("========="*20)
         print(result)
         print("========="*20)
