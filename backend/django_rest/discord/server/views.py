@@ -355,10 +355,16 @@ def api_change_profile_avatar(request):
         return JsonResponse(data={"result" : False, "message" : "not valid token"})
     
 
-    data : dict = json.loads(request.body)
+    data : dict = request.FILES
 
-    print(data)
+    file = data.get("file")
+
+
+    if file:
+        filename : str = handle_upload_file(file=file)
+    else:
+        return JsonResponse(data={"result" : False, "message" : "file not found"})
 
 
 
-    return JsonResponse(data={"result" : True, "message" : "Saved to files"})
+    return JsonResponse(data={"result" : True, "message" : "saved to files", "filename" : filename})
