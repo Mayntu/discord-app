@@ -88,20 +88,21 @@ def api_get_users_chats(request):
         user_chats = user.chats.all()
         print(user_chats)
         data_ : dict = {}
+        result : list = []
         for user_chat in user_chats:
-            data_[str(user_chat.uuid)] = {}
+            result.append({"uuid" : str(user_chat.uuid), "users" : []})
             for user_ in user_chat.users.all():
                 user_dict = {
-                    str(user_.uuid) : {
-                        "uuid" : str(user_.uuid),
-                        "login" : user_.login,
-                        "avatar" : user_.avatar,
-                        "status" : user_.is_online,
-                        "is_current" : str(user_.uuid) == str(uuid)
-                    },
+                    "uuid" : str(user_.uuid),
+                    "login" : user_.login,
+                    "avatar" : user_.avatar,
+                    "status" : user_.is_online,
+                    "is_current" : str(user_.uuid) == str(uuid)
                 }
-                data_[str(user_chat.uuid)].update(user_dict)
-        print(data_)
+                result[0]["users"].append(user_dict)
+        print("========="*20)
+        print(result)
+        print("========="*20)
         return JsonResponse(data={"result" : True, "data" : data_})
     except Exception as e:
         return JsonResponse(data={"result" : False, "error" : f"user not found {e}"})
@@ -217,7 +218,7 @@ def api_get_chat_messages(request):
         chat : Chat = Chat.objects.get(uuid=chat_id)
 
         
-        messages = chat.messages.all()
+        messages = chat.messages.all().order_by("timestamp")
 
 
         messages_serializer = MessageSerializer(messages, many=True)
