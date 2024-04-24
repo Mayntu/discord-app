@@ -103,7 +103,7 @@ def api_get_users_chats(request):
         print("========="*20)
         print(result)
         print("========="*20)
-        return JsonResponse(data={"result" : True, "data" : data_})
+        return JsonResponse(data={"result" : True, "data" : data_}, safe=False)
     except Exception as e:
         return JsonResponse(data={"result" : False, "error" : f"user not found {e}"})
 
@@ -291,5 +291,40 @@ def api_make_user_online(request):
 
         return JsonResponse(data={"result" : True, "user_id" : user.uuid})
     
+    
+    return JsonResponse(data={"result" : False, "error" : "not valid token"})
+
+
+
+def api_delete_users_chats(request):
+    headers : dict = request.headers
+
+    token : str = headers.get("Authorization").replace('"', "")
+    token_content : dict = get_token(token=token)
+    
+
+    if token_content:
+        data : dict = json.loads(request.body)
+
+        user_id : str = token_content.get("uuid")
+        chat_id : str = data.get("chat_id")
+        
+
+        user : User = User.objects.get(uuid=user_id)
+        chat : Chat = Chat.objects.get(uuid=chat_id)
+
+        
+        chat.delete()
+
+
+
+def api_get_token_content(request):
+    headers : dict = request.headers
+
+    token : str = headers.get("Authorization").replace('"', "")
+    token_content : dict = get_token(token=token)
+
+    if token_content:
+        return JsonResponse(data={"result" : True, "user_info" : token_content})
     
     return JsonResponse(data={"result" : False, "error" : "not valid token"})
