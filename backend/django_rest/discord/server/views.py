@@ -174,6 +174,9 @@ def api_save_message(request):
     media : str = handle_upload_file(file=img)
 
 
+    print(media, img)
+
+
     print("chat id: " + chat_id, "from user id: " + from_user_id, "text: " + text, "media: " + img)
 
     chat : Chat = Chat.objects.get(uuid=chat_id)
