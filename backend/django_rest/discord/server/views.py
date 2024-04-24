@@ -296,7 +296,7 @@ def api_make_user_online(request):
 
 
 
-def api_delete_users_chats(request):
+def api_delete_users_chat(request):
     headers : dict = request.headers
 
     token : str = headers.get("Authorization").replace('"', "")
@@ -310,7 +310,6 @@ def api_delete_users_chats(request):
         chat_id : str = data.get("chat_id")
         
 
-        user : User = User.objects.get(uuid=user_id)
         chat : Chat = Chat.objects.get(uuid=chat_id)
 
         
