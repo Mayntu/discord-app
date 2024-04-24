@@ -341,3 +341,24 @@ def api_get_users_info(request):
         return JsonResponse(data={"result" : True, "user_data" : user_data})
     
     return JsonResponse(data={"result" : False, "message" : "not valid token"})
+
+
+def api_change_profile_avatar(request):
+    headers : dict = request.headers
+
+    
+    token : str = headers.get("token")
+    token_content : dict = get_token(token=token)
+
+    
+    if not token_content:
+        return JsonResponse(data={"result" : False, "message" : "not valid token"})
+    
+
+    data : dict = json.loads(request.body)
+
+    print(data)
+
+
+
+    return JsonResponse(data={"result" : True, "message" : "Saved to files"})
