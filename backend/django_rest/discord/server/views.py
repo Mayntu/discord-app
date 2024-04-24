@@ -87,7 +87,6 @@ def api_get_users_chats(request):
         user : User = User.objects.get(pk=uuid)
         user_chats = user.chats.all()
         print(user_chats)
-        data_ : dict = {}
         result : list = []
         for user_chat in user_chats:
             temp : dict = {"uuid" : str(user_chat.uuid), "users" : []}
