@@ -47,4 +47,4 @@ def handle_upload_file(file) -> str:
             _file.write(_chunk)
     
 
-    return _path
+    return f"media/images/{filename}.{file_extension}"
