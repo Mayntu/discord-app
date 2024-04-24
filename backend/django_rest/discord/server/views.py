@@ -254,19 +254,16 @@ def api_find_users(request):
             users : list = User.objects.all()
 
             for user in users:
-                for chat in user_getter.chats.all():
-                    for user_chat in chat.users.all():
-                        if not user_getter == user_chat:
-                            print(user_getter)
-                            if not user == user_getter:
-                                if login in user.login:
-                                    user_result : dict = {
-                                        "uuid" : user.uuid,
-                                        "login" : user.login,
-                                        "avatar" : user.avatar,
-                                        "is_online" : user.is_online,
-                                    }
-                                    users_results.append(user_result)
+                if not user == user_getter:
+                    if not user_getter.chats.filter(users__uuid=user.uuid).exists():
+                        if login in user.login:
+                            user_result : dict = {
+                                "uuid" : user.uuid,
+                                "login" : user.login,
+                                "avatar" : user.avatar,
+                                "is_online" : user.is_online,
+                            }
+                            users_results.append(user_result)
             
 
             return JsonResponse(data={"result" : True, "users_results" : users_results})
