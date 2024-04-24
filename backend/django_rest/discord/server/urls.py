@@ -9,6 +9,7 @@ from server.views import (
     api_create_chat,
     api_make_user_online,
     api_delete_users_chat,
+    api_get_users_info,
 )
 
 
@@ -22,4 +23,5 @@ urlpatterns : list = [
     path("api/v1/createChat", api_create_chat, name="api_create_chat"),
     path("api/v1/makeUserOnline", api_make_user_online, name="api_make_user_online"),
     path("api/v1/deleteUsersChat", api_delete_users_chat, name="api_delete_users_chat"),
+    path("api/v1/getUsersInfo", api_get_users_info, name="api_get_users_info"),
 ]

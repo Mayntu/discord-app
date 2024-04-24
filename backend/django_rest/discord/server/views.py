@@ -306,7 +306,7 @@ def api_delete_users_chat(request):
     if token_content:
         data : dict = json.loads(request.body)
 
-        user_id : str = token_content.get("uuid")
+        # user_id : str = token_content.get("uuid")
         chat_id : str = data.get("chat_id")
         
 
@@ -317,13 +317,15 @@ def api_delete_users_chat(request):
 
 
 
-def api_get_token_content(request):
+def api_get_users_info(request):
     headers : dict = request.headers
 
+    
     token : str = headers.get("Authorization").replace('"', "")
+
     token_content : dict = get_token(token=token)
 
     if token_content:
-        return JsonResponse(data={"result" : True, "user_info" : token_content})
+        return JsonResponse(data={"result" : True, "token_content" : token_content})
     
-    return JsonResponse(data={"result" : False, "error" : "not valid token"})
+    return JsonResponse(data={"result" : False, "message" : "Not valid token"})
