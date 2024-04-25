@@ -66,7 +66,7 @@ const  MessageContainer : FC=()=> {
           {chatid  &&
           <>   
             <div className="get-message-cantainer">
-              {messageArray.map(ms=><Message key={ms.uuid} classUser={ms.from_user_id} time={ms.timestamp}>{ms.content}</Message>)}
+              {messageArray.map(ms=><Message key={ms.uuid} classUser={ms.from_user_id}  time={ms.timestamp}>{ms.content}</Message>)}
             </div>
             <div className="message-input-container">
               <input placeholder='iwjdijwijd' onChange={(e)=>setMessageText(e.target.value)} value={messageText}></input>

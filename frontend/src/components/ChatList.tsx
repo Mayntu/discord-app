@@ -3,7 +3,6 @@ import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock'
 import ChatListItem from './ChatListItem'
 import icon from "../assets/icons8.png"
 import SettingsBlock from './SettingsBlock'
-import { CSSTransition } from 'react-transition-group'
 import { fetchFindChat, fetchGetUserChats } from '../store/acthion'
 import { useParams } from 'react-router-dom'
 import SaerchBlockUser from './SaerchBlock'
@@ -57,15 +56,6 @@ const ChatList:FC=()=> {
       </div>}
       {!isSettings && <SettingsBlock setIsSettings={setIsSettings}/>}
       
-        
-
-
-      {/* <CSSTransition in={!isSettings}   timeout={3000} classNames="alert"  unmountOnExit> */}
-       
-      {/* </CSSTransition> */}
-      {/* <CSSTransition in={!isSettings}   timeout={3000} classNames="alert"  unmountOnExit>
-      <button>okoefkoe</button>
-      </CSSTransition> */}
     
     </>
   )

@@ -26,9 +26,9 @@ const chatsSlice = createSlice({
     initialState,
     reducers:{
         addUsersChat(state,acthion: PayloadAction<IUserChatT[]>){
-            let userIAm = acthion.payload.find(user => user.is_current == true) 
-            // console.log(userIAm,"noFetch")
-            state.users = userIAm
+            // let userIAm = acthion.payload.find(user => user.is_current == true) 
+            // // console.log(userIAm,"noFetch")
+            // state.users = userIAm
         },
         addUserInChat(state,acthion: PayloadAction<string>){
             // console.log(state.socketChat)
@@ -44,8 +44,9 @@ const chatsSlice = createSlice({
             state.socketChat = payload.data.data
             // console.log(s)
             if(payload.users){
-                state.users = state.socketChat.find(chat=>chat.uuid == payload.users)?.users.find(user => user.is_current == true)
+                state.users = state.socketChat.find(chat=>chat.uuid == payload.users)?.users
             }
+            console.log(state.users)
         })
         // сообщения
         .addCase(fetchGetChatMessage.fulfilled,(state :TChats,{payload}: PayloadAction<any>)=>{

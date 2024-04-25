@@ -1,22 +1,34 @@
-import  { FC, ReactNode } from 'react'
+import  { FC, ReactNode, useEffect } from 'react'
 import avatar from "../assets/sonic.jpg"
 import { useAppSelector } from '../hooks/redux-hoock'
 
 interface MessageProps{
     children : ReactNode
     classUser : string,
-    time: string
+    time: string,
+    
+
 }
 
 
 
 const  Message: FC<MessageProps>=({classUser,children,time})=> {
-  const me = useAppSelector(state=>state.chat.users)
+  const me = useAppSelector(state=>state.auth.user)
+  
 
+  useEffect(()=>{
+    
+    // console.log(me,"me")
+    // if(me.avatar == "."){
+    //   console.log(".........")
+    // }
+    // {me.avatar == "." && (<p>"здесь"</p>)}
+  },[])
   return (
     <div className={classUser == me.uuid || me.uuid == "" || undefined ? 'message my-message'  : 'message'}>
         <div className="avatar avatar-message">
-            <img src={avatar} alt="" />
+          {me.avatar == "." ?  (<img src={avatar} alt="" />) :   (<img src={me.avatar} alt="" />)}
+         
         </div>
         <div className="column">
         {children}

@@ -27,7 +27,7 @@ const Test=()=> {
     <div className='test'>
         Test
         
-        {/* <img src={avatar} alt="" /> */}
+        {/* <img src="media/images/758b3624-b9c9-4e34-8ffe-08baeadfeba4.png" alt="" /> */}
         <input type="file" accept='image/*,.png,.web,.jpg,.gif' onChange={(e)=>{
           setFile(e.target.files)
        
