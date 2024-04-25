@@ -18,7 +18,7 @@ class Message(models.Model):
     from_user_id = models.CharField(max_length=64, verbose_name="from user id")
     chat_id = models.ForeignKey("Chat", on_delete=models.PROTECT)
     content = models.CharField(max_length=2048, blank=False, verbose_name="content")
-    media = models.CharField(max_length=512, blank=True, verbose_name="media")
+    media = models.CharField(max_length=512, verbose_name="media")
     timestamp = models.DateTimeField(auto_now_add=True, verbose_name="date time")
 
 
