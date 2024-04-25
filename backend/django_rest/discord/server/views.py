@@ -170,6 +170,7 @@ def api_save_message(request):
     from_user_id : str = token_content.get("uuid")
     text : str = data.get("text")
     img : str = data.get("media")
+    print(img)
 
     media : str = handle_upload_file(file=img)
 
