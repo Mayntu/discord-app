@@ -171,7 +171,8 @@ def api_save_message(request):
     text : str = data.get("text")
     img : str = data.get("media")
 
-    media : str = handle_upload_file(file=img)
+    if img:
+        media : str = handle_upload_file(file=img)
 
 
     print(media, img)
@@ -185,7 +186,10 @@ def api_save_message(request):
     message.chat_id = chat
     message.from_user_id = from_user_id
     message.content = text
-    message.media = media
+    if media:
+        message.media = media
+    else:
+        message.media = ""
     message.save()
 
 
