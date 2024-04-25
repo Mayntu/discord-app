@@ -337,6 +337,7 @@ def api_get_users_info(request):
 
         user_serializer : UserSerializer = UserSerializer(user, many=False)
         user_data : dict = user_serializer.data
+        user_data["password"] = "secret"
 
         return JsonResponse(data={"result" : True, "user_data" : user_data})
     
@@ -360,8 +361,14 @@ def api_change_profile_avatar(request):
     file = data.get("file")
 
 
+    user_uuid : str = str(token_content.get("uuid"))
+
+
     if file:
         filename : str = handle_upload_file(file=file)
+        user : User = User.objects.get(uuid=user_uuid)
+        user.avatar = filename
+        user.save()
     else:
         return JsonResponse(data={"result" : False, "message" : "file not found"})
 
