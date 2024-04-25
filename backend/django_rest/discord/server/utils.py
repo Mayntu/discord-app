@@ -40,7 +40,7 @@ def handle_upload_file(file) -> str:
     filename : str = str(uuid.uuid4())
     file_extension : str = str(file).split(".")[-1]
 
-    _path : str = f"{BASE_DIR.parent.parent.parent}/media/images/{filename}.{file_extension}"
+    _path : str = f"{BASE_DIR.parent.parent.parent}/frontend/public/media/images/{filename}.{file_extension}"
 
     with open(file=_path, mode="wb") as _file:
         for _chunk in file.chunks():
