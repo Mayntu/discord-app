@@ -14,7 +14,7 @@ interface MessageProps{
 
 const  Message: FC<MessageProps>=({classUser,children,time})=> {
   const me = useAppSelector(state=>state.auth.user)
-  
+  const users = use
 
   useEffect(()=>{
     

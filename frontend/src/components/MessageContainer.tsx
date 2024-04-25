@@ -50,7 +50,7 @@ const  MessageContainer : FC=()=> {
     if(chatid){
       socket.on("message", (data:any) => {
         data = JSON.parse(data)
-        // console.log(data)
+        console.log(data,"data")
         setMessageArray((prev)=>[...prev,{content: data.content, from_user_id : data.from_user_id, uuid : data.uuid,timestamp : data.timestamp}]) 
       });
     }

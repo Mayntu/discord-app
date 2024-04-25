@@ -26,9 +26,9 @@ const chatsSlice = createSlice({
     initialState,
     reducers:{
         addUsersChat(state,acthion: PayloadAction<IUserChatT[]>){
-            // let userIAm = acthion.payload.find(user => user.is_current == true) 
-            // // console.log(userIAm,"noFetch")
-            // state.users = userIAm
+            let userIAm = acthion.payload
+            // console.log(userIAm,"noFetch")
+            state.users = userIAm
         },
         addUserInChat(state,acthion: PayloadAction<string>){
             // console.log(state.socketChat)
