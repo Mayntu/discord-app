@@ -55,13 +55,17 @@ const ChatList:FC=()=> {
         {/* отображение item чатов */}
         {chats2.map(i=>(<ChatListItem key={i.uuid}  chatId={i.uuid} chatsUser={i.users}/>))}
       </div>}
-            
-      <CSSTransition in={!isSettings}   timeout={3000} classNames="alert"  unmountOnExit>
-        <SettingsBlock/>
-      </CSSTransition>
-      <CSSTransition in={!isSettings}   timeout={3000} classNames="alert"  unmountOnExit>
+      {!isSettings && <SettingsBlock setIsSettings={setIsSettings}/>}
+      
+        
+
+
+      {/* <CSSTransition in={!isSettings}   timeout={3000} classNames="alert"  unmountOnExit> */}
+       
+      {/* </CSSTransition> */}
+      {/* <CSSTransition in={!isSettings}   timeout={3000} classNames="alert"  unmountOnExit>
       <button>okoefkoe</button>
-      </CSSTransition>
+      </CSSTransition> */}
     
     </>
   )

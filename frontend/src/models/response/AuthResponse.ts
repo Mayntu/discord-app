@@ -1,7 +1,6 @@
 import { IUser } from "../IUser"
 
 export interface IAuthResponse{
-    accessToken: string,
-    refreshToken: string
-    user: IUser
+    result: boolean
+    user_data: IUser
 }

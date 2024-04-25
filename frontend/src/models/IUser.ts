@@ -1,6 +1,9 @@
 export interface IUser{
     login: string,
-    password:string,
-    isActivated: boolean
-    
+    avatar: string,
+    is_online: boolean
+    email: string
+    uuid: string
 }
+
+
