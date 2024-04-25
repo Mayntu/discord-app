@@ -14,7 +14,11 @@ export class AuthService{
         return $api.post<any>("/api/v1/registration",{email,login,password})
     }
     
-    static async logout(): Promise<void>{
-        return $api.post("/logout")
+    // static async logout(): Promise<void>{
+        // return $api.post("/logout")  //под вопросом нужно ли
+    // }
+
+    static async getUser():Promise<AxiosResponse<any>>{
+        return $api.get<any>("api/v1/getUsersInfo")
     }
 }

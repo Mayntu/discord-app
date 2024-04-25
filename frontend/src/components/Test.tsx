@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock'
 import { fetchMedia, fetchTest } from '../store/acthion'
-import avatar from "C:\Users\1\Desktop\homework\diplom\discord-app\media\images\a7ebd92f-4355-4164-b180-49e9a7e244a4.png"
-const module = import.meta.glob("./media/images/a7ebd92f-4355-4164-b180-49e9a7e244a4.png")
+// import avatar from "C:\Users\1\Desktop\homework\diplom\discord-app\media\images\a7ebd92f-4355-4164-b180-49e9a7e244a4.png"
+// const module = import.meta.glob("./media/images/a7ebd92f-4355-4164-b180-49e9a7e244a4.png")
 
 const Test=()=> {
   // console.log(module)
@@ -27,7 +27,7 @@ const Test=()=> {
     <div className='test'>
         Test
         
-        <img src={avatar} alt="" />
+        {/* <img src={avatar} alt="" /> */}
         <input type="file" accept='image/*,.png,.web,.jpg,.gif' onChange={(e)=>{
           setFile(e.target.files)
        

@@ -28,11 +28,16 @@ export class ChatService {
         return $api.post<any>("адрес",{users_ids: uuid})
     }
 
-    static async saveM(media : any):Promise<AxiosResponse<any>>{
+
+    static async saveM(media : FormData):Promise<AxiosResponse<any>>{
         return $api.post<any>("api/v1/changeProfileAvatar",media,{
             headers: {
               'Content-Type': 'multipart/form-data'
             }
         })
     }
+
+
+  
+
 }
