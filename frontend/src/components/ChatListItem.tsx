@@ -4,7 +4,7 @@ import avatar from "../assets/sonic.jpg"
 import {  NavLink } from 'react-router-dom'
 import { useAppDispatch} from '../hooks/redux-hoock'
 import { addUsersChat } from '../store/ChatsSlice'
-
+import { socket } from '../socket';
 interface ChatListItemProps{
     chatId : string,
     chatsUser :  IUserChatT[]

@@ -1,4 +1,4 @@
-import  { FC, useEffect, useState } from 'react'
+import  { FC, useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import backImage from "../assets/Rectangle 59.png"
 import { socket } from '../socket';
@@ -17,13 +17,15 @@ const  MessageContainer : FC=()=> {
   const dispatch = useAppDispatch()
   const message = useAppSelector(state=>state.chat.getMessage)
   const {users,isLoading} = useAppSelector(state=>state.chat)
-  
+  const refImage = useRef<HTMLInputElement>(null) 
+  const [file,setFile] = useState()
   const [userMessage,setUserMessage] = useState<any>()
   const getMessage = async ()=>{
     chatid && await dispatch(fetchGetChatMessage(chatid))
   }
 
   const joinRoom = (room:any) => {
+    console.log("room")
     socket.emit("join", {"username" : "12345", "chat_id" : room});
     socket.on("join",(data: any)=>{
       console.log(data,"join")
@@ -54,9 +56,10 @@ const  MessageContainer : FC=()=> {
 
 
   const sendMessage = () => {
+    console.log(file,"file")
     // отправляю сообщение 
     if(messageText.trim()){
-      socket.emit("message", {"data" : messageText, "chat_id" : chatid, "token" : localStorage.getItem("token")});
+      socket.emit("message", {"data" : messageText, "chat_id" : chatid, "token" : localStorage.getItem("token"), media: file ? file : ""});
       setMessageText("")
     }
     }; 
@@ -87,6 +90,8 @@ const  MessageContainer : FC=()=> {
             <div className="message-input-container">
               <input placeholder='iwjdijwijd' onChange={(e)=>setMessageText(e.target.value)} value={messageText}></input>
               <button onClick={()=>{sendMessage()}}>отправить</button>
+              <input ref={refImage} type="file" accept='image/*,.png,.web,.jpg,.gif' onChange={(e)=>{setFile(e.target.files[0])}} className='none'/>
+              <button onClick={()=>{refImage.current?.click()}}>отправить  image</button>
             </div>
           </>  
             }
