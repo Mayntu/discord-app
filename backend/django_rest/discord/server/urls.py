@@ -12,6 +12,7 @@ from server.views import (
     api_get_users_info,
     api_change_profile_avatar,
     api_get_users_chat,
+    api_change_users_login,
 )
 
 
@@ -28,4 +29,5 @@ urlpatterns : list = [
     path("api/v1/getUsersInfo", api_get_users_info, name="api_get_users_info"),
     path("api/v1/changeProfileAvatar", api_change_profile_avatar, name="api_change_profile_avatar"),
     path("api/v1/getUsersChat", api_get_users_chat, name="api_get_users_chat"),
+    path("api/v1/changeUsersLogin", api_change_users_login, name="api_change_users_login"),
 ]

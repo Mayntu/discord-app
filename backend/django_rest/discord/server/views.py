@@ -396,3 +396,40 @@ def api_get_users_chat(request):
     # users_data["password"] = "secret"
 
     return JsonResponse(data={"result" : True, "users_data" : users_data})
+
+
+
+def api_change_users_login(request):
+    headers : dict = request.headers
+
+    
+    token : str = headers.get("Authorization").replace('"', "")
+    token_content : dict = get_token(token=token)
+
+    
+    if not token_content:
+        return JsonResponse(data={"result" : False, "message" : "not valid token"})
+    
+
+
+    
+    
+    try:
+        data : dict = json.loads(request.body)
+
+        user_uuid : str = str(token_content.get("uuid"))
+        new_login : str = data.get("new_login")
+
+        user : User = User.objects.get(uuid=user_uuid)
+
+        user.login = new_login
+        
+        user.save()
+
+
+    except Exception as e:
+        return JsonResponse(data={"result" : False, "message" : f"some error occurred {e}"})
+
+
+
+    return JsonResponse(data={"result" : True, "message" : "saved to files"})
