@@ -1,4 +1,4 @@
-import  { FC, ReactNode, useEffect } from 'react'
+import  { FC, ReactNode, useEffect, useState } from 'react'
 import avatar from "../assets/sonic.jpg"
 import { useAppSelector } from '../hooks/redux-hoock'
 
@@ -14,16 +14,9 @@ interface MessageProps{
 
 const  Message: FC<MessageProps>=({classUser,children,time})=> {
   const me = useAppSelector(state=>state.auth.user)
-  const users = use
+ 
 
-  useEffect(()=>{
-    
-    // console.log(me,"me")
-    // if(me.avatar == "."){
-    //   console.log(".........")
-    // }
-    // {me.avatar == "." && (<p>"здесь"</p>)}
-  },[])
+
   return (
     <div className={classUser == me.uuid || me.uuid == "" || undefined ? 'message my-message'  : 'message'}>
         <div className="avatar avatar-message">

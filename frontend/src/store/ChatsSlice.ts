@@ -6,18 +6,20 @@ import { getChats } from "../hooks/getChat";
 
 type TChats = {
     socketChat : IUserChat[],
-    users : IUserChatT,
+    users : IUserChatT[],
     getMessage : any,
     searcChat : IUserChatT[],
-    test : any
+    test : any,
+    isLoading : boolean
 }
 
 const initialState: TChats= {
     socketChat : [],
-    users : {} as IUserChatT,
+    users : [],
     getMessage: [],
     searcChat: [],
-    test : []
+    test : [],
+    isLoading : false
 }
 
 
@@ -44,9 +46,10 @@ const chatsSlice = createSlice({
             state.socketChat = payload.data.data
             // console.log(s)
             if(payload.users){
-                state.users = state.socketChat.find(chat=>chat.uuid == payload.users)?.users
+               state.users = state.socketChat.find(chat=>chat.uuid == payload.users).users
             }
             console.log(state.users)
+            state.isLoading = true
         })
         // сообщения
         .addCase(fetchGetChatMessage.fulfilled,(state :TChats,{payload}: PayloadAction<any>)=>{

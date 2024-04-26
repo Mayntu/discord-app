@@ -154,6 +154,9 @@ button:focus-visible {
   cursor: pointer;
 }
 /* login end */
+
+
+
 input{
 
   display: block;
@@ -163,7 +166,7 @@ input{
   border: none;
   padding-left: 4px;
 }
-
+  /* chat container */
 .chat-container{
   display: flex;
   flex-direction: row;
@@ -197,8 +200,8 @@ input{
   background-color: #242424;
   padding: 5px;
   width: 300px;
-  animation-duration: 10s;
-  transition: 10s;
+  /* animation-duration: 10s;
+  transition: 10s; */
   display: flex;
   flex-direction: column;
   
@@ -215,11 +218,7 @@ input{
 
 
 
-.settings-container{
-  /* display: none; */
-  /* transition: 10s; */
-  background-color: #b11414;
-}
+
 
 .alert-enter {
   position: absolute;
@@ -280,6 +279,64 @@ input{
 .pending-link{
   color: #a11059;
 }
+/* chat container end */
+
+/* setting constainer start */
+
+
+.settings-container{
+  color: white;
+}
+.settting-icon{
+  display: flex;
+  max-width: 100%;
+  /* background-color: #38ff10; */
+}
+.settting-icon img{
+  width: 20px;
+  background-color: #ffffff;
+}
+.settingBlock{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+}
+.settingBlock p{
+  font-size: medium;
+  padding-left: 10px;
+  text-align: start;
+  cursor: pointer;
+  /* background-color: #646cff; */
+  width: 100%;
+}
+
+.settingBlock p:hover{
+  background-color: #888;
+}
+.UserBlock{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 10px 20px;
+  font-size: 20px;
+  font-weight: 600;
+  
+}
+
+
+.avatar-setting{
+
+  margin-bottom: 4px;
+  /* background-color: #38ff10; */
+}
+.avatar-setting img{
+  border-radius: 100%;
+  width: 80px;
+  height: 77px;
+}
+/* setting constainer end */
+
 /* message container */
  ::-webkit-scrollbar-track{
   width: 1px;
@@ -343,6 +400,9 @@ width: 70%;
 .my-message{
   align-self: flex-end;
 }
+
+
+
 
 /* find container start */
 .find-container{
