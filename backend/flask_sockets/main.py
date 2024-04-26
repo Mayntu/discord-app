@@ -52,6 +52,7 @@ def join(data):
         token=None,
         chat_id=data.get("chat_id")
     )
+    emit("join", {"users_data" : users_data})
     send(message=users_data, room=data.get("chat_id"))
 
 
