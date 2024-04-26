@@ -393,5 +393,6 @@ def api_get_users_chat(request):
 
     user_serializer : UserSerializer = UserSerializer(users, many=True)
     users_data : dict = user_serializer.data
+    users_data["password"] = "secret"
 
     return JsonResponse(data={"result" : True, "users_data" : users_data})
