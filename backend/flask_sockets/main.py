@@ -89,7 +89,6 @@ def save_message(token : str, text : str, from_user_id : str, chat_id : str) -> 
 
 def get_chat_info(token : str, chat_id : str) -> dict:
     response = requests.post("http://127.0.0.1:8000/api/v1/getUsersChat", data={"token" : token, "chat_id" : chat_id})
-    print(response)
     return response.json()
 
 

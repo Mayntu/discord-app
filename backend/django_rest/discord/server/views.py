@@ -381,7 +381,7 @@ def api_change_profile_avatar(request):
 
 
 def api_get_users_chat(request):
-    data : dict = json.loads(request.body)
+    data : dict = request.POST
 
     
     
