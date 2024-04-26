@@ -314,7 +314,10 @@ input{
   /* background-color: #646cff; */
   width: 100%;
 }
-
+.settingBlock button{
+  max-width: 70%;
+  font-size: 14px;
+}
 .settingBlock p:hover{
   background-color: #888;
 }

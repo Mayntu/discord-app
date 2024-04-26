@@ -5,7 +5,6 @@ import {  NavLink } from 'react-router-dom'
 import { useAppDispatch} from '../hooks/redux-hoock'
 import { addUsersChat } from '../store/ChatsSlice'
 
-
 interface ChatListItemProps{
     chatId : string,
     chatsUser :  IUserChatT[]
@@ -17,10 +16,10 @@ interface ChatListItemProps{
 
 const ChatListItem: FC<ChatListItemProps>=({chatId,chatsUser})=> {
   const dispatch = useAppDispatch()
-
-  
   const [noMe,setNoME] = useState<IUserChatT>()
     
+
+
   const findNoMe=()=>{
     // console.log(chatsUser)
     setNoME(chatsUser.find(user=>user.is_current !== true))
@@ -29,6 +28,10 @@ const ChatListItem: FC<ChatListItemProps>=({chatId,chatsUser})=> {
 
   useEffect(()=>{
     findNoMe()
+    // socket.emit("disconnect")
+    // socket.on("disconnected",(data)=>{
+    //   console.log(data)
+    // })
   },[])
 
   return (

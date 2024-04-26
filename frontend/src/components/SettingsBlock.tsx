@@ -83,7 +83,10 @@ const  SettingsBlock:FC<SettingsBlockProps>=({setIsSettings})=> {
             <img src={iconCamera} alt="" className='imput-setting' onClick={handleImage}/>
             {user.avatar == "." ? <img src="" alt=""/>  :  <img src={user.avatar} alt="" />}
             <input ref={refImage} type="file" accept='image/*,.png,.web,.jpg,.gif' onChange={(e)=>{setFile(e.target.files[0])}} className='none'/>
-           
+          </div>
+          <div className="settingBlock">
+            <input type="text" placeholder='new login'  />
+            <button>Принять</button>
           </div>
         </div>
       </>}

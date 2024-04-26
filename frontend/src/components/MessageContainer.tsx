@@ -19,13 +19,11 @@ const  MessageContainer : FC=()=> {
   const {users,isLoading} = useAppSelector(state=>state.chat)
   
   const [userMessage,setUserMessage] = useState<any>()
-  // const {data,refetch} = useGetfetchGetUserChatsQuery()
   const getMessage = async ()=>{
     chatid && await dispatch(fetchGetChatMessage(chatid))
   }
 
   const joinRoom = (room:any) => {
-    console.log("room")
     socket.emit("join", {"username" : "12345", "chat_id" : room});
     socket.on("join",(data: any)=>{
       console.log(data,"join")
@@ -42,7 +40,7 @@ const  MessageContainer : FC=()=> {
   
 
   useEffect(()=>{
-  
+   
     joinRoom(chatid)
   },[chatid])
 

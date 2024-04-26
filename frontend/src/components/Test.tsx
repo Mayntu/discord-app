@@ -21,15 +21,14 @@ const Test=()=> {
       formData.append("file",file[0])
       dispatch(fetchMedia(formData))
     }
-    //media\images\a7ebd92f-4355-4164-b180-49e9a7e244a4.png
-    //C:\Users\1\Desktop\homework\diplom\discord-app\media\images\a7ebd92f-4355-4164-b180-49e9a7e244a4.png
+    
   return (
     <div className='test'>
         Test
         
         {/* <img src="media/images/758b3624-b9c9-4e34-8ffe-08baeadfeba4.png" alt="" /> */}
-        <input type="file" accept='image/*,.png,.web,.jpg,.gif' onChange={(e)=>{setFile(e.target.files)}}/>
-           <button onClick={()=>{newFile()}}>запрос</button>
+        {/* <input type="file" accept='image/*,.png,.web,.jpg,.gif' onChange={(e)=>{setFile(e.target.files)}}/>
+           <button onClick={()=>{newFile()}}>запрос</button> */}
         <input type="text" value={nValue} onChange={(e)=>{setInValue(e.target.value)}} />
                                                     {/* если ничего не надо очисти */}
         <button onClick={()=>{dispatch(fetchTest(nValue))}}>запрос</button>
