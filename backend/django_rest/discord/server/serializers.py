@@ -23,7 +23,7 @@ class MessageSerializer(serializers.ModelSerializer):
 
 
 
-# class ChatSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Chat
-#         fields = ("uuid", "users", "messages")
+class ChatSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Chat
+        fields = ("uuid", "users", "messages")

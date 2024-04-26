@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from server.models import User, Message, Chat
-from server.serializers import UserSerializer, MessageSerializer
+from server.serializers import UserSerializer, MessageSerializer, ChatSerializer
 from server.utils import generate_jwt, get_token, handle_upload_file
 import json
 
@@ -377,3 +377,21 @@ def api_change_profile_avatar(request):
 
 
     return JsonResponse(data={"result" : True, "message" : "saved to files", "filename" : filename})
+
+
+
+def api_get_users_chat(request):
+    data : dict = json.loads(request.body)
+
+    
+    
+    chat_id : str = data.get("chat_id")
+
+    chat : Chat = Chat.objects.get(uuid=chat_id)
+
+    users : list = chat.users.all()
+
+    user_serializer : UserSerializer = UserSerializer(users, many=True)
+    users_data : dict = user_serializer.data
+
+    return JsonResponse(data={"result" : True, "users_data" : users_data})

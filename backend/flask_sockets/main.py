@@ -47,8 +47,12 @@ def handle_message(message):
 
 @socketio.on("join")
 def join(data):
-    join_room(data["chat_id"])
-    send(message="new user joined the room", room=data["chat_id"])
+    join_room(data.get("chat_id"))
+    users_data = get_chat_info(
+        token=None,
+        chat_id=data.get("chat_id")
+    )
+    send(message=users_data, room=data.get("chat_id"))
 
 
 @socketio.on("leave")
@@ -69,7 +73,7 @@ def make_user_online(token : str) -> None:
 
 
 
-def save_message(token : str, text : str, from_user_id : str, chat_id : str) -> None:
+def save_message(token : str, text : str, from_user_id : str, chat_id : str) -> dict:
     data : dict = {
         "token" : token,
         "text" : text,
@@ -80,6 +84,11 @@ def save_message(token : str, text : str, from_user_id : str, chat_id : str) -> 
     result = requests.post("http://127.0.0.1:8000/api/v1/saveMessage", data=data)
     print(result)
     return result.json()
+
+
+def get_chat_info(token : str, chat_id : str) -> dict:
+    response = requests.post("http://127.0.0.1:8000/api/v1/getUsersChat", data={"token" : token, "chat_id" : chat_id})
+    return response.json()
 
 
 
