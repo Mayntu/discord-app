@@ -5,6 +5,7 @@ import { socket } from '../socket';
 import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock';
 import { fetchGetChatMessage } from '../store/acthion';
 import Message from './Message';
+import { useGetfetchGetUserChatsQuery } from '../store/RTQChat';
 
 
 
@@ -15,7 +16,10 @@ const  MessageContainer : FC=()=> {
   const [messageArray,setMessageArray] = useState<any[]>([])
   const dispatch = useAppDispatch()
   const message = useAppSelector(state=>state.chat.getMessage)
-
+  const {users,isLoading} = useAppSelector(state=>state.chat)
+  
+  const [userMessage,setUserMessage] = useState<any>()
+  // const {data,refetch} = useGetfetchGetUserChatsQuery()
   const getMessage = async ()=>{
     chatid && await dispatch(fetchGetChatMessage(chatid))
   }
@@ -23,6 +27,15 @@ const  MessageContainer : FC=()=> {
   const joinRoom = (room:any) => {
     socket.emit("join", {"username" : "12345", "chat_id" : room});
   };
+
+
+  useEffect(()=>{
+   setUserMessage(users)
+},[users])
+ 
+
+  
+  
 
   useEffect(()=>{
     // console.log("room")
@@ -45,12 +58,16 @@ const  MessageContainer : FC=()=> {
     }; 
 
     
-   useEffect(()=>{ 
+  useEffect(()=>{ 
     // получаю сообщения
-    if(chatid){
+    if(isLoading){
+      console.log("laod")
+    }else{
+      console.log("no")
+    }
+      if(chatid){
       socket.on("message", (data:any) => {
         data = JSON.parse(data)
-        console.log(data,"data")
         setMessageArray((prev)=>[...prev,{content: data.content, from_user_id : data.from_user_id, uuid : data.uuid,timestamp : data.timestamp}]) 
       });
     }
