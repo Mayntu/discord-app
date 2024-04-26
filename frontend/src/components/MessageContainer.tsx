@@ -25,7 +25,11 @@ const  MessageContainer : FC=()=> {
   }
 
   const joinRoom = (room:any) => {
+    console.log("room")
     socket.emit("join", {"username" : "12345", "chat_id" : room});
+    socket.on("join",(data: any)=>{
+      console.log(data,"join")
+    })
   };
 
 
@@ -38,7 +42,7 @@ const  MessageContainer : FC=()=> {
   
 
   useEffect(()=>{
-    // console.log("room")
+  
     joinRoom(chatid)
   },[chatid])
 

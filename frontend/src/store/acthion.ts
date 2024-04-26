@@ -121,7 +121,7 @@ import { ChatService } from "../services/ChatService"
   )
 
   export const fetcUser = createAsyncThunk(
-    'users/fetchMedia',
+    'users/fetcUser',
     async (_, thunkAPI) => {
       try {
         const response = await AuthService.getUser()

@@ -22,6 +22,7 @@ const ChatListItem: FC<ChatListItemProps>=({chatId,chatsUser})=> {
   const [noMe,setNoME] = useState<IUserChatT>()
     
   const findNoMe=()=>{
+    // console.log(chatsUser)
     setNoME(chatsUser.find(user=>user.is_current !== true))
   }
 
