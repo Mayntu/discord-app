@@ -53,18 +53,15 @@ const  MessageContainer : FC=()=> {
 
   const sendMessage = () => {
     // отправляю сообщение 
-    socket.emit("message", {"data" : messageText, "chat_id" : chatid, "token" : localStorage.getItem("token")});
-    setMessageText("")
+    if(messageText.trim()){
+      socket.emit("message", {"data" : messageText, "chat_id" : chatid, "token" : localStorage.getItem("token")});
+      setMessageText("")
+    }
     }; 
 
     
   useEffect(()=>{ 
     // получаю сообщения
-    if(isLoading){
-      console.log("laod")
-    }else{
-      console.log("no")
-    }
       if(chatid){
       socket.on("message", (data:any) => {
         data = JSON.parse(data)
