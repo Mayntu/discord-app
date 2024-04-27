@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session
 from flask_socketio import SocketIO, emit, send, join_room, leave_room
 # from flask_cors import CORS
 from json import dumps, loads
@@ -19,15 +19,23 @@ ONLINE_USERS : list = []
 def user_connected(data):
     token : str = data.get("token")
     make_user_online(token)
-    ONLINE_USERS.append(token)
-    emit("connected", {"data" : "user connected"})
+    if not session["token"]:
+        ONLINE_USERS.append(token)
+        session["token"] = token
+    
+    emit("connected", {"data" : ONLINE_USERS})
 
 
 
 @socketio.on("disconnect")
 def user_disconnected():
     print("disconnected")
-    emit("disconnected", {"data" : "user disconnected"})
+    token : str = session.get("token")
+    if token:
+        user = ONLINE_USERS.pop(ONLINE_USERS.index(token))
+        session["token"] = None
+    
+    emit("disconnected", {"data" : ONLINE_USERS})
 
 
 @socketio.on("message")
