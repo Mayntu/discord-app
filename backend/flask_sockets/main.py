@@ -20,7 +20,7 @@ def user_connected(data):
     token : str = data.get("token")
     make_user_online(token)
     ONLINE_USERS.append(token)
-    emit("connected", {"data" : "user connected"})
+    emit("connected", {"data" : ONLINE_USERS})
 
 
 
