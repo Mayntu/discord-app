@@ -192,9 +192,18 @@ input{
   display: flex;
   flex-grow: 2;
   flex-direction: column;
+  position: relative;
 }
 
-
+.status{
+  width: 10px;
+  height: 10px;
+  background-color: #38ff10;
+  position: absolute;
+  right: 10px;
+  top: 0px;
+  border-radius: 100%;
+}
 
 .chat-list-container,.settings-container{
   background-color: #242424;

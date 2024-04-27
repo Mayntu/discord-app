@@ -5,7 +5,6 @@ import { socket } from '../socket';
 import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock';
 import { fetchGetChatMessage } from '../store/acthion';
 import Message from './Message';
-import { useGetfetchGetUserChatsQuery } from '../store/RTQChat';
 
 
 

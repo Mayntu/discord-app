@@ -49,6 +49,7 @@ const ChatListItem: FC<ChatListItemProps>=({chatId,chatsUser})=> {
             <img src={avatar} alt="" />
         </div>
         <div className="content-chat">
+          {noMe?.status && <div className="status"></div>}
             <div className="row-content-chat">
                 {noMe?.login} {noMe?.status}
             </div>
