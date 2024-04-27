@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import { setIsAuth } from '../store/AuthSlice'
 import { fetcUser, fetchMedia } from '../store/acthion'
 import Module from './Module'
-
+import avatar from "../assets/sonic.jpg"
 
 interface SettingsBlockProps{
     setIsSettings:  React.Dispatch<React.SetStateAction<any>>
@@ -65,7 +65,7 @@ const  SettingsBlock:FC<SettingsBlockProps>=({setIsSettings})=> {
       </div>
         <div className="UserBlock">
           <div className="avatar-setting">
-            {user.avatar == "." ? <img src="" alt=""/>  :  <img src={user.avatar} alt="" />}
+            {user.avatar == "." ? <img src={avatar} alt=""/>  :  <img src={user.avatar} alt="" />}
 
           </div>
           <p>{user.login}</p>
@@ -81,7 +81,7 @@ const  SettingsBlock:FC<SettingsBlockProps>=({setIsSettings})=> {
       <div className="UserBlock editBlock">
             <div className="avatar-setting ">
             <img src={iconCamera} alt="" className='imput-setting' onClick={handleImage}/>
-            {user.avatar == "." ? <img src="" alt=""/>  :  <img src={user.avatar} alt="" />}
+            {user.avatar == "." ? <img src={avatar} alt=""/>  :  <img src={user.avatar} alt="" />}
             <input ref={refImage} type="file" accept='image/*,.png,.web,.jpg,.gif' onChange={(e)=>{setFile(e.target.files[0])}} className='none'/>
           </div>
           <div className="settingBlock">

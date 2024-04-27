@@ -5,6 +5,7 @@ import { socket } from '../socket';
 import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock';
 import { fetchGetChatMessage } from '../store/acthion';
 import Message from './Message';
+import InputEmoji from "react-input-emoji";
 
 
 
@@ -15,10 +16,9 @@ const  MessageContainer : FC=()=> {
   const [messageArray,setMessageArray] = useState<any[]>([])
   const dispatch = useAppDispatch()
   const message = useAppSelector(state=>state.chat.getMessage)
-  const {users,isLoading} = useAppSelector(state=>state.chat)
   const refImage = useRef<HTMLInputElement>(null) 
   const [file,setFile] = useState()
-  const [userMessage,setUserMessage] = useState<any>()
+  const [userMessage,setUserMessage] = useState<any>([])
   const getMessage = async ()=>{
     chatid && await dispatch(fetchGetChatMessage(chatid))
   }
@@ -26,15 +26,14 @@ const  MessageContainer : FC=()=> {
   const joinRoom = (room:any) => {
     console.log("room")
     socket.emit("join", {"username" : "12345", "chat_id" : room});
-    socket.on("join",(data: any)=>{
-      console.log(data,"join")
+    socket.on("join",(users: any)=>{
+      console.log(users.users_data.users_data)
+      setUserMessage(users.users_data.users_data)
+      console.log(userMessage,"usermessage")
     })
   };
 
 
-  useEffect(()=>{
-   setUserMessage(users)
-},[users])
  
 
   
@@ -55,11 +54,10 @@ const  MessageContainer : FC=()=> {
 
 
   const sendMessage = () => {
-    console.log(file,"file")
+    console.log(file?.name,"file")
     // отправляю сообщение 
     if(messageText.trim()){
-      socket.emit("message", {"data" : messageText, "chat_id" : chatid, "token" : localStorage.getItem("token"), media: file ? file : ""});
-      setMessageText("")
+      socket.emit("message", {"data" : messageText, "chat_id" : chatid, "token" : localStorage.getItem("token"), media: file ? {file, name : file?.name} : ""});
     }
     }; 
 
@@ -83,11 +81,16 @@ const  MessageContainer : FC=()=> {
       <div className='message-container' style={{backgroundImage : `url(${backImage})`}}>
           {chatid  &&
           <>   
+          <div className="status-bar">
+
+          </div>
             <div className="get-message-cantainer">
               {messageArray.map(ms=><Message key={ms.uuid} classUser={ms.from_user_id}  time={ms.timestamp}>{ms.content}</Message>)}
             </div>
             <div className="message-input-container">
-              <input placeholder='iwjdijwijd' onChange={(e)=>setMessageText(e.target.value)} value={messageText}></input>
+              {/* <input placeholder='сообщение' onChange={(e)=>setMessageText(e.target.value)} value={messageText}></input> */}
+              
+              <InputEmoji onEnter={sendMessage} cleanOnEnter  onChange={setMessageText} value={messageText}    placeholder="Введите сообщение"/>
               <button onClick={()=>{sendMessage()}}>отправить</button>
               <input ref={refImage} type="file" accept='image/*,.png,.web,.jpg,.gif' onChange={(e)=>{setFile(e.target.files[0])}} className='none'/>
               <button onClick={()=>{refImage.current?.click()}}>отправить  image</button>
