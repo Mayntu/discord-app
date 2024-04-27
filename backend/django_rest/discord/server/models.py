@@ -32,6 +32,7 @@ class Chat(models.Model):
 
 class ServerChatRoom(models.Model):
     uuid = models.UUIDField(default=uuid4, primary_key=True, verbose_name="UUID")
+    title = models.CharField(max_length=256, verbose_name="title")
     messages = models.ManyToManyField(Message, blank=True)
 
 
