@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import JsonResponse
-from server.models import User, Message, Chat
+from server.models import User, Message, Chat, Server
 from server.serializers import UserSerializer, MessageSerializer, ChatSerializer
 from server.utils import generate_jwt, get_token, handle_upload_file
 import json
@@ -437,3 +437,37 @@ def api_change_users_login(request):
 
 
     return JsonResponse(data={"result" : True, "message" : "saved to files"})
+
+
+
+def api_create_server(request):
+    data : dict = request.headers
+
+
+    token : str = data.get("Authorization").replace('"', "")
+    token_content : dict = get_token(
+        token=token
+    )
+
+    if not token_content:
+        return JsonResponse(data={"result" : False, "error" : "not valid token"})
+    
+    
+    data : dict = json.loads(request.body)
+
+    title : str = data.get("title")
+    owner_user_id : str = token_content.get("uuid")
+    avatar : str = data.get("avatar")
+
+    server : Server = Server.objects.create(
+        title=title,
+        owner_id=owner_user_id,
+        avatar=avatar,
+    )
+    owner_user : User = User.objects.get(uuid=owner_user_id)
+    owner_user.servers.add(server)
+
+    print(owner_user.servers.all())
+
+
+    return JsonResponse(data={"result" : True, "server_id" : server.uuid})
