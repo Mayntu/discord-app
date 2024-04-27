@@ -54,10 +54,10 @@ const  MessageContainer : FC=()=> {
 
 
   const sendMessage = () => {
-    console.log(file?.name,"file")
+    console.log(file?.type,"file")
     // отправляю сообщение 
     if(messageText.trim()){
-      socket.emit("message", {"data" : messageText, "chat_id" : chatid, "token" : localStorage.getItem("token"), media: file ? {file, name : file?.name} : ""});
+      socket.emit("message", {"data" : messageText, "chat_id" : chatid, "token" : localStorage.getItem("token"), media: file ? {file, name : file?.type} : ""});
     }
     }; 
 
