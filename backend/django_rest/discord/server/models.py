@@ -11,6 +11,7 @@ class User(models.Model):
     avatar = models.CharField(max_length=256, verbose_name="avatar")
     is_online = models.BooleanField(default=True, verbose_name="IS ONLINE")
     chats = models.ManyToManyField("Chat", blank=True)
+    servers = models.ManyToManyField("Server", blank=True)
 
 
 class Message(models.Model):
@@ -31,12 +32,14 @@ class Chat(models.Model):
 
 class ServerChatRoom(models.Model):
     uuid = models.UUIDField(default=uuid4, primary_key=True, verbose_name="UUID")
+    title = models.CharField(max_length=256, verbose_name="title")
     messages = models.ManyToManyField(Message, blank=True)
 
 
 class Server(models.Model):
     uuid = models.UUIDField(default=uuid4, primary_key=True, verbose_name="UUID")
+    title = models.CharField(max_length=32, blank=False, verbose_name="title")
     owner_id = models.CharField(max_length=256, blank=False, verbose_name="owner")
     users = models.ManyToManyField(User, blank=True, verbose_name="users")
-    chat_rooms = models.ManyToManyField(ServerChatRoom, verbose_name="chat_rooms")
-    avatar = models.ImageField(verbose_name="avatar")
+    chat_rooms = models.ManyToManyField(ServerChatRoom, blank=True, verbose_name="chat_rooms")
+    avatar = models.CharField(max_length=256, verbose_name="avatar")
