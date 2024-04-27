@@ -31,10 +31,11 @@ def user_connected(data):
 def user_disconnected():
     print("disconnected")
     token : str = session.get("token")
-    user = ONLINE_USERS.pop(ONLINE_USERS.index(token))
-    session["token"] = None
+    if token:
+        user = ONLINE_USERS.pop(ONLINE_USERS.index(token))
+        session["token"] = None
     
-    emit("disconnected", {"data" : "user disconnected"})
+    emit("disconnected", {"data" : ONLINE_USERS})
 
 
 @socketio.on("message")
