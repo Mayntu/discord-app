@@ -29,7 +29,7 @@ const  MessageContainer : FC=()=> {
     socket.on("join",(users: any)=>{
       console.log(users.users_data.users_data)
       setUserMessage(users.users_data.users_data)
-      console.log(userMessage,"usermessage")
+      // console.log(userMessage,"usermessage")
     })
   };
 
@@ -67,11 +67,12 @@ const  MessageContainer : FC=()=> {
       if(chatid){
       socket.on("message", (data:any) => {
         data = JSON.parse(data)
-        setMessageArray((prev)=>[...prev,{content: data.content, from_user_id : data.from_user_id, uuid : data.uuid,timestamp : data.timestamp}]) 
+        console.log(data,"datamessage")
+        setMessageArray((prev)=>[...prev,{content: data.content, from_user_id : data.from_user_id, uuid : data.uuid,timestamp : data.timestamp,media : data.media}]) 
       });
     }
     // из-за зависимости с params socket накладываеться на предыдущий и просходит отправка кучи сообщений  решение?
-  },[chatid])
+  },[chatid,socket])
  
  
 
@@ -85,11 +86,10 @@ const  MessageContainer : FC=()=> {
 
           </div>
             <div className="get-message-cantainer">
-              {messageArray.map(ms=><Message key={ms.uuid} classUser={ms.from_user_id}  time={ms.timestamp}>{ms.content}</Message>)}
+              {messageArray.map(ms=><Message key={ms.uuid} classUser={ms.from_user_id} media={ms.media}  time={ms.timestamp}>{ms.content}</Message>)}
             </div>
             <div className="message-input-container">
               {/* <input placeholder='сообщение' onChange={(e)=>setMessageText(e.target.value)} value={messageText}></input> */}
-              
               <InputEmoji onEnter={sendMessage} cleanOnEnter  onChange={setMessageText} value={messageText}    placeholder="Введите сообщение"/>
               <button onClick={()=>{sendMessage()}}>отправить</button>
               <input ref={refImage} type="file" accept='image/*,.png,.web,.jpg,.gif' onChange={(e)=>{setFile(e.target.files[0])}} className='none'/>

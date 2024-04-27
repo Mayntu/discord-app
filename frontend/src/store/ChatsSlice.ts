@@ -43,7 +43,6 @@ const chatsSlice = createSlice({
     extraReducers: (builder:  ActionReducerMapBuilder<TChats>)=>{
         // получение чатов 
         builder.addCase(fetchGetUserChats.fulfilled,(state :TChats,{payload} : PayloadAction<any>)=>{
-            console.log(payload.data)
             state.socketChat = payload.data.data
             if(payload.users){
                state.users = state.socketChat.find(chat=>chat.uuid == payload.users).users

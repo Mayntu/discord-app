@@ -30,7 +30,6 @@ const ChatList:FC=()=> {
       dispatch(fetchFindChat(e))
   }
 
-  console.log(chats2)
   
 
   return (

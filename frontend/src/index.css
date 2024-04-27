@@ -437,18 +437,37 @@ width: 70%;
 .message{
   gap: 5px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  flex-direction: column;
   padding:5px ;
   align-self: flex-start;
   max-width: 400px;
+  color: black;
+  flex-wrap: wrap;
+}
+.chat-message{
+  gap: 10px;
+  border-radius: 5px;
+  padding:5px ;
+  max-width: 400px;
   border: 1px solid green;
   background-color: white;
-  color: black;
+  display: flex
+  
 }
-
 .my-message{
   align-self: flex-end;
 }
+
+.image-message{
+  display: block;
+  max-width: 100%;
+}
+
+.image-message img{
+  max-width: 100%;
+}
+/* message-container end */
 
 
 
