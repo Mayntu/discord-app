@@ -34,15 +34,18 @@ def user_disconnected():
 def handle_message(message):
     print(message.get("chat_id"))
     token = message["token"]
+    print(token)
     chat_id = message["chat_id"]
+    media = message["media"]
     message = message["data"]
     print(message)
     if message != "User connected!":
-        result : dict = save_message(token=token, text=message, from_user_id="", chat_id=chat_id)
+        result : dict = save_message(token=token, text=message, from_user_id="", chat_id=chat_id, media=media)
         print(result)
-        message : str = dumps(result["message_data"])
-        print(message)
-        send(message=message, room=chat_id)
+        if result["result"] == True:
+            message : str = dumps(result["message_data"])
+            print(message)
+            send(message=message, room=chat_id)
 
 
 @socketio.on("join")
@@ -74,15 +77,19 @@ def make_user_online(token : str) -> None:
 
 
 
-def save_message(token : str, text : str, from_user_id : str, chat_id : str) -> dict:
+def save_message(token : str, text : str, from_user_id : str, chat_id : str, media : dict) -> dict:
     data : dict = {
         "token" : token,
         "text" : text,
         "from_user_id" : from_user_id,
         "chat_id" : chat_id,
-        "media" : "",
     }
-    result = requests.post("http://127.0.0.1:8000/api/v1/saveMessage", data=data)
+    file = media["file"] if media else None
+    file_name : str = media["name"].split("/")[-1] if media else None
+    files : dict = {
+        file_name : file,
+    }
+    result = requests.post("http://127.0.0.1:8000/api/v1/saveMessage", data=data, files=files)
     print(result)
     return result.json()
 

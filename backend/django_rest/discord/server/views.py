@@ -169,8 +169,12 @@ def api_save_message(request):
     chat_id : str = data.get("chat_id")
     from_user_id : str = token_content.get("uuid")
     text : str = data.get("text")
-    img : str = data.get("media") or None
+    file_name : str = list(request.FILES.keys())[0] if request.FILES else None
+    img = request.FILES.get(file_name) if file_name else None
 
+    
+    print(img)
+    
     if img:
         media : str = handle_upload_file(file=img)
 
