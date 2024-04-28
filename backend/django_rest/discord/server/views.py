@@ -592,3 +592,34 @@ def api_save_server_chat_message(request):
 
     
     return JsonResponse(data={"result" : True, "message_data" : message_data})
+
+
+
+def api_get_server_room_messages(request):
+    headers : dict = request.headers
+
+    token : str = headers.get("Authorization") or "."
+    token : str = token.replace('"', "")
+    token_content : dict = get_token(
+        token=token
+    )
+
+    if token_content:
+        data : dict = json.loads(request.body)
+
+        chat_id      : str = data.get("chat_id")
+        
+        chat : Chat = Chat.objects.get(uuid=chat_id)
+
+        
+        messages = chat.messages.all().order_by("timestamp")
+
+
+        messages_serializer = MessageSerializer(messages, many=True)
+
+        messages_ : list = messages_serializer.data
+
+
+        return JsonResponse(data={"result" : True, "messages" : messages_}, safe=False)
+    
+    return JsonResponse(data={"result" : False})

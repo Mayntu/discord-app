@@ -107,6 +107,5 @@ def get_chat_info(token : str, chat_id : str) -> dict:
     return response.json()
 
 
-
 if __name__ == "__main__":
     socketio.run(app, host="127.0.0.1", port=5000, debug=True)
