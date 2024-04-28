@@ -17,8 +17,8 @@ ONLINE_USERS : list = []
 
 @socketio.on("user_connected")
 def user_connected(data):
-    token : str = data.get("token")
-    make_user_online(token)
+    # token : str = data.get("token")
+    # make_user_online(token)
     
     if not request.sid in ONLINE_USERS:
         ONLINE_USERS.append(request.sid)
