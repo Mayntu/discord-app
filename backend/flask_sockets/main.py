@@ -19,9 +19,9 @@ ONLINE_USERS : list = []
 def user_connected(data):
     token : str = data.get("token")
     make_user_online(token)
-    if not session.get("token"):
-        ONLINE_USERS.append(token)
-        session["token"] = token
+    
+    if not request.namespace.socket.sessid in ONLINE_USERS:
+        ONLINE_USERS.append(request.namespace.socket.sessid)
     
     emit("connected", {"data" : ONLINE_USERS})
 
@@ -32,8 +32,7 @@ def user_disconnected():
     print("disconnected")
     token : str = session.get("token")
     if token:
-        user = ONLINE_USERS.pop(ONLINE_USERS.index(token))
-        session["token"] = None
+        user = ONLINE_USERS.pop(ONLINE_USERS.index(request.namespace.socket.sessid))
     
     emit("disconnected", {"data" : ONLINE_USERS})
 
