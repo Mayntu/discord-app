@@ -69,7 +69,7 @@ def join(data):
 @socketio.on("leave")
 def leave(data):
     leave_room(data["chat_id"])
-    send(message="new user left the room", room=data["room"])
+    send(message="new user left the room", room=data["chat_id"])
 
 
 @app.route("/", methods=["GET", "POST"])
