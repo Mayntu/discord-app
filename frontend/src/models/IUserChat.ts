@@ -12,5 +12,14 @@ export interface IUserChatT  {
 export interface  IUserChat {
     uuid: string;
     users : Array<IUserChatT>
- 
+}
+
+export interface IMessage{
+    avatar? : string,
+    login? : string,
+    media : string,
+    content: string,
+    uuid : string,
+    from_user_id: string,
+    chat_id : string
 }

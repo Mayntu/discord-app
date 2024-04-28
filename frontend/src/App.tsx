@@ -1,18 +1,15 @@
 
 import { useEffect } from 'react'
-// import './App.css'
 import ChatList from './components/ChatList'
-import LoginForm from './components/LoginForm'
 import { useAppDispatch, useAppSelector } from './hooks/redux-hoock'
 import { setIsAuth } from './store/AuthSlice'
-import MessageContainer from './components/MessageContainer'
-import { Outlet, redirect, useNavigate } from 'react-router-dom'
+import { Outlet,  useNavigate } from 'react-router-dom'
 import { fetcUser } from './store/acthion'
 import { socket } from './socket'
 
 
 function App() {
-  const {isAuth,isLoading,error} = useAppSelector(state=> state.auth)
+  const {isAuth,isLoading,error,user} = useAppSelector(state=> state.auth)
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
  
@@ -21,11 +18,14 @@ function App() {
     dispatch(fetcUser())
    
   },[])
+  useEffect(()=>{
+    socket.emit("user_connected",{uuid: user.uuid})
+    socket.on("connected",(data:any)=>{
+      console.log(data,"connect")
+    })
+  //  socket.emit("disconnect",{token: localStorage.getItem("token")})
+  },[socket])
 
-  socket.emit("user_connected",{token: localStorage.getItem("token")})
-  socket.on("connected",(data:any)=>{
-    console.log(data,"connect")
-  })
 
   
   useEffect(()=>{

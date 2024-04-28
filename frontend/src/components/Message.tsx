@@ -8,21 +8,26 @@ interface MessageProps{
     classUser : string,
     time: string,
     media : string 
-
+    users : any
 }
 
 
 
-const  Message: FC<MessageProps>=({classUser,children,time,media})=> {
+const  Message: FC<MessageProps>=({classUser,children,time,media,users})=> {
   const me = useAppSelector(state=>state.auth.user)
+  const [user,setUser] = useState("")
+  useEffect(()=>{
+    //  console.log(users,"users")
+    //  setUser(users.find(i => i.uuid == classUser))
+    //   console.log(user)
+  },[users])
 
   return (
     <>
     <div className={classUser == me.uuid || me.uuid == "" || undefined ? 'message my-message'  : 'message'}>
       <div className={classUser == me.uuid || me.uuid == "" || undefined ? 'chat-message my-message'  : 'chat-message'}>
         <div className="avatar avatar-message">
-          {me.avatar == "." ?  (<img src={avatar} alt="" />) :   (<img src={me.avatar} alt="" />)}
-         
+          {user?.avatar == "" ?  (<img src={avatar} alt="" />) :   (<img src={me.avatar} alt="" />)}
         </div>
           <div className="column">
           {children}

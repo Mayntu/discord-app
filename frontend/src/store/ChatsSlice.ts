@@ -1,5 +1,5 @@
 import { ActionReducerMapBuilder, PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { IUserChat, IUserChatT } from "../models/IUserChat";
+import { IMessage, IUserChat, IUserChatT } from "../models/IUserChat";
 import { fetchFindChat, fetchGetChatMessage, fetchGetUserChats, fetchMedia, fetchTest } from "./acthion";
 
 
@@ -9,7 +9,7 @@ import { fetchFindChat, fetchGetChatMessage, fetchGetUserChats, fetchMedia, fetc
 type TChats = {
     socketChat : IUserChat[],
     users : IUserChatT[],
-    getMessage : any,
+    getMessage : IMessage[],
     searcChat : IUserChatT[],
     test : any,
     isLoading : boolean
@@ -29,15 +29,25 @@ const chatsSlice = createSlice({
     name : "chats",
     initialState,
     reducers:{
-        addUsersChat(state,acthion: PayloadAction<IUserChatT[]>){
-            let userIAm = acthion.payload
+        addUsersChat(state,{payload}: PayloadAction<IUserChatT[]>){
+            let userIAm = payload
             // console.log(userIAm,"noFetch")
             state.users = userIAm
         },
-        addUserInChat(state,acthion: PayloadAction<string>){
+        addUserInChat(state,{payload}: PayloadAction<string>){
             // console.log(state.socketChat)
-            let userIAm = state.socketChat.find(chat=>chat.uuid == acthion.payload)
+            let userIAm = state.socketChat.find(chat=>chat.uuid == payload)
             // console.log(userIAm,acthion.payload,state.socketChat, "userIem")
+        },
+        addMessage(state,{payload}: PayloadAction<any>){
+          state.getMessage =  state.getMessage.map(mes=>{
+                    const user = payload.find(userm=>userm.uuid == mes.from_user_id)
+                    console.log(user,"userM")
+                    console.log({...mes, avatar: user.avatar})
+                    return ({...mes, avatar: user.avatar})
+                   }
+            )
+            console.log(state.getMessage,"getMessage")
         }
     },
     extraReducers: (builder:  ActionReducerMapBuilder<TChats>)=>{
@@ -65,6 +75,6 @@ const chatsSlice = createSlice({
     }
 })
 
-export const {addUsersChat,addUserInChat} = chatsSlice.actions
+export const {addUsersChat,addUserInChat,addMessage} = chatsSlice.actions
 
 export default chatsSlice.reducer

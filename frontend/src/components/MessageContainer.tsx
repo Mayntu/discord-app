@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock';
 import { fetchGetChatMessage } from '../store/acthion';
 import Message from './Message';
 import InputEmoji from "react-input-emoji";
+import { addMessage } from '../store/ChatsSlice';
 
 
 
@@ -19,6 +20,7 @@ const  MessageContainer : FC=()=> {
   const refImage = useRef<HTMLInputElement>(null) 
   const [file,setFile] = useState()
   const [userMessage,setUserMessage] = useState<any>([])
+ 
   const getMessage = async ()=>{
     chatid && await dispatch(fetchGetChatMessage(chatid))
   }
@@ -26,37 +28,45 @@ const  MessageContainer : FC=()=> {
   const joinRoom = (room:any) => {
     console.log("room")
     socket.emit("join", {"username" : "12345", "chat_id" : room});
-    socket.on("join",(users: any)=>{
-      console.log(users.users_data.users_data)
-      setUserMessage(users.users_data.users_data)
-      // console.log(userMessage,"usermessage")
-    })
+    // socket.on("join",(users: any)=>{
+    //   console.log(users.users_data.users_data,"users-message")
+    //   setUserMessage(users.users_data.users_data)
+    // })
   };
 
 
- 
+  // useEffect(()=>{
+  //   // socket.emit("leave",{chat_id: chatid})
+  // })
 
-  
-  
 
   useEffect(()=>{
-   
+    //вход в комнату
     joinRoom(chatid)
   },[chatid])
 
  useEffect(()=>{
-    getMessage()
+    // получение предыдущих сообщений
+  
   },[chatid])
 
+  const getMessages=async()=>{
+      dispatch(addMessage(userMessage))
+      setMessageArray(message)
+  }
   useEffect(()=>{
-    {message && setMessageArray(message)}
-  },[message])
+    if(userMessage.length){
+      getMessages()
+    }
+  },[userMessage])
 
 
   const sendMessage = () => {
     console.log(file?.type,"file")
     // отправляю сообщение 
+   
     if(messageText.trim()){
+      console.log(message,"m2")
       socket.emit("message", {"data" : messageText, "chat_id" : chatid, "token" : localStorage.getItem("token"), media: file ? {file, name : file?.type} : ""});
     }
     }; 
@@ -65,14 +75,20 @@ const  MessageContainer : FC=()=> {
   useEffect(()=>{ 
     // получаю сообщения
       if(chatid){
-      socket.on("message", (data:any) => {
-        data = JSON.parse(data)
-        // console.log(data,"datamessage")
-        setMessageArray((prev)=>[...prev,{content: data.content, from_user_id : data.from_user_id, uuid : data.uuid,timestamp : data.timestamp,media : data.media}]) 
-      });
+      
+      socket.on("join",(users: any)=>{
+        setUserMessage(users.users_data.users_data)
+        getMessage()
+        socket.on("message", (data:any) => {
+          console.log(users.users_data.users_data,"users-message33333")
+          data = JSON.parse(data)
+          setMessageArray((prev)=>[...prev,{content: data.content, from_user_id : data.from_user_id, uuid : data.uuid,timestamp : data.timestamp,media : data.media}]) 
+        });
+      })
+   
     }
     // из-за зависимости с params socket накладываеться на предыдущий и просходит отправка кучи сообщений  решение?
-  },[chatid,socket])
+  },[chatid])
  
  
 
@@ -86,10 +102,9 @@ const  MessageContainer : FC=()=> {
 
           </div>
             <div className="get-message-cantainer">
-              {messageArray.map(ms=><Message key={ms.uuid} classUser={ms.from_user_id} media={ms.media}  time={ms.timestamp}>{ms.content}</Message>)}
+              {messageArray.map(ms=><Message key={ms.uuid} classUser={ms.from_user_id} media={ms.media}  time={ms.timestamp} users={userMessage}>{ms.content}</Message>)}
             </div>
             <div className="message-input-container">
-              {/* <input placeholder='сообщение' onChange={(e)=>setMessageText(e.target.value)} value={messageText}></input> */}
               <InputEmoji onEnter={sendMessage} cleanOnEnter  onChange={setMessageText} value={messageText}    placeholder="Введите сообщение"/>
               <button onClick={()=>{sendMessage()}}>отправить</button>
               <input ref={refImage} type="file" accept='image/*,.png,.web,.jpg,.gif' onChange={(e)=>{setFile(e.target.files[0])}} className='none'/>
