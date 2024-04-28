@@ -15,35 +15,6 @@ interface MessageProps{
 
 const  Message: FC<MessageProps>=({classUser,children,time,media})=> {
   const me = useAppSelector(state=>state.auth.user)
-  const [file,setFile] = useState<any>("")
-  
-  const getImage=async()=>{
-    console.log(media)
-    // setTimeout(()=>{
-    //   setFile(media)
-    // },2000)
-
-    // const res = await axios.get(media)
-    // const reader = new FileReader();
-    // reader.readAsDataURL(res.data)
-    // reader.onload = ()=>{
-    //   setFile(reader.result)
-    // }
- 
-    // return (
-    //   <>
-    //   {media && 
-    //   (<div className='image-message'>
-    //     <img src={media} alt="" />
-    //   </div>) }
-    //  </>
-    // )
-  }
-   
-
-  useEffect(()=>{
-    getImage()
-  },[])
 
   return (
     <>
