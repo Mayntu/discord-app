@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import JsonResponse
-from server.models import User, Message, Chat, Server, ServerChatRoom
+from server.models import User, Message, Chat, Server, ServerChatRoom, ServerMessage
 from server.serializers import UserSerializer, MessageSerializer, ChatSerializer
 from server.utils import generate_jwt, get_token, handle_upload_file
 import json
@@ -505,3 +505,90 @@ def api_create_server_chat(request):
 
 
     return JsonResponse(data={"result" : True, "server_chat_room_uuid" : server_chat_room.uuid})
+
+
+
+def api_get_server_chat_rooms(request):
+    data  : dict = request.headers
+    token : str  = data.get("Authorization").replace('"', "")
+
+    token_content = get_token(token=token)
+    if not token_content:
+        return JsonResponse(data={"result" : False, "message" : "not valid token"})
+    
+
+    data : dict = json.loads(request.body)
+
+
+    server_uuid : str = data.get("server_uuid")
+
+
+    try:
+        server : Server = Server.objects.get(uuid=server_uuid)
+        server_chat_rooms = server.chat_rooms.all()
+        print(server_chat_rooms)
+        result : list = []
+        for server_chat_room in server_chat_rooms:
+            temp : dict = {"uuid" : str(server_chat_room.uuid), "title" : server_chat_room.title}
+            result.append(temp)
+
+        return JsonResponse(data={"result" : True, "data" : result}, safe=False)
+    except Exception as e:
+        return JsonResponse(data={"result" : False, "error" : f"user not found {e}"})
+
+
+
+def api_save_server_chat_message(request):
+    data : dict = request.POST
+    
+    
+
+    token : str = data.get("token")
+    token_content : dict | bool = get_token(token=token)
+
+    if not token_content:
+        return JsonResponse(data={"result" : False, "error" : "not valid token"})
+    
+
+
+    server_chat_room_id : str = data.get("chat_id")
+    from_user_id : str = token_content.get("uuid")
+    text : str = data.get("text")
+    file_name : str = list(request.FILES.keys())[0] if request.FILES else None
+    img = request.FILES.get(file_name) if file_name else None
+
+    
+    print(img)
+    
+    if img:
+        media : str = handle_upload_file(file=img)
+
+
+
+
+
+    server_chat_room : ServerChatRoom = ServerChatRoom.objects.get(uuid=server_chat_room_id)
+
+    server_message : ServerMessage = ServerMessage()
+    server_message.from_user_id = from_user_id
+    server_message.content = text
+    
+    if img:
+        server_message.media = media
+    else:
+        server_message.media = ""
+    
+    server_message.save()
+
+
+    message_data : dict = {}
+    message_data["uuid"] = server_message.uuid
+    message_data["from_user_id"] = server_message.from_user_id
+    message_data["content"] = server_message.content
+    message_data["media"] = server_message.media
+    message_data["timestamp"] = server_message.timestamp
+
+    server_chat_room.messages.add(server_message)
+
+    
+    return JsonResponse(data={"result" : True, "message_data" : message_data})
