@@ -411,6 +411,7 @@ def api_get_users_chat(request):
     
     
     chat_id : str = data.get("chat_id")
+    print(chat_id)
 
     chat : Chat = Chat.objects.get(uuid=chat_id)
 
