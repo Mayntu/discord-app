@@ -17,11 +17,12 @@ ONLINE_USERS : list = []
 
 @socketio.on("user_connected")
 def user_connected(data):
-    # token : str = data.get("token")
+    token : str = data.get("token")
     # make_user_online(token)
     
-    if not request.sid in ONLINE_USERS:
-        ONLINE_USERS.append(request.sid)
+    if not token in ONLINE_USERS:
+        ONLINE_USERS.append(token)
+        request.session["token"] = token
     
     emit("connected", {"data" : ONLINE_USERS})
 
@@ -31,7 +32,7 @@ def user_connected(data):
 def user_disconnected():
     print("disconnected")
     # print(request.sid)
-    user = ONLINE_USERS.pop(ONLINE_USERS.index(request.sid))
+    user = ONLINE_USERS.pop(ONLINE_USERS.index(request.session.get("token")))
     # print(ONLINE_USERS)
 
     emit("connected", {"data" : ONLINE_USERS})
