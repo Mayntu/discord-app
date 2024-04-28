@@ -1,8 +1,29 @@
 from django.shortcuts import render
 from django.http import JsonResponse
-from server.models import User, Message, Chat, Server, ServerChatRoom, ServerMessage
-from server.serializers import UserSerializer, MessageSerializer, ChatSerializer
-from server.utils import generate_jwt, get_token, handle_upload_file
+
+from server.models import (
+    User,
+    Message,
+    Chat,
+    Server,
+    ServerChatRoom,
+    ServerMessage,
+)
+from server.serializers import (
+    UserSerializer,
+    MessageSerializer,
+    ChatSerializer,
+    ServerSerializer,
+    ServerMessageSerializer,
+    ServerRoomSerializer,
+)
+from server.utils import (
+    generate_jwt,
+    get_token,
+    handle_upload_file,
+)
+
+
 import json
 
 
@@ -607,19 +628,19 @@ def api_get_server_room_messages(request):
     if token_content:
         data : dict = json.loads(request.body)
 
-        chat_id      : str = data.get("chat_id")
+        server_chat_room_id      : str = data.get("chat_id")
         
-        chat : Chat = Chat.objects.get(uuid=chat_id)
+        server_chat_room : ServerChatRoom = ServerChatRoom.objects.get(uuid=server_chat_room_id)
 
         
-        messages = chat.messages.all().order_by("timestamp")
+        messages = server_chat_room.messages.all().order_by("timestamp")
 
 
-        messages_serializer = MessageSerializer(messages, many=True)
+        server_message_serializer : ServerMessageSerializer = ServerMessageSerializer(messages, many=True)
 
-        messages_ : list = messages_serializer.data
+        server_messages : dict = server_message_serializer.data
 
 
-        return JsonResponse(data={"result" : True, "messages" : messages_}, safe=False)
+        return JsonResponse(data={"result" : True, "server_messages" : server_messages}, safe=False)
     
     return JsonResponse(data={"result" : False})
