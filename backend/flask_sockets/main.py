@@ -19,7 +19,7 @@ ONLINE_USERS : list = []
 def user_connected(data):
     token : str = data.get("token")
     make_user_online(token)
-    if not session["token"]:
+    if not session.get("token"):
         ONLINE_USERS.append(token)
         session["token"] = token
     
