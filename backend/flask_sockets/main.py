@@ -30,12 +30,10 @@ def user_connected(data):
 @socketio.on("disconnect")
 def user_disconnected():
     print("disconnected")
-    token : str = session.get("token")
-    if token:
-        print(request.sid)
-        user = ONLINE_USERS.pop(ONLINE_USERS.index(request.sid))
-        print(ONLINE_USERS)
-    
+    # print(request.sid)
+    user = ONLINE_USERS.pop(ONLINE_USERS.index(request.sid))
+    # print(ONLINE_USERS)
+
     emit("connected", {"data" : ONLINE_USERS})
 
 
