@@ -39,7 +39,7 @@ import { ServerService } from "../services/ServerService"
     async (payload: string, thunkAPI) => {
       try {
         const response = await ChatService.getChatsUsers()
-        console.log(response.data,"fetchGetUserChats")
+        console.log(response.data.data,"fetchGetUserChats")
         if(payload){
           return {data: response.data,users : payload }
         }else{
@@ -148,3 +148,16 @@ import { ServerService } from "../services/ServerService"
   )
 
 
+
+export const fetchDeleteUser = createAsyncThunk(
+  'server/fetchDeleteUser',
+  async (chat_id:string, thunkAPI) => {
+    try {
+      const response = await ChatService.postDeleteChat(chat_id)
+      console.log(response.data,"fetchDeleteUser")
+      return response.data
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error?.message)
+    }
+  },
+)

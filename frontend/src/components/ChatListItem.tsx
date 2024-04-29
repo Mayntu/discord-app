@@ -20,7 +20,6 @@ const ChatListItem: FC<ChatListItemProps>=({chatId,chatsUser})=> {
     setNoME(chatsUser.find(user=>user.is_current !== true))
   }
 
-
   useEffect(()=>{
     findNoMe()
   },[])

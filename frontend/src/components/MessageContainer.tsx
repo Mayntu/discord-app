@@ -3,10 +3,11 @@ import { useParams } from 'react-router-dom'
 import backImage from "../assets/Rectangle 59.png"
 import { socket } from '../socket';
 import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock';
-import { fetchGetChatMessage, fetchUser } from '../store/acthion';
+import { fetchDeleteUser, fetchGetChatMessage } from '../store/acthion';
 import Message from './Message';
 import InputEmoji from "react-input-emoji";
 import avatar from "../assets/sonic.jpg"
+import { IUserChatT } from '../models/IUserChat';
 
 
 
@@ -19,7 +20,7 @@ const  MessageContainer : FC=()=> {
   const userMe = useAppSelector(state=>state.auth.user)
   const refImage = useRef<HTMLInputElement>(null) 
   const [file,setFile] = useState()
-  const [usersChat,setUsersChat]= useState()
+  const [usersChat,setUsersChat]= useState<IUserChatT>()
 
 
   const joinRoom = (room:any) => {
@@ -35,11 +36,10 @@ const  MessageContainer : FC=()=> {
 
   useEffect(()=>{
     //вход в комнату
- 
+    if(chatid){
       joinRoom(chatid)
       getMessage()
-    
-  
+    }
   },[chatid])
 
  useEffect(()=>{
@@ -47,9 +47,9 @@ const  MessageContainer : FC=()=> {
     socket.on("join",(data)=>{
       console.log(data.users_data.users_data,"user")
       // dispatch(fetchUser())
-      console.log(userMe,"userMe")
+      // console.log(userMe,"userMe")
       const user  = data.users_data.users_data.find(usern=>usern.uuid !== userMe.uuid)
-      console.log(user,"user")
+      // console.log(user,"user")
       setUsersChat(user)
     })
   }
@@ -100,7 +100,7 @@ const  MessageContainer : FC=()=> {
               <p>{usersChat.login}</p>
               </>)}
             </div>
-          
+                <button onClick={()=>{dispatch(fetchDeleteUser(chatid))}}>удалить</button>
           </div>
             <div className="get-message-cantainer">
               {messageArray.length !==0 ? messageArray.map((ms,index)=><Message key={index} classUser={ms.from_user_id} media={ms.media}  time={ms.timestamp}>{ms.content}</Message>): null}

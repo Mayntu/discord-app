@@ -12,7 +12,8 @@ type TChats = {
     getMessage : IMessage[],
     searcChat : IUserChatT[],
     test : any,
-    isLoading : boolean
+    isLoading : boolean,
+    usersConnect : any[]
 }
 
 const initialState: TChats= {
@@ -21,7 +22,8 @@ const initialState: TChats= {
     getMessage: [],
     searcChat: [],
     test : [],
-    isLoading : false
+    isLoading : false,
+    usersConnect:[]
 }
 
 
@@ -30,14 +32,33 @@ const chatsSlice = createSlice({
     initialState,
     reducers:{
         addUsersChat(state,{payload}: PayloadAction<any>){
-            console.log(payload,"pay")
+            // console.log(payload,"pay")
             state.users = payload
             // state.getMessage =  state.getMessage.map(mes=>{
             //     return ({...mes, avatar: payload.find(userm=>userm.uuid == mes.from_user_id).avatar})
             //    }
             // )
-            console.log(state.getMessage,"getMessage")
         },
+        addUsersConnect(state,{payload}:PayloadAction<any[]>){
+            // {uuid: '086e6487-4f01-41ff-99a2-f2adf26178df', users: Array(2)} 
+            // console.log(state.usersConnect,"connectSlice")
+            // const n = state.socketChat.map(user=>user.users)
+            // // 
+            // for(let i=0;i<n.length;i++){
+            //     console.log(2)
+            //     for(let s=0;i<payload.length;i++){
+            //         const r = n[i].find(user=>user.uuid == payload[s])
+            //         if(r){
+            //             r.status = !r.status
+            //             console.log(r)
+            //         }
+            //     }
+            // }
+                
+            // state.socketChat[0].users[1].login = "wwwwwwwwww"
+            // // state.usersConnect = n
+            // console.log(state.usersConnect)
+        }
     },
     extraReducers: (builder:  ActionReducerMapBuilder<TChats>)=>{
         // получение чатов 
@@ -64,6 +85,6 @@ const chatsSlice = createSlice({
     }
 })
 
-export const {addUsersChat} = chatsSlice.actions
+export const {addUsersChat, addUsersConnect} = chatsSlice.actions
 
 export default chatsSlice.reducer

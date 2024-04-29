@@ -4,7 +4,6 @@ import ChatListItem from './ChatListItem'
 import icon from "../assets/icons8.png"
 import SettingsBlock from './SettingsBlock'
 import { fetchFindChat, fetchGetUserChats } from '../store/acthion'
-import { useParams } from 'react-router-dom'
 import SaerchBlockUser from './SaerchBlock'
 
 
@@ -12,23 +11,29 @@ import SaerchBlockUser from './SaerchBlock'
 
 
 const ChatList:FC=()=> {
-  const {chatid} = useParams()
   const findUsers = useAppSelector(state=>state.chat.searcChat)
   useEffect(()=>{
     dispatch(fetchGetUserChats(""))
   },[])
   const [isSettings,setIsSettings] = useState<boolean>(true)
   const dispatch = useAppDispatch()
-  const chats2 = useAppSelector(state=>state.chat.socketChat)
-
+  const {socketChat} = useAppSelector(state=>state.chat)
+  const usersConnect = useAppSelector(state=>state.chat.usersConnect)
   
   const seacrhChat = (e:string)=>{
       dispatch(fetchFindChat(e))
   }
 
-  
+   useEffect(()=>{
+    // console.log(socketChat)
+    // console.log(usersConnect,"con")
+    // const n = chats2.filter(user=>{
+    //   console.log(user.users)
+    //   return user.users})
+    // console.log(n,"con2")
+  },[socketChat])
 
-  return (
+  return ( 
     <>
     
       {isSettings &&
@@ -47,7 +52,7 @@ const ChatList:FC=()=> {
           </div>
         : null}
         {/* отображение item чатов */}
-        {chats2.map(i=>(<ChatListItem key={i.uuid}  chatId={i.uuid} chatsUser={i.users}/>))}
+        {socketChat.map(i=>(<ChatListItem key={i.uuid}  chatId={i.uuid} chatsUser={i.users}/>))}
       </div>}
       {!isSettings && <SettingsBlock setIsSettings={setIsSettings}/>}
       

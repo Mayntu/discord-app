@@ -37,6 +37,9 @@ export class ChatService {
         })
     }
 
+    static async postDeleteChat(chat_id: string):Promise<AxiosResponse<any>>{
+        return $api.post<any>("api/v1/deleteUsersChat",{chat_id})
+    }
 
   
 
