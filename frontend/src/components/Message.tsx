@@ -16,7 +16,7 @@ interface MessageProps{
 const  Message: FC<MessageProps>=({classUser,children,time,media})=> {
   const me = useAppSelector(state=>state.auth.user)
 
-
+  console.log(me)
   return (
     <>
     <div className={classUser == me.uuid || me.uuid == "" || undefined ? 'message my-message'  : 'message'}>

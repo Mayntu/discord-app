@@ -65,7 +65,7 @@ const  SettingsBlock:FC<SettingsBlockProps>=({setIsSettings})=> {
       </div>
         <div className="UserBlock">
           <div className="avatar-setting">
-            {user.avatar == "" ? <img src={avatar} alt=""/>  :  <img src={user.avatar} alt="" />}
+            {user.avatar == "." ? <img src={avatar} alt=""/>  :  <img src={user.avatar} alt="" />}
 
           </div>
           <p>{user.login}</p>

@@ -26,7 +26,7 @@ const ChatListItem: FC<ChatListItemProps>=({chatId,chatsUser})=> {
 
   return (
     <>
-     <NavLink to={`/${chatId}`}
+     <NavLink to={`/chat/${chatId}`}
      className='chat-container'
       // className={({ isActive, isPending }) =>
       //   isPending ? "pending-link" : isActive ? "active" : "active-link"

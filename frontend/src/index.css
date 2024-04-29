@@ -274,7 +274,7 @@ input{
   min-width: 5%;
   flex-shrink: 1;
  }
-.container-chat{
+.container-chat,.container-chat-message{
   display: flex;
   flex-direction: row;
   height: 100vh;
@@ -304,6 +304,7 @@ input{
 }
 
 .block-server-chat,.block-server{
+  color: white;
   width: 60px;
   height: 60px;
   background-color: #242424;

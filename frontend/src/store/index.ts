@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import AuthSlice from "./AuthSlice";
 import ChatsSlice from "./ChatsSlice";
 import { serverApi } from "./RTQServer";
+import ServerSlice from "./ServerSlice";
 
 
 
@@ -9,7 +10,8 @@ import { serverApi } from "./RTQServer";
 const store = configureStore({
     reducer:{
         auth : AuthSlice,
-        chat : ChatsSlice,
+        chats : ChatsSlice,
+        server : ServerSlice,
         [serverApi.reducerPath]: serverApi.reducer,
     },
     middleware:  (getDefaultMiddleware) =>

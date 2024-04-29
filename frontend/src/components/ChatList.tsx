@@ -5,20 +5,22 @@ import icon from "../assets/icons8.png"
 import SettingsBlock from './SettingsBlock'
 import { fetchFindChat, fetchGetUserChats } from '../store/acthion'
 import SaerchBlockUser from './SaerchBlock'
+import { Outlet } from 'react-router-dom'
+import MessageContainer from './MessageContainer'
 
 
 
 
 
 const ChatList:FC=()=> {
-  const findUsers = useAppSelector(state=>state.chat.searcChat)
+  const findUsers = useAppSelector(state=>state.chats.searcChat)
   useEffect(()=>{
     dispatch(fetchGetUserChats(""))
   },[])
   const [isSettings,setIsSettings] = useState<boolean>(true)
   const dispatch = useAppDispatch()
-  const {socketChat} = useAppSelector(state=>state.chat)
-  const usersConnect = useAppSelector(state=>state.chat.usersConnect)
+  const {socketChat} = useAppSelector(state=>state.chats)
+  const usersConnect = useAppSelector(state=>state.chats.usersConnect)
   
   const seacrhChat = (e:string)=>{
       dispatch(fetchFindChat(e))
@@ -35,7 +37,6 @@ const ChatList:FC=()=> {
 
   return ( 
     <>
-    
       {isSettings &&
       <div className='chat-list-container'>
         <div className="search">
@@ -55,8 +56,8 @@ const ChatList:FC=()=> {
         {socketChat.map(i=>(<ChatListItem key={i.uuid}  chatId={i.uuid} chatsUser={i.users}/>))}
       </div>}
       {!isSettings && <SettingsBlock setIsSettings={setIsSettings}/>}
-      
-    
+      <Outlet></Outlet>
+      {/* <MessageContainer/> */}
     </>
   )
 }

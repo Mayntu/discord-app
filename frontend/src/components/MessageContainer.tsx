@@ -16,7 +16,7 @@ const  MessageContainer : FC=()=> {
   const [messageText,setMessageText] = useState<string>("")
   const [messageArray,setMessageArray] = useState<any[]>([])
   const dispatch = useAppDispatch()
-  const message = useAppSelector(state=>state.chat.getMessage)
+  const message = useAppSelector(state=>state.chats.getMessage)
   const userMe = useAppSelector(state=>state.auth.user)
   const refImage = useRef<HTMLInputElement>(null) 
   const [file,setFile] = useState()

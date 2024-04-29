@@ -1,12 +1,12 @@
 import { createAsyncThunk } from "@reduxjs/toolkit"
-import { IAuthLogin, IAuthRegistration } from "../models/request/AuthRequest"
+import { IAuthLogin, IAuthRegistration, IcreateServerChat } from "../models/request/AuthRequest"
 import { AuthService } from "../services/AuhService"
 import { ChatService } from "../services/ChatService"
 import { ServerService } from "../services/ServerService"
 
 
  export const fetchLogin = createAsyncThunk(
-    'users/fetchlogin',
+    'auth/fetchlogin',
     async (payload: IAuthLogin, thunkAPI) => {
       try {
         const response = await AuthService.login(payload.login,payload.password)
@@ -20,7 +20,7 @@ import { ServerService } from "../services/ServerService"
   )
 
   export const fetchRegistration = createAsyncThunk(
-    'users/fetchRegistration',
+    'auth/fetchRegistration',
     async (payload: IAuthRegistration, thunkAPI) => {
       try {
         const response = await AuthService.registration(payload.email,payload.login,payload.password)
@@ -35,7 +35,7 @@ import { ServerService } from "../services/ServerService"
 
 
   export const fetchGetUserChats = createAsyncThunk(
-    'users/fetchGetUserChats',
+    'chats/fetchGetUserChats',
     async (payload: string, thunkAPI) => {
       try {
         const response = await ChatService.getChatsUsers()
@@ -54,7 +54,7 @@ import { ServerService } from "../services/ServerService"
 
   
   export const fetchGetChatMessage = createAsyncThunk(
-    'users/fetchGetChatMessage',
+    'chats/fetchGetChatMessage',
     async (payload:string, thunkAPI) => {
       try {
         const response = await ChatService.getChatMessage(payload)
@@ -67,7 +67,7 @@ import { ServerService } from "../services/ServerService"
   )
 
   export const fetchFindChat = createAsyncThunk(
-    'users/fetchFindChat',
+    'chats/fetchFindChat',
     async (payload:string, thunkAPI) => {
       try {
         const response = await ChatService.postFindChat(payload)
@@ -81,7 +81,7 @@ import { ServerService } from "../services/ServerService"
 
 
   export const fetchCreateChat = createAsyncThunk(
-    'chat/fetchFindChat',
+    'chats/fetchFindChat',
     async (payload:string, thunkAPI) => {
       try {
         const response = await ChatService.postCreateChat(payload)
@@ -161,3 +161,29 @@ export const fetchDeleteUser = createAsyncThunk(
     }
   },
 )
+
+export const fetchCreateServerChat = createAsyncThunk(
+  'server/fetchCreateServerChat',
+  async (payload : IcreateServerChat, thunkAPI) => {
+    try {
+      const response = await ServerService.createServerChat(payload)
+      console.log(response.data,"fetchCreateServerChat")
+      return response.data
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error?.message)
+    }
+  },
+)
+export const fetchGetServerChatRooms = createAsyncThunk(
+  'server/fetchGetServerChatRooms',
+  async (payload : string, thunkAPI) => {
+    try {
+      const response = await ServerService.getServerChatRooms(payload)
+      console.log(response.data,"fetchGetServerChatRooms")
+      return response.data
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error?.message)
+    }
+  },
+)
+
