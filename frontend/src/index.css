@@ -262,17 +262,12 @@ input{
   margin-left: 10px;
   display: flex;
   flex-direction: row;
-  /* align-items: center;
-  justify-content: start; */
   gap: 10px;
-  /* flex-wrap: wrap; */
   margin-bottom: 10px;
   max-width: 100%;
  }
  .search input{
   min-width: 5%;
-  /* flex-basis: 100%; */
-  /* max-width: 100%; */
   flex-shrink: 1;
  }
 .container-chat{
@@ -289,6 +284,33 @@ input{
   color: #a11059;
 }
 /* chat container end */
+
+/* server-container  start*/
+
+.container-server{
+  width: 80px;
+  height: 100vh;
+  background-color: #38ff10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 10px 0px;
+  gap: 5px;
+}
+
+.block-server-chat,.block-server{
+  width: 60px;
+  height: 60px;
+  background-color: #242424;
+  border-radius: 10px;
+}
+
+.block-server{
+  border-radius: 100px;
+}
+/* server-container  end*/
+
 
 /* setting constainer start */
 

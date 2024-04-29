@@ -5,7 +5,7 @@ import iconEdit from "../assets/pencil.png"
 import iconCamera from "../assets/camera.png"
 import { useNavigate } from 'react-router-dom'
 import { setIsAuth } from '../store/AuthSlice'
-import { fetcUser, fetchMedia } from '../store/acthion'
+import {fetchUser,fetchMedia } from '../store/acthion'
 import Module from './Module'
 import avatar from "../assets/sonic.jpg"
 
@@ -32,7 +32,7 @@ const  SettingsBlock:FC<SettingsBlockProps>=({setIsSettings})=> {
     const formData = new FormData()
     formData.append("file",file)
     await dispatch(fetchMedia(formData))
-    dispatch(fetcUser())
+    dispatch(fetchUser())
     setIsModule(false)
   }
 

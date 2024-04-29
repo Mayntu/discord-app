@@ -15,12 +15,8 @@ const ChatList:FC=()=> {
   const {chatid} = useParams()
   const findUsers = useAppSelector(state=>state.chat.searcChat)
   useEffect(()=>{
-    if(chatid){
-      dispatch(fetchGetUserChats(chatid))
-    }else{
-      dispatch(fetchGetUserChats(""))
-    }
-  },[chatid])
+    dispatch(fetchGetUserChats(""))
+  },[])
   const [isSettings,setIsSettings] = useState<boolean>(true)
   const dispatch = useAppDispatch()
   const chats2 = useAppSelector(state=>state.chat.socketChat)

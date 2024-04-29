@@ -2,6 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit"
 import { IAuthLogin, IAuthRegistration } from "../models/request/AuthRequest"
 import { AuthService } from "../services/AuhService"
 import { ChatService } from "../services/ChatService"
+import { ServerService } from "../services/ServerService"
 
 
  export const fetchLogin = createAsyncThunk(
@@ -80,7 +81,7 @@ import { ChatService } from "../services/ChatService"
 
 
   export const fetchCreateChat = createAsyncThunk(
-    'users/fetchFindChat',
+    'chat/fetchFindChat',
     async (payload:string, thunkAPI) => {
       try {
         const response = await ChatService.postCreateChat(payload)
@@ -120,12 +121,25 @@ import { ChatService } from "../services/ChatService"
     },
   )
 
-  export const fetcUser = createAsyncThunk(
-    'users/fetcUser',
+  export const fetchUser = createAsyncThunk(
+    'users/fetchUser',
     async (_, thunkAPI) => {
       try {
         const response = await AuthService.getUser()
         console.log(response.data,"User")
+        return response.data
+      } catch (error: any) {
+        return thunkAPI.rejectWithValue(error?.message)
+      }
+    },
+  )
+
+  export const fetchCreateServer = createAsyncThunk(
+    'server/fetchCreateServer',
+    async (n:any, thunkAPI) => {
+      try {
+        const response = await ServerService.createServer(n)
+        console.log(response.data,"createServer")
         return response.data
       } catch (error: any) {
         return thunkAPI.rejectWithValue(error?.message)

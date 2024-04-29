@@ -29,52 +29,41 @@ const chatsSlice = createSlice({
     name : "chats",
     initialState,
     reducers:{
-        addUsersChat(state,{payload}: PayloadAction<IUserChatT[]>){
-            let userIAm = payload
-            // console.log(userIAm,"noFetch")
-            state.users = userIAm
-        },
-        addUserInChat(state,{payload}: PayloadAction<string>){
-            // console.log(state.socketChat)
-            let userIAm = state.socketChat.find(chat=>chat.uuid == payload)
-            // console.log(userIAm,acthion.payload,state.socketChat, "userIem")
-        },
-        addMessage(state,{payload}: PayloadAction<any>){
-          state.getMessage =  state.getMessage.map(mes=>{
-                    const user = payload.find(userm=>userm.uuid == mes.from_user_id)
-                    console.log(user,"userM")
-                    console.log({...mes, avatar: user.avatar})
-                    return ({...mes, avatar: user.avatar})
-                   }
-            )
+        addUsersChat(state,{payload}: PayloadAction<any>){
+            console.log(payload,"pay")
+            state.users = payload
+            // state.getMessage =  state.getMessage.map(mes=>{
+            //     return ({...mes, avatar: payload.find(userm=>userm.uuid == mes.from_user_id).avatar})
+            //    }
+            // )
             console.log(state.getMessage,"getMessage")
-        }
+        },
     },
     extraReducers: (builder:  ActionReducerMapBuilder<TChats>)=>{
         // получение чатов 
         builder.addCase(fetchGetUserChats.fulfilled,(state :TChats,{payload} : PayloadAction<any>)=>{
             state.socketChat = payload.data.data
-            if(payload.users){
-               state.users = state.socketChat.find(chat=>chat.uuid == payload.users).users
-            }
-            console.log(state.users)
             state.isLoading = true
         })
         // сообщения
         .addCase(fetchGetChatMessage.fulfilled,(state :TChats,{payload}: PayloadAction<any>)=>{
+            console.log(payload,"payMessage")
             state.getMessage = payload.messages
-        }).addCase(fetchFindChat.fulfilled,(state,{payload}:PayloadAction<any>)=>{
-            // console.log(payload.users_results,"pay")
+            // поиск чатов
+        })
+        .addCase(fetchFindChat.fulfilled,(state,{payload}:PayloadAction<any>)=>{
             state.searcChat = payload.users_results
-        }).addCase(fetchTest.fulfilled,(state,{payload}:PayloadAction<any>)=>{
-            // console.log(payload.users_results,"pay")
+            // для теста
+        })
+        .addCase(fetchTest.fulfilled,(state,{payload}:PayloadAction<any>)=>{
             state.test = JSON.stringify(payload)
-        }).addCase(fetchMedia.fulfilled,()=>{
+        })
+        .addCase(fetchMedia.fulfilled,()=>{
             
         })
     }
 })
 
-export const {addUsersChat,addUserInChat,addMessage} = chatsSlice.actions
+export const {addUsersChat} = chatsSlice.actions
 
 export default chatsSlice.reducer

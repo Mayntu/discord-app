@@ -4,31 +4,45 @@ import ChatList from './components/ChatList'
 import { useAppDispatch, useAppSelector } from './hooks/redux-hoock'
 import { setIsAuth } from './store/AuthSlice'
 import { Outlet,  useNavigate } from 'react-router-dom'
-import { fetcUser } from './store/acthion'
+import { fetchCreateServer, fetchUser } from './store/acthion'
 import { socket } from './socket'
+import { usePostCreateServerMutation } from './store/RTQServer'
+import { createActionCreatorInvariantMiddleware } from '@reduxjs/toolkit'
 
 
 function App() {
-  const {isAuth,isLoading,error,user} = useAppSelector(state=> state.auth)
+  const {isAuth,error,user} = useAppSelector(state=> state.auth)
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
- 
+  const [result,{data,isLoading}] = usePostCreateServerMutation()
 
   useEffect(()=>{
-    dispatch(fetcUser())
+    dispatch(fetchUser())
    
   },[])
-  useEffect(()=>{
-    socket.emit("user_connected",{uuid: user.uuid})
-    socket.on("connected",(data:any)=>{
-      console.log(data,"connect")
-    })
-  //  socket.emit("disconnect",{token: localStorage.getItem("token")})
-  },[socket])
+
+  const server=async()=>{
+    //  await result({title: "satana",avatar:""}).reset()
+     dispatch(fetchCreateServer({title: "satana",avatar:""}))
+  
+      // console.log(data,"data")
+     
+ 
+  }
+
+  // useEffect(()=>{
+  //   // console.log(user,"userconnet")
+  //   // socket.emit("user_connected",{token:"53a2d47e-2a94-4ea3-9f1d-8d78e34d8147" })
+  //   // socket.on("connected",(data:any)=>{
+  //   //   console.log(data,"connect")
+  //   // })
+  // //  socket.emit("disconnect",{token: localStorage.getItem("token")})
+  // },[socket])
 
 
   
   useEffect(()=>{
+   
     if(localStorage.getItem("token")){
       dispatch(setIsAuth(true))
     }else{
@@ -46,8 +60,16 @@ function App() {
     {error && <h1 style={{color: "red"}}>{error}</h1>}
     <main>
       <section className='container-chat'>
+          <div className="container-server">
+            <div className="block-server-chat">
+            </div>
+            
+            <div className="block-server" onClick={()=>{server()}}>
+
+            </div>
+          </div>
           {isAuth && <ChatList/>}
-          <Outlet></Outlet>
+          {isAuth && <Outlet></Outlet>}
       </section>
    
     
