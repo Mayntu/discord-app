@@ -183,8 +183,12 @@ input{
 .chat-container:active{
   background-color: #a39d9d;
 }
+.avatar{
+  border-radius: 100px;
+}
 .avatar img{
-  max-width: 50px;
+  width: 50px;
+  height: 50px;
   border-radius: 100px;
 }
 
@@ -430,7 +434,26 @@ input{
 .message-container input{
 width: 70%;
 }
-
+.user-chat{
+  display: flex;
+  flex-direction: row;
+  padding: 2px;
+}
+.user-chat p{
+  margin-left: 10px;
+}
+.user-chat img{
+  width: 30px;
+  height: 30px;
+}
+.status-bar{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  padding: 5px;
+  width: 100%;
+  background-color: #1059FF;
+}
 .get-message-cantainer{
   overflow:auto;
   display: flex;
