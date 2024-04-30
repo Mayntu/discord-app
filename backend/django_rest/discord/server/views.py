@@ -348,6 +348,12 @@ def api_delete_users_chat(request):
         chat.delete()
 
 
+        return JsonResponse(data={"result" : True, "message" : "chat delete successfully"})
+    
+    
+    return JsonResponse(data={"result" : False, "message" : "not valid token"})
+
+
 
 def api_get_users_info(request):
     headers : dict = request.headers
