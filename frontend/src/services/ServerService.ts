@@ -16,4 +16,10 @@ export class ServerService{
     static async getServerChatRooms(server_uuid : string):Promise<AxiosResponse<any>>{
         return $api.post<any>("api/v1/getServerChatRooms",{server_uuid})
     }
+    static async getServer():Promise<AxiosResponse<any>>{
+        return $api.get<any>("api/v1/getUsersServers")
+    }
+    static async getServerChatRoomMessages(chat_id: string):Promise<AxiosResponse<any>>{
+        return $api.post<any>("api/v1/getServerChatRoomMessages",{chat_id})
+    }
 }

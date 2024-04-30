@@ -1,13 +1,17 @@
 import { NavLink } from 'react-router-dom'
-import { useAppDispatch } from '../hooks/redux-hoock'
+import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock'
 import { usePostCreateServerMutation } from '../store/RTQServer'
-import { fetchCreateServer, fetchCreateServerChat, fetchGetServerChatRooms } from '../store/acthion'
-import { createActionCreatorInvariantMiddleware } from '@reduxjs/toolkit'
+import { fetchCreateServer, fetchCreateServerChat, fetchGetServer, fetchGetServerChatRooms } from '../store/acthion'
+import { useEffect } from 'react'
 
 const ServerContainer=()=> {
-    const [result,{data,isLoading}] = usePostCreateServerMutation()
+    // const [result,{data,isLoading}] = usePostCreateServerMutation()
     const dispatch = useAppDispatch()
+    const {serversUser} = useAppSelector(state=>state.server)
 
+    useEffect(()=>{
+      dispatch(fetchGetServer())
+    },[])
     const server=async()=>{
         //  await result({title: "satana",avatar:""}).reset()
          dispatch(fetchCreateServer({title: "satana",avatar:""}))
@@ -21,28 +25,34 @@ const ServerContainer=()=> {
         просто чаты
       </div>
     </NavLink>
-    <div className="block-server" onClick={()=>{
-      dispatch(fetchCreateServerChat({title: "satana",uuid_server : "747adb0b-8452-4cbe-a622-5bfb9912f3e4"}))
+    {/* <div className="block-server" onClick={()=>{
+      dispatch(fetchCreateServerChat({title: "satana",uuid_server : "b8e373e4-c43c-4484-bc32-aa628a6a38ce"}))
     }}>
       создать чат
       {//2302f077-f01f-4767-ad51-b031bbb60b5c id-servera
       //2302f077-f01f-4767-ad51-b031bbb60b5c
       }
-    </div>
-    <div className="block-server" onClick={()=>{
+    </div> */}
+    {/* <div className="block-server" onClick={()=>{
       dispatch(fetchGetServerChatRooms("2302f077-f01f-4767-ad51-b031bbb60b5c"))
     }}>
       получить чаты
-    </div>
-    <NavLink to={"/server/fjowfwoj"}>
+    </div> */}
+    {/* <div className="block-server" onClick={()=>{
+      dispatch(fetchGetServer())
+    }}>
+      получить серевера
+    </div> */}
+    {/* <NavLink to={"/server/fjowfwoj"}>
     <div className="block-server">
       перейти на сервера
     </div>
-    </NavLink>
-  
+    </NavLink> */}
+    
     <div className="block-server" onClick={()=>{server()}}>
       создать сервер
     </div>
+    {serversUser.length && serversUser.map(i=>(<NavLink to={`/server/${i.uuid}`}  key={i.uuid}><div className="block-server">{i.title}</div></NavLink>))}
   </div>
   )
 }

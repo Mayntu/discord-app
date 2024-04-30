@@ -12,7 +12,11 @@ export const serverApi = createApi({
         method: 'PATCH',
         body: server,
       }),
+     
   }),
+  getServerChatRooms: build.query({
+    query:()=>""
+  })
 })
 })
 

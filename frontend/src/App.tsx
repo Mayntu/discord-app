@@ -1,6 +1,5 @@
 
 import { useEffect } from 'react'
-import ChatList from './components/ChatList'
 import { useAppDispatch, useAppSelector } from './hooks/redux-hoock'
 import { setIsAuth } from './store/AuthSlice'
 import { Outlet,  useLocation,  useNavigate } from 'react-router-dom'
@@ -43,7 +42,6 @@ function App() {
    
     if(localStorage.getItem("token")){
       dispatch(setIsAuth(true))
-      console.log(pathname)
       if(pathname == "/"){
           navigate("/chat")  
       }
@@ -64,7 +62,6 @@ function App() {
     <main>
       <section className='container-chat'>
           {isAuth && <ServerContainer/>}
-          {/* {isAuth && <ChatList/>} */}
           <section className='container-chat-message'>
             {isAuth && <Outlet></Outlet>}
           </section>

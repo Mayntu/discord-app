@@ -30,7 +30,7 @@ const router = createBrowserRouter([
       ]},
       {path: "/server/:serverid",element: <ServerChatList/>,children:[
         {index: true,element: <MessageContainer/>},
-        // {path: ":chatserverid",element: <MessageContainer/>}
+        {path: ":chatserverid",element: <MessageContainer/>}
       ]},
       ]
   },

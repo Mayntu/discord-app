@@ -187,3 +187,30 @@ export const fetchGetServerChatRooms = createAsyncThunk(
   },
 )
 
+
+export const fetchGetServer = createAsyncThunk(
+  'server/fetchGetServer',
+  async (_, thunkAPI) => {
+    try {
+      const response = await ServerService.getServer()
+      // console.log(response.data.data ,"fetchGetServer")
+      return response.data.data
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error?.message)
+    }
+  },
+)
+
+
+export const fetchGetServerChatRoomMessages = createAsyncThunk(
+  'server/fetchGetServerChatRoomMessages',
+  async (payload:string, thunkAPI) => {
+    try {
+      const response = await ServerService.getServerChatRoomMessages(payload)
+      console.log(response.data.server_messages ,"fetchGetServerChatRoomMessages")
+      return response.data.server_messages
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error?.message)
+    }
+  },
+)
