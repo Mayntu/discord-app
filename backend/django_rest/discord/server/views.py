@@ -591,6 +591,26 @@ def api_get_server_chat_rooms(request):
 
 
 
+def api_get_users_server_chat(request):
+    data : dict = request.POST
+
+    
+    
+    chat_id : str = data.get("chat_id")
+    print(chat_id)
+
+    server : Server = Server.objects.get(uuid=chat_id)
+
+    users : list = server.users.all()
+
+    user_serializer : UserSerializer = UserSerializer(users, many=True)
+    users_data : dict = user_serializer.data
+    # users_data["password"] = "secret"
+
+    return JsonResponse(data={"result" : True, "users_data" : users_data})
+
+
+
 def api_save_server_chat_message(request):
     data : dict = request.POST
     

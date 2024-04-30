@@ -56,6 +56,24 @@ def handle_message(message):
             send(message=message, room=chat_id)
 
 
+@socketio.on("server_chat_message")
+def handle_message(message):
+    print(message.get("chat_id"))
+    token = message["token"]
+    print(token)
+    chat_id = message["chat_id"]
+    media = message["media"]
+    message = message["data"]
+    print(message)
+    if message != "User connected!":
+        result : dict = save_server_chat_message(token=token, text=message, from_user_id="", chat_id=chat_id, media=media)
+        print(result)
+        if result["result"] == True:
+            message : str = dumps(result["message_data"])
+            print(message)
+            send(message=message, room=chat_id)
+
+
 @socketio.on("join")
 def join(data):
     join_room(data.get("chat_id"))
@@ -64,6 +82,17 @@ def join(data):
         chat_id=data.get("chat_id")
     )
     emit("join", {"users_data" : users_data})
+    send(message=users_data, room=data.get("chat_id"))
+
+
+@socketio.on("join_server_chat")
+def join(data):
+    join_room(data.get("chat_id"))
+    users_data = get_server_chat_info(
+        token=None,
+        chat_id=data.get("chat_id")
+    )
+    emit("join_server_chat", {"users_data" : users_data})
     send(message=users_data, room=data.get("chat_id"))
 
 
@@ -102,8 +131,30 @@ def save_message(token : str, text : str, from_user_id : str, chat_id : str, med
     return result.json()
 
 
+def save_server_chat_message(token : str, text : str, from_user_id : str, chat_id : str, media : dict) -> dict:
+    data : dict = {
+        "token" : token,
+        "text" : text,
+        "from_user_id" : from_user_id,
+        "chat_id" : chat_id,
+    }
+    file = media["file"] if media else None
+    file_name : str = media["name"].split("/")[-1] if media else None
+    files : dict = {
+        file_name : file,
+    }
+    result = requests.post("http://127.0.0.1:8000/api/v1/serverChatMessageSave", data=data, files=files)
+    print(result)
+    return result.json()
+
+
 def get_chat_info(token : str, chat_id : str) -> dict:
     response = requests.post("http://127.0.0.1:8000/api/v1/getUsersChat", data={"token" : token, "chat_id" : chat_id})
+    return response.json()
+
+
+def get_server_chat_info(token : str, chat_id : str) -> dict:
+    response = requests.post("http://127.0.0.1:8000/api/v1/getUsersServerChat", data={"token" : token, "chat_id" : chat_id})
     return response.json()
 
 
