@@ -13,11 +13,12 @@ from server.views import (
     api_change_profile_avatar,
     api_get_users_chat,
     api_change_users_login,
+    api_get_users_servers,
     api_create_server,
     api_create_server_chat,
     api_get_server_chat_rooms,
     api_save_server_chat_message,
-    api_get_server_room_messages
+    api_get_server_room_messages,
 )
 
 
@@ -35,6 +36,7 @@ urlpatterns : list = [
     path("api/v1/changeProfileAvatar", api_change_profile_avatar, name="api_change_profile_avatar"),
     path("api/v1/getUsersChat", api_get_users_chat, name="api_get_users_chat"),
     path("api/v1/changeUsersLogin", api_change_users_login, name="api_change_users_login"),
+    path("api/v1/getUsersServers", api_get_users_servers, name="api_get_users_servers"),
     path("api/v1/createServer", api_create_server, name="api_create_server"),
     path("api/v1/createServerChat", api_create_server_chat, name="api_create_server_chat"),
     path("api/v1/getServerChatRooms", api_get_server_chat_rooms, name="api_get_server_chat_rooms"),

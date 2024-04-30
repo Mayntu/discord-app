@@ -48,3 +48,4 @@ def handle_upload_file(file) -> str:
     
 
     return f"media/images/{filename}.{file_extension}"
+

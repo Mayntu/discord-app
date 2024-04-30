@@ -462,6 +462,30 @@ def api_change_users_login(request):
 
 
 
+def api_get_users_servers(request):
+    print(request.headers)
+    data  : dict = request.headers
+    token : str  = data.get("Authorization").replace('"', "")
+
+    token_content = get_token(token=token)
+    if not token_content:
+        return JsonResponse(data={"result" : False, "result2" : "not valid token"})
+    
+
+    uuid = token_content.get("uuid")
+
+    try:
+        user : User = User.objects.get(pk=uuid)
+        users_servers = user.servers.all()
+        print(users_servers)
+        server_serializer : ServerSerializer = ServerSerializer(users_servers, many=True)
+        users_servers_serialized : dict = server_serializer.data
+        return JsonResponse(data={"result" : True, "data" : users_servers_serialized}, safe=False)
+    except Exception as e:
+        return JsonResponse(data={"result" : False, "error" : f"user not found {e}"})
+
+
+
 def api_create_server(request):
     data : dict = request.headers
 
@@ -518,8 +542,9 @@ def api_create_server_chat(request):
     user : User = User.objects.get(pk=user_uuid)
 
     server : Server = Server.objects.get(pk=server_uuid)
+    print(str(user.uuid), server.owner_id)
 
-    if not user.uuid == server.owner_id:
+    if not str(user.uuid) == server.owner_id:
         return JsonResponse(data={"result" : False, "message" : "you must be server owner"})
     
 
