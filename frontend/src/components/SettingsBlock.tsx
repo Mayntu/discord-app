@@ -5,7 +5,7 @@ import iconEdit from "../assets/pencil.png"
 import iconCamera from "../assets/camera.png"
 import { useNavigate } from 'react-router-dom'
 import { setIsAuth } from '../store/AuthSlice'
-import {fetchUser,fetchMedia } from '../store/acthion'
+import {fetchUser,fetchMedia, fetchChangeUsersLogin } from '../store/acthion'
 import Module from './Module'
 import avatar from "../assets/sonic.jpg"
 
@@ -20,7 +20,8 @@ const  SettingsBlock:FC<SettingsBlockProps>=({setIsSettings})=> {
   const dispatch = useAppDispatch()
   const [isEditUser,setIsEditUser] = useState<boolean>(true)
   const [isModule,setIsModule] = useState<boolean>(false)
-  const [file,setFile] = useState()
+  const [login,setlogin] = useState<string>("")
+  const [file,setFile] = useState<File>()
   const refImage = useRef<HTMLInputElement>(null) 
  
   const newFile=async()=>{
@@ -53,7 +54,15 @@ const  SettingsBlock:FC<SettingsBlockProps>=({setIsSettings})=> {
 
   }
 
-  console.log(user.avatar)
+  const ChanageUserLogin=async()=>{
+    await dispatch(fetchChangeUsersLogin(login))
+    dispatch(fetchUser())
+  }
+
+
+ 
+
+
   return (
     <div className='settings-container'>
       {isEditUser ?
@@ -85,8 +94,8 @@ const  SettingsBlock:FC<SettingsBlockProps>=({setIsSettings})=> {
             <input ref={refImage} type="file" accept='image/*,.png,.web,.jpg,.gif' onChange={(e)=>{setFile(e.target.files[0])}} className='none'/>
           </div>
           <div className="settingBlock">
-            <input type="text" placeholder='new login'  />
-            <button>Принять</button>
+            <input type="text" placeholder='new login' onChange={(e)=>setlogin(e.target.value)} value={login}  />
+            <button onClick={()=>{ChanageUserLogin()}}>Принять</button>
           </div>
         </div>
       </>}

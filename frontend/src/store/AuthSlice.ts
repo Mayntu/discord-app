@@ -1,6 +1,6 @@
 import { ActionReducerMapBuilder, PayloadAction,  createSlice } from "@reduxjs/toolkit";
 import { IUser } from "../models/IUser";
-import { fetchUser, fetchLogin, fetchRegistration } from "./acthion";
+import { fetchUser, fetchLogin, fetchRegistration, fetchChangeUsersLogin } from "./acthion";
 import { IAuthResponse } from "../models/response/AuthResponse";
 
 
@@ -57,6 +57,12 @@ const authSlice = createSlice({
             state.error = action.payload
         }).addCase(fetchUser.fulfilled,(state : TAuth,action : PayloadAction<IAuthResponse>)=>{
             state.user = action.payload.user_data
+        }).addCase(fetchChangeUsersLogin.fulfilled,(state : TAuth,{payload} : PayloadAction<any>)=>{
+            state.isLoading = true;
+            state.error = ""
+        }).addCase(fetchChangeUsersLogin.pending,(state : TAuth,{payload} : PayloadAction<any>)=>{
+            state.isLoading = false;
+            state.error = ""
         })
     }
 })

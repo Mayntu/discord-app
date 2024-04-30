@@ -19,6 +19,7 @@ import { ServerService } from "../services/ServerService"
     },
   )
 
+
   export const fetchRegistration = createAsyncThunk(
     'auth/fetchRegistration',
     async (payload: IAuthRegistration, thunkAPI) => {
@@ -52,7 +53,18 @@ import { ServerService } from "../services/ServerService"
     },
   )
 
-  
+   export const fetchChangeUsersLogin = createAsyncThunk(
+    'auth/fetchChangeUsersLogin',
+    async (payload:string, thunkAPI) => {
+      try {
+        const response = await AuthService.postChangeUsersLogin(payload)
+        console.log(response.data,"ChangeUsersLogin")
+        return response.data
+      } catch (error: any) {
+        return thunkAPI.rejectWithValue(error?.message)
+      }
+    },
+  )
   export const fetchGetChatMessage = createAsyncThunk(
     'chats/fetchGetChatMessage',
     async (payload:string, thunkAPI) => {

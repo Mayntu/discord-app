@@ -18,4 +18,9 @@ export class AuthService{
     static async getUser():Promise<AxiosResponse<any>>{
         return $api.get<any>("api/v1/getUsersInfo")
     }
+
+    static async postChangeUsersLogin(new_login:string):Promise<AxiosResponse<any>>{
+        return $api.post<any>("api/v1/changeUsersLogin",{new_login})
+    }
+    
 }

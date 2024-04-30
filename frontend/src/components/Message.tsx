@@ -25,7 +25,8 @@ const  Message: FC<MessageProps>=({classUser,children,time,media})=> {
           {me.avatar == "." ?  (<img src={avatar} alt="" />) :   (<img src={"public/"+me.avatar} alt="" />)}
         </div>
           <div className="column">
-          {children}
+            <p>{children}</p>
+         
           <p>{`
           ${new Date(time).getHours()>10 ? new Date(time).getHours() : "0"+new Date(time).getHours()}
           : ${new Date(time).getMinutes()>10 ? new Date(time).getMinutes() : "0"+new Date(time).getMinutes()}

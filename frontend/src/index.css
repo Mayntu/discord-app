@@ -518,13 +518,26 @@ width: 70%;
   max-width: 400px;
   border: 1px solid green;
   background-color: white;
-  display: flex
-  
+  display: flex;
+
+  flex-wrap: wrap;
+  word-wrap: break-word;
+  overflow-x:hidden;
 }
 .my-message{
   align-self: flex-end;
 }
+.column{
+  display: flex;
+  align-items: flex-end;
+  text-align: right;
+  flex-direction: column;
 
+}
+
+.column p {
+  max-width: 100%;
+}
 .image-message{
   display: block;
   max-width: 100%;
@@ -581,10 +594,7 @@ width: 70%;
 
 /* test css */
 
-.column{
-  display: flex;
-  flex-direction: column;
-}
+
 
 .test{
   width: 100vw;
