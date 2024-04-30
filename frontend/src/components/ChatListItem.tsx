@@ -1,7 +1,7 @@
 import  { FC, useEffect, useState} from 'react'
 import { IUserChatT } from '../models/IUserChat'
 import avatar from "../assets/sonic.jpg"
-import {  NavLink } from 'react-router-dom'
+import {  NavLink, useParams } from 'react-router-dom'
 interface ChatListItemProps{
     chatId : string,
     chatsUser :  IUserChatT[]
@@ -33,9 +33,9 @@ const ChatListItem: FC<ChatListItemProps>=({chatId,chatsUser})=> {
       // }
      >
         <div className="avatar">
-            <img src={avatar} alt="" />
+            <img src={avatar} alt="" title={noMe?.login} />
         </div>
-        <div className="content-chat">
+        <div className="content-chat" title={noMe?.login}>
           {noMe?.status && <div className="status"></div>}
             <div className="row-content-chat">
                 {noMe?.login} {noMe?.status}

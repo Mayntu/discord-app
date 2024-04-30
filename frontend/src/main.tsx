@@ -9,6 +9,7 @@ import MessageContainer from './components/MessageContainer.tsx'
 import LoginForm from './components/LoginForm.tsx'
 import Test from './components/Test.tsx'
 import ChatList from './components/ChatList.tsx'
+import ServerChatList from './components/ServerChatList.tsx'
 
 
 
@@ -17,15 +18,21 @@ const router = createBrowserRouter([
     path: "/",
     element : <App/>,
     children:[
+    //   {path: "/",element: <ChatList/>,
+    //   children:[
+    //     {path: "/",element: <MessageContainer/>},
+    //     {path: "/:chatid",element: <MessageContainer/>}
+    //   ]
+    // },
       {path: "/chat",element: <ChatList/>,children:[
         {index: true,element: <MessageContainer/>},
         {path: ":chatid",element: <MessageContainer/>}
       ]},
-      {path: "/",element: <ChatList/>,
-      children:[
-        {path: "/",element: <MessageContainer/>},
+      {path: "/server/:serverid",element: <ServerChatList/>,children:[
+        {index: true,element: <MessageContainer/>},
+        // {path: ":chatserverid",element: <MessageContainer/>}
+      ]},
       ]
-    },]
   },
 
   {

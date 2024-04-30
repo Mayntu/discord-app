@@ -1,6 +1,7 @@
 import  { FC, useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import backImage from "../assets/Rectangle 59.png"
+import Add from "./Add"
 import { socket } from '../socket';
 import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock';
 import { fetchDeleteUser, fetchGetChatMessage } from '../store/acthion';
@@ -90,7 +91,9 @@ const  MessageContainer : FC=()=> {
 
   return (
     <>
-      <div className='message-container' style={{backgroundImage : `url(${backImage})`}}>
+      <div className='message-container'
+      //  style={{backgroundImage : `url(${backImage})`}}
+       >
           {chatid  &&
           <>   
           <div className="status-bar">
@@ -105,11 +108,16 @@ const  MessageContainer : FC=()=> {
             <div className="get-message-cantainer">
               {messageArray.length !==0 ? messageArray.map((ms,index)=><Message key={index} classUser={ms.from_user_id} media={ms.media}  time={ms.timestamp}>{ms.content}</Message>): null}
             </div>
+            <div className="file-input">
+              {file && (<p>pltcm afqk</p>)}
+            </div>
             <div className="message-input-container">
-              <InputEmoji onEnter={sendMessage} cleanOnEnter  onChange={setMessageText} value={messageText}    placeholder="Введите сообщение"/>
+
+              <Add onClick={()=>refImage.current?.click()}/>
+              <InputEmoji inputClass='emoji' onEnter={sendMessage} cleanOnEnter  onChange={setMessageText} value={messageText}    placeholder="Введите сообщение"/>
               <button onClick={()=>{sendMessage()}}>отправить</button>
               <input ref={refImage} type="file" accept='image/*,.png,.web,.jpg,.gif' onChange={(e)=>{setFile(e.target.files[0])}} className='none'/>
-              <button onClick={()=>{refImage.current?.click()}}>отправить  image</button>
+              {/* <button onClick={()=>{refImage.current?.click()}}>отправить  image</button> */}
             </div>
           </>  
             }

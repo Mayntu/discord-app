@@ -1,3 +1,4 @@
+import { NavLink } from 'react-router-dom'
 import { useAppDispatch } from '../hooks/redux-hoock'
 import { usePostCreateServerMutation } from '../store/RTQServer'
 import { fetchCreateServer, fetchCreateServerChat, fetchGetServerChatRooms } from '../store/acthion'
@@ -15,9 +16,11 @@ const ServerContainer=()=> {
       
   return (
     <div className="container-server">
-    <div className="block-server-chat">
-      просто чаты
-    </div>
+    <NavLink to={"/chat"}>
+      <div className="block-server-chat">
+        просто чаты
+      </div>
+    </NavLink>
     <div className="block-server" onClick={()=>{
       dispatch(fetchCreateServerChat({title: "satana",uuid_server : "747adb0b-8452-4cbe-a622-5bfb9912f3e4"}))
     }}>
@@ -31,6 +34,12 @@ const ServerContainer=()=> {
     }}>
       получить чаты
     </div>
+    <NavLink to={"/server/fjowfwoj"}>
+    <div className="block-server">
+      перейти на сервера
+    </div>
+    </NavLink>
+  
     <div className="block-server" onClick={()=>{server()}}>
       создать сервер
     </div>

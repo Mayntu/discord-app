@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import ChatList from './components/ChatList'
 import { useAppDispatch, useAppSelector } from './hooks/redux-hoock'
 import { setIsAuth } from './store/AuthSlice'
-import { Outlet,  useNavigate } from 'react-router-dom'
+import { Outlet,  useLocation,  useNavigate } from 'react-router-dom'
 import {  fetchUser } from './store/acthion'
 import { socket } from './socket'
 import $api from './http'
@@ -15,7 +15,7 @@ function App() {
   const {isAuth,error,isLoading} = useAppSelector(state=> state.auth)
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
-
+  const {pathname} = useLocation()
 
   useEffect(()=>{
     dispatch(fetchUser())
@@ -37,12 +37,17 @@ function App() {
     })
   },[])
 
-
+  
   
   useEffect(()=>{
    
     if(localStorage.getItem("token")){
       dispatch(setIsAuth(true))
+      console.log(pathname)
+      if(pathname == "/"){
+          navigate("/chat")  
+      }
+      
     }else{
       navigate("/login")
     }
