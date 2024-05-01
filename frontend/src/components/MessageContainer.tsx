@@ -25,6 +25,7 @@ const  MessageContainer : FC=()=> {
   const [file,setFile] = useState<File | undefined>()
   const [usersChat,setUsersChat]= useState<IUserChatT>()
   const navigate = useNavigate()
+  const [arrayURL,setArrayURL] = useState<string[]>([])
 
   const joinRoom = (room:any) => {
    
@@ -46,15 +47,15 @@ const  MessageContainer : FC=()=> {
       joinRoom(chatid)
       }
 
-      // return ()=>{
-      //   if(roomId !== chatid && chatid !== undefined && roomId !== ""){
-      //     console.log("ok",roomId,chatid,"выход")
-      //     socket.emit("leave",{"chat_id" : roomId})
-      //     socket.on("leave",(data)=>{
-      //     console.log(data)
-      //   })
-      //   }
-      // }
+      return ()=>{
+        if(roomId !== chatid && chatid !== undefined && roomId !== ""){
+          console.log("ok",roomId,chatid,"выход")
+          socket.emit("leave",{"chat_id" : roomId})
+          socket.on("leave",(data)=>{
+          console.log(data)
+        })
+        }
+      }
   },[chatid,socket])
 
   useEffect(()=>{
@@ -79,6 +80,7 @@ const  MessageContainer : FC=()=> {
 
   const sendMessage = () => {
     // отправляю сообщение 
+    
     if(messageText.trim()){
       socket.emit("message", {
         "data" : messageText, 
@@ -86,7 +88,10 @@ const  MessageContainer : FC=()=> {
         "token" : localStorage.getItem("token"), 
         media: file ? {file, name : file?.type} : ""});
         setMessageText("")
+        setArrayURL([])
+        setFile(undefined)
     }
+
   }; 
 
     
@@ -131,6 +136,7 @@ const  MessageContainer : FC=()=> {
 
   const sendMessageServer = () => {
     // отправляю сообщение 
+    console.log(file,"filevneInput")
     if(messageText.trim()){
       socket.emit("server_chat_message", {
         "data" : messageText, 
@@ -157,6 +163,18 @@ const  MessageContainer : FC=()=> {
 
 
 
+  const dropImage=(e:React.DragEvent<HTMLDivElement>)=>{
+    e.preventDefault()
+    const files = [...e.dataTransfer.files]
+    console.log(files)
+    if(files && files.length){
+      setFile(files[0])
+      setArrayURL([window.URL.createObjectURL(files[0])]) 
+  }else{
+      
+  }
+  }
+
   return (
     <>
       <div className='message-container'
@@ -181,13 +199,18 @@ const  MessageContainer : FC=()=> {
               {messageArray.length !==0 ? messageArray.map((ms,index)=><Message key={index} classUser={ms.from_user_id} media={ms.media}  time={ms.timestamp}>{ms.content}</Message>): null}
             </div>
             <div className="file-input">
-              {file && (<p>pltcm afqk</p>)}
+              {file && (
+              <img src={arrayURL[0]}/>
+              )}
             </div>
-            <div className="message-input-container">
+            <div className="message-input-container" 
+            onDrop={(e)=>{dropImage(e)}} 
+            
+            onDragOver={e=>e.preventDefault()}>
               <Add onClick={()=>refImage.current?.click()}/>
               <InputEmoji shouldConvertEmojiToImage={false} shouldReturn={true} inputClass='emoji' onEnter={sendMessage} cleanOnEnter  onChange={setMessageText} value={messageText}    placeholder="Введите сообщение"/>
               <button onClick={()=>{sendMessage()}}>отправить</button>
-              <input ref={refImage} type="file" accept='image/*,.png,.web,.jpg,.gif' onChange={(e)=>{setFile(e.target.files[0])}} className='none'/>
+              <input ref={refImage} type="file" multiple accept='image/*,.png,.web,.jpg,.gif' onChange={(e)=>{setFile(e.target.files[0])}} className='none'/>
             </div>
           </>  
             }
