@@ -842,3 +842,39 @@ def api_delete_server_chat_room(request):
         return JsonResponse(data={"result" : True, "message" : "chat delete successfully"})
         
     return JsonResponse(data={"result" : False, "message" : "not valid token"})
+
+
+
+def api_change_servers_avatar(request):
+    headers : dict = request.headers
+
+    
+    token : str = headers.get("Authorization").replace('"', "")
+    token_content : dict = get_token(token=token)
+
+    
+    if not token_content:
+        return JsonResponse(data={"result" : False, "message" : "not valid token"})
+    
+
+    data : dict = json.loads(request.body)
+    files : dict = request.FILES
+
+    file = files.get("file")
+
+
+    server_uuid : str = str(data.get("uuid"))
+
+
+    if file:
+        filename : str = handle_upload_file(file=file)
+        server : Server = Server.objects.get(uuid=server_uuid)
+        server.avatar = filename
+        server.save()
+    else:
+        return JsonResponse(data={"result" : False, "message" : "file not found"})
+
+
+
+    return JsonResponse(data={"result" : True, "message" : "saved to files", "filename" : filename})
+
