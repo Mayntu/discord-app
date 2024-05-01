@@ -155,6 +155,7 @@ def get_chat_info(token : str, chat_id : str) -> dict:
 
 def get_server_chat_info(token : str, chat_id : str) -> dict:
     response = requests.post("http://127.0.0.1:8000/api/v1/getUsersServerChat", data={"token" : token, "chat_id" : chat_id})
+    print(response.json())
     return response.json()
 
 
