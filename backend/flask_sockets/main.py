@@ -57,7 +57,7 @@ def handle_message(message):
 
 
 @socketio.on("server_chat_message")
-def handle_message(message):
+def handle_server_chat_message(message):
     print(message.get("chat_id"))
     token = message["token"]
     print(token)
@@ -86,7 +86,7 @@ def join(data):
 
 
 @socketio.on("join_server_chat")
-def join(data):
+def join_server_chat(data):
     join_room(data.get("chat_id"))
     users_data = get_server_chat_info(
         token=None,
