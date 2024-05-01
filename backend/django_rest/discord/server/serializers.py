@@ -33,7 +33,7 @@ class ServerSerializer(serializers.ModelSerializer):
 class ServerMessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ServerMessage
-        fields = ("uuid", "from_user_id", "media", "timestamp")
+        fields = ("uuid", "from_user_id", "content", "media", "timestamp")
 
 
 
