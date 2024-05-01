@@ -61,5 +61,5 @@ def handle_upload_file_server(file, server_id : str) -> str:
             _file.write(_chunk)
     
 
-    return f"media/images/servers/{filename}.{file_extension}"
+    return f"media/images/servers/{server_id}/{filename}.{file_extension}"
 
