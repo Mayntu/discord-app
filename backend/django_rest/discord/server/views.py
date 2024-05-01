@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 
+from discord.settings import SECRET_KEY, BASE_DIR
+
 from server.models import (
     User,
     Message,
@@ -21,10 +23,12 @@ from server.utils import (
     generate_jwt,
     get_token,
     handle_upload_file,
+    handle_upload_file_server,
 )
 
 
 import json
+import os
 
 
 
@@ -534,14 +538,21 @@ def api_create_server(request):
     avatar : str = files.get("file")
 
 
-    if avatar:
-        filename : str = handle_upload_file(file=avatar)
-
     server : Server = Server.objects.create(
         title=title,
         owner_id=owner_user_id,
-        avatar=filename,
+        avatar="",
     )
+
+    os.mkdir(f"{BASE_DIR.parent.parent.parent}/frontend/public/media/images/servers/{server.uuid}")
+
+    if avatar:
+        filename : str = handle_upload_file_server(file=avatar)
+        server.avatar = filename
+        server.save()
+    
+
+
     print(server.uuid)
     owner_user : User = User.objects.get(uuid=owner_user_id)
     owner_user.servers.add(server)
