@@ -516,6 +516,7 @@ def api_create_server(request):
         owner_id=owner_user_id,
         avatar=avatar,
     )
+    print(server.uuid)
     owner_user : User = User.objects.get(uuid=owner_user_id)
     owner_user.servers.add(server)
 
@@ -548,13 +549,14 @@ def api_create_server_chat(request):
     user : User = User.objects.get(pk=user_uuid)
 
     server : Server = Server.objects.get(pk=server_uuid)
-    print(str(user.uuid), server.owner_id)
+    print(str(user.uuid), str(server.owner_id))
 
     if not str(user.uuid) == server.owner_id:
         return JsonResponse(data={"result" : False, "message" : "you must be server owner"})
     
 
     server_chat_room : ServerChatRoom = ServerChatRoom.objects.create(title=chat_room_title)
+    server.chat_rooms.add(server_chat_room)
 
 
     return JsonResponse(data={"result" : True, "server_chat_room_uuid" : server_chat_room.uuid})
@@ -599,7 +601,8 @@ def api_get_users_server_chat(request):
     chat_id : str = data.get("chat_id")
     print(chat_id)
 
-    server : Server = Server.objects.get(uuid=chat_id)
+    server_chat_room : ServerChatRoom = ServerChatRoom.objects.get(uuid=chat_id)
+    server : Server = Server.objects.get(chat_rooms__uuid=server_chat_room.uuid)
 
     users : list = server.users.all()
 
