@@ -62,11 +62,12 @@ def handle_server_chat_message(message):
     token = message["token"]
     print(token)
     chat_id = message["chat_id"]
+    server_id = message["server_id"]
     media = message["media"]
     message = message["data"]
     print(message)
     if message != "User connected!":
-        result : dict = save_server_chat_message(token=token, text=message, from_user_id="", chat_id=chat_id, media=media)
+        result : dict = save_server_chat_message(token=token, text=message, from_user_id="", chat_id=chat_id, server_id=server_id, media=media)
         print(result)
         if result["result"] == True:
             message : str = dumps(result["message_data"])
@@ -131,12 +132,13 @@ def save_message(token : str, text : str, from_user_id : str, chat_id : str, med
     return result.json()
 
 
-def save_server_chat_message(token : str, text : str, from_user_id : str, chat_id : str, media : dict) -> dict:
+def save_server_chat_message(token : str, text : str, from_user_id : str, chat_id : str, server_id : str, media : dict) -> dict:
     data : dict = {
         "token" : token,
         "text" : text,
         "from_user_id" : from_user_id,
         "chat_id" : chat_id,
+        "server_id" : server_id,
     }
     file = media["file"] if media else None
     file_name : str = media["name"].split("/")[-1] if media else None
