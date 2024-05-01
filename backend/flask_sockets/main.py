@@ -22,7 +22,7 @@ def user_connected(data):
     
     if not token in ONLINE_USERS:
         ONLINE_USERS.append(token)
-        request.session["token"] = token
+        session["token"] = token
     
     emit("connected", {"data" : ONLINE_USERS})
 
@@ -32,7 +32,7 @@ def user_connected(data):
 def user_disconnected():
     print("disconnected")
     # print(request.sid)
-    user = ONLINE_USERS.pop(ONLINE_USERS.index(request.session.get("token")))
+    user = ONLINE_USERS.pop(ONLINE_USERS.index(session.get("token")))
     # print(ONLINE_USERS)
 
     emit("connected", {"data" : ONLINE_USERS})
