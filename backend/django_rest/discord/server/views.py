@@ -602,7 +602,7 @@ def api_get_users_server_chat(request):
     print(chat_id)
 
     server_chat_room : ServerChatRoom = ServerChatRoom.objects.get(uuid=chat_id)
-    server : Server = Server.objects.get(chat_rooms__uuid=server_chat_room.uuid)
+    server : Server = server_chat_room.server_object
 
     users : list = server.users.all()
 
