@@ -8,6 +8,7 @@ from server.views import (
     api_find_users,
     api_create_chat,
     api_make_user_online,
+    api_delete_message,
     api_delete_users_chat,
     api_get_users_info,
     api_change_profile_avatar,
@@ -22,6 +23,7 @@ from server.views import (
     api_save_server_chat_message,
     api_get_server_room_messages,
     api_delete_server,
+    api_delete_servers_message,
     api_delete_server_chat_room,
 )
 
@@ -35,6 +37,7 @@ urlpatterns : list = [
     path("api/v1/findUsers", api_find_users, name="api_find_users"),
     path("api/v1/createChat", api_create_chat, name="api_create_chat"),
     path("api/v1/makeUserOnline", api_make_user_online, name="api_make_user_online"),
+    path("api/v1/deleteMessage", api_delete_message, name="api_delete_message"),
     path("api/v1/deleteUsersChat", api_delete_users_chat, name="api_delete_users_chat"),
     path("api/v1/getUsersInfo", api_get_users_info, name="api_get_users_info"),
     path("api/v1/changeProfileAvatar", api_change_profile_avatar, name="api_change_profile_avatar"),
@@ -49,5 +52,6 @@ urlpatterns : list = [
     path("api/v1/serverChatMessageSave", api_save_server_chat_message, name="api_save_server_chat_message"),
     path("api/v1/getServerChatRoomMessages", api_get_server_room_messages, name="api_get_server_room_messages"),
     path("api/v1/deleteServer", api_delete_server, name="api_delete_server"),
+    path("api/v1/deleteServersMessage", api_delete_servers_message, name="api_delete_servers_message"),
     path("api/v1/deleteServerChatRoom", api_delete_server_chat_room, name="api_delete_server_chat_room"),
 ]
