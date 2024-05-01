@@ -538,18 +538,18 @@ def api_create_server(request):
     avatar : str = files.get("file")
 
 
+    filename : str = ""
+    if avatar:
+        filename : str = handle_upload_file(file=avatar)
+
+
     server : Server = Server.objects.create(
         title=title,
         owner_id=owner_user_id,
-        avatar="",
+        avatar=filename,
     )
 
     os.mkdir(f"{BASE_DIR.parent.parent.parent}/frontend/public/media/images/servers/{server.uuid}")
-
-    if avatar:
-        filename : str = handle_upload_file_server(file=avatar)
-        server.avatar = filename
-        server.save()
     
 
 
@@ -701,16 +701,20 @@ def api_save_server_chat_message(request):
 
 
     server_chat_room_id : str = data.get("chat_id")
+    server_uuid : str = data.get("server_id")
     from_user_id : str = token_content.get("uuid")
     text : str = data.get("text")
     file_name : str = list(request.FILES.keys())[0] if request.FILES else None
     img = request.FILES.get(file_name) if file_name else None
 
+
+    server : Server = Server.objects.get(uuid=server_uuid)
+
     
     print(img)
     
     if img:
-        media : str = handle_upload_file(file=img)
+        media : str = handle_upload_file_server(file=img, server_id=server_uuid)
 
 
 
