@@ -522,6 +522,8 @@ def api_create_server(request):
 
     print(owner_user.servers.all())
 
+    server.users.add(owner_user)
+
 
     return JsonResponse(data={"result" : True, "server_id" : server.uuid})
 
