@@ -467,10 +467,6 @@ def api_change_users_login(request):
     if not token_content:
         return JsonResponse(data={"result" : False, "message" : "not valid token"})
     
-
-
-    
-    
     try:
         data : dict = json.loads(request.body)
 
@@ -842,6 +838,40 @@ def api_delete_server_chat_room(request):
         return JsonResponse(data={"result" : True, "message" : "chat delete successfully"})
         
     return JsonResponse(data={"result" : False, "message" : "not valid token"})
+
+
+
+def api_change_servers_title(request):
+    headers : dict = request.headers
+
+    
+    token : str = headers.get("Authorization").replace('"', "")
+    token_content : dict = get_token(token=token)
+
+    
+    if not token_content:
+        return JsonResponse(data={"result" : False, "message" : "not valid token"})
+    
+    try:
+        data : dict = json.loads(request.body)
+
+        server_uuid : str = data.get("server_uuid")
+        title : str = data.get("title")
+
+        
+        server : Server = Server.objects.get(uuid=server_uuid)
+
+        server.title = title
+        
+        server.save
+
+
+    except Exception as e:
+        return JsonResponse(data={"result" : False, "message" : "failed to change server title"})
+
+
+
+    return JsonResponse(data={"result" : True, "message" : "saved to files"})
 
 
 
