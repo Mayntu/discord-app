@@ -46,15 +46,15 @@ const  MessageContainer : FC=()=> {
       joinRoom(chatid)
       }
 
-      return ()=>{
-        if(roomId !== chatid && chatid !== undefined && roomId !== ""){
-          console.log("ok",roomId,chatid,"выход")
-          socket.emit("leave",{"chat_id" : roomId})
-          socket.on("leave",(data)=>{
-          console.log(data)
-        })
-        }
-      }
+      // return ()=>{
+      //   if(roomId !== chatid && chatid !== undefined && roomId !== ""){
+      //     console.log("ok",roomId,chatid,"выход")
+      //     socket.emit("leave",{"chat_id" : roomId})
+      //     socket.on("leave",(data)=>{
+      //     console.log(data)
+      //   })
+      //   }
+      // }
   },[chatid,socket])
 
   useEffect(()=>{
@@ -114,10 +114,11 @@ const  MessageContainer : FC=()=> {
 
 
   useEffect(()=>{
+    console.log(chatserverid)
     if(chatserverid){
       socket.emit("join_server_chat",{chat_id:chatserverid})
       socket.on("join_server_chat",(data:any)=>{
-        console.log(data)
+        console.log(data,"dataServerJoin")
       })
       dispatch(fetchGetServerChatRoomMessages(chatserverid))
     }
@@ -133,7 +134,7 @@ const  MessageContainer : FC=()=> {
     if(messageText.trim()){
       socket.emit("server_chat_message", {
         "data" : messageText, 
-        "chat_id" : chatid, 
+        "chat_id" : chatserverid, 
         "token" : localStorage.getItem("token"), 
         media: file ? {file, name : file.type} : ""});
         setMessageText("")
@@ -144,14 +145,14 @@ const  MessageContainer : FC=()=> {
     // получаю сообщения
       if(chatserverid){
         socket.on("server_chat_message", (data:any) => {
-          // data = JSON.parse(data)
+          data = JSON.parse(data.message)
           console.log( data,"dataServerMessage")
           setMessageArray((prev)=>[...prev,{content: data.content, from_user_id : data.from_user_id, uuid : data.uuid,timestamp : data.timestamp,media : data.media}]) 
         });
       }
-      return ()=>{
-        socket.off("server_chat_message")
-      }
+      // return ()=>{
+      //   socket.off("server_chat_message")
+      // }
   },[chatserverid])
 
 
@@ -212,7 +213,7 @@ const  MessageContainer : FC=()=> {
               </div>
               <div className="message-input-container">
                 <Add onClick={()=>refImage.current?.click()}/>
-                <InputEmoji shouldReturn={true} shouldConvertEmojiToImage={true}  inputClass='emoji' onEnter={sendMessageServer} cleanOnEnter  onChange={setMessageText} value={messageText}    placeholder="Введите сообщение"/>
+                <InputEmoji shouldReturn={true} shouldConvertEmojiToImage={false}  inputClass='emoji' onEnter={sendMessageServer} cleanOnEnter  onChange={setMessageText} value={messageText}    placeholder="Введите сообщение"/>
                 <button onClick={()=>{sendMessageServer()}}>отправить</button>
                 <input ref={refImage} type="file" accept='image/*,.png,.web,.jpg,.gif' onChange={(e)=>{setFile(e.target.files[0])}} className='none'/>
               </div>

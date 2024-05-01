@@ -191,8 +191,8 @@ export const fetchGetServerChatRooms = createAsyncThunk(
   async (payload : string, thunkAPI) => {
     try {
       const response = await ServerService.getServerChatRooms(payload)
-      console.log(response.data,"fetchGetServerChatRooms")
-      return response.data
+      console.log(response.data.data,"fetchGetServerChatRooms")
+      return response.data.data
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error?.message)
     }

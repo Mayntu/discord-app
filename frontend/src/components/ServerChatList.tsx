@@ -1,5 +1,5 @@
 import  { FC, useEffect, useState } from 'react'
-import { useAppDispatch } from '../hooks/redux-hoock'
+import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock'
 import { NavLink, Outlet, useParams } from 'react-router-dom'
 import { fetchCreateServerChat, fetchGetServerChatRooms } from '../store/acthion'
 
@@ -12,10 +12,15 @@ const ServerChatList:FC=()=> {
     const dispatch = useAppDispatch()
     const {serverid}= useParams()
     const [chatName,setChatName] = useState<string>("")
-    console.log(serverid)
     useEffect(()=>{
       serverid && dispatch(fetchGetServerChatRooms(serverid))
     },[serverid])
+
+    
+    const serverRooms = useAppSelector(state=>state.server.serverChatSRooms)
+    // console.log(serverid)
+    
+ 
 
   return ( 
     <>
@@ -25,15 +30,14 @@ const ServerChatList:FC=()=> {
         if(serverid){
           dispatch(fetchCreateServerChat({title: chatName,uuid_server : serverid}))
         }}}>создать чат</button>
-
-        <NavLink to={`/server/${serverid}/b5633fe1-5390-468e-882e-cee73259359b`}>
-          <div className='server-chat-block'>b5633fe1-5390-468e-882e-cee73259359b</div>
+        {serverRooms.map(room=>(
+        <NavLink to={`/server/${serverid}/${room.uuid}`} key={room.uuid}>
+          <div className='server-chat-block'>{room.title}</div>
         </NavLink>
-        
+        ))}
      </div>
-        
-     {//"b5633fe1-5390-468e-882e-cee73259359b" id чата
-     }
+       
+   
       <Outlet></Outlet>
   
     </>
