@@ -701,3 +701,34 @@ def api_get_server_room_messages(request):
         return JsonResponse(data={"result" : True, "server_messages" : server_messages}, safe=False)
     
     return JsonResponse(data={"result" : False})
+
+
+
+def api_delete_server(request):
+    headers : dict = request.headers
+
+    token : str = headers.get("Authorization").replace('"', "")
+    token_content : dict = get_token(token=token)
+    
+
+    if token_content:
+        data : dict = json.loads(request.body)
+
+        user_id : str = token_content.get("uuid")
+        server_id : str = data.get("chat_id")
+        
+
+        user : User = User.objects.get(uuid=user_id)
+        server : Server = Server.objects.get(uuid=server_id)
+
+        
+        if str(user.uuid) == server.owner_id:
+            server.delete()
+            
+            return JsonResponse(data={"result" : True, "message" : "chat delete successfully"})
+        
+        return JsonResponse(data={"result" : False, "message" : "you must be server owner"})
+    
+    
+    return JsonResponse(data={"result" : False, "message" : "not valid token"})
+
