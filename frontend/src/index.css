@@ -480,10 +480,17 @@ width: 70%;
   max-height: 30px;
 }
 .file-input{
+
+  max-height: 200px;
   width: 100%;
   display: flex;
   flex-direction: row;
   border: 1px solid red;
+}
+
+.file-input img{
+  width: 100px;
+  height: 100px;
 }
 .message-input-container{
   width: 100%;
