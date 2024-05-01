@@ -21,6 +21,7 @@ from server.views import (
     api_save_server_chat_message,
     api_get_server_room_messages,
     api_delete_server,
+    api_delete_server_chat_room,
 )
 
 
@@ -46,4 +47,5 @@ urlpatterns : list = [
     path("api/v1/serverChatMessageSave", api_save_server_chat_message, name="api_save_server_chat_message"),
     path("api/v1/getServerChatRoomMessages", api_get_server_room_messages, name="api_get_server_room_messages"),
     path("api/v1/deleteServer", api_delete_server, name="api_delete_server"),
+    path("api/v1/deleteServerChatRoom", api_delete_server_chat_room, name="api_delete_server_chat_room"),
 ]

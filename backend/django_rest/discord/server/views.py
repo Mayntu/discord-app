@@ -715,7 +715,7 @@ def api_delete_server(request):
         data : dict = json.loads(request.body)
 
         user_id : str = token_content.get("uuid")
-        server_id : str = data.get("chat_id")
+        server_id : str = data.get("server_id")
         
 
         user : User = User.objects.get(uuid=user_id)
@@ -732,3 +732,29 @@ def api_delete_server(request):
     
     return JsonResponse(data={"result" : False, "message" : "not valid token"})
 
+
+
+def api_delete_server_chat_room(request):
+    headers : dict = request.headers
+
+    token : str = headers.get("Authorization").replace('"', "")
+    token_content : dict = get_token(token=token)
+    
+
+    if token_content:
+        data : dict = json.loads(request.body)
+
+        user_id : str = token_content.get("uuid")
+        server_id : str = data.get("server_id")
+        server_chat_room_id : str = data.get("server_chat_room_id")
+        
+
+        user : User = User.objects.get(uuid=user_id)
+        server : Server = Server.objects.get(uuid=server_id)
+        server_chat_room : ServerChatRoom = ServerChatRoom.objects.get(uuid=server_chat_room_id)
+
+        server_chat_room.delete()
+            
+        return JsonResponse(data={"result" : True, "message" : "chat delete successfully"})
+        
+    return JsonResponse(data={"result" : False, "message" : "not valid token"})
