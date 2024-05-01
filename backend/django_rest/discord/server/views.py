@@ -527,15 +527,20 @@ def api_create_server(request):
     
     
     data : dict = json.loads(request.body)
+    files = request.FILES
 
     title : str = data.get("title")
     owner_user_id : str = token_content.get("uuid")
-    avatar : str = data.get("avatar")
+    avatar : str = files.get("file")
+
+
+    if avatar:
+        filename : str = handle_upload_file(file=avatar)
 
     server : Server = Server.objects.create(
         title=title,
         owner_id=owner_user_id,
-        avatar=avatar,
+        avatar=filename,
     )
     print(server.uuid)
     owner_user : User = User.objects.get(uuid=owner_user_id)
