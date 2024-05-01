@@ -555,7 +555,7 @@ def api_create_server_chat(request):
         return JsonResponse(data={"result" : False, "message" : "you must be server owner"})
     
 
-    server_chat_room : ServerChatRoom = ServerChatRoom.objects.create(title=chat_room_title)
+    server_chat_room : ServerChatRoom = ServerChatRoom.objects.create(title=chat_room_title, server_object=server)
     server.chat_rooms.add(server_chat_room)
 
 
