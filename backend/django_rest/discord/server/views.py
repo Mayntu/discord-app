@@ -328,6 +328,31 @@ def api_make_user_online(request):
 
 
 
+def api_delete_message(request):
+    headers : dict = request.headers
+
+    token : str = headers.get("Authorization").replace('"', "")
+    token_content : dict = get_token(token=token)
+    
+
+    if token_content:
+        data : dict = json.loads(request.body)
+
+        message_uuid : str = data.get("message_id")
+        
+        message : Message = Message.objects.get(uuid=message_uuid)
+
+
+        message.delete()
+
+
+        return JsonResponse(data={"result" : True, "message" : "message delete successfully"})
+    
+    
+    return JsonResponse(data={"result" : False, "message" : "not valid token"})
+
+
+
 def api_delete_users_chat(request):
     headers : dict = request.headers
 
@@ -526,6 +551,40 @@ def api_create_server(request):
 
 
     return JsonResponse(data={"result" : True, "server_id" : server.uuid})
+
+
+
+def api_get_servers_users(request):
+    data : dict = request.headers
+
+
+    token : str = data.get("Authorization").replace('"', "")
+    token_content : dict = get_token(
+        token=token
+    )
+
+    if not token_content:
+        return JsonResponse(data={"result" : False, "error" : "not valid token"})
+    
+    
+    data : dict = json.loads(request.body)
+
+    
+    user_uuid : str = token_content.get("uuid")
+    server_uuid : str = data.get("uuid")
+
+    user : User = User.objects.get(uuid=user_uuid)
+    server : Server = Server.objects.get(uuid=server_uuid)
+
+    users : list = server.users.all()
+    
+    
+    user_serializer : UserSerializer = UserSerializer(users, many=True)
+    
+    users_ : list = user_serializer.data
+
+
+    return JsonResponse(data={"result" : True, "users" : users_})
 
 
 
@@ -728,6 +787,31 @@ def api_delete_server(request):
             return JsonResponse(data={"result" : True, "message" : "chat delete successfully"})
         
         return JsonResponse(data={"result" : False, "message" : "you must be server owner"})
+    
+    
+    return JsonResponse(data={"result" : False, "message" : "not valid token"})
+
+
+
+def api_delete_servers_message(request):
+    headers : dict = request.headers
+
+    token : str = headers.get("Authorization").replace('"', "")
+    token_content : dict = get_token(token=token)
+    
+
+    if token_content:
+        data : dict = json.loads(request.body)
+
+        server_message_uuid : str = data.get("server_message_uuid")
+        
+        server_message : ServerMessage = ServerMessage.objects.get(uuid=server_message_uuid)
+
+
+        server_message_uuid.delete()
+
+
+        return JsonResponse(data={"result" : True, "message" : "server message was deleted successfully"})
     
     
     return JsonResponse(data={"result" : False, "message" : "not valid token"})
