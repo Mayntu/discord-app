@@ -1,16 +1,15 @@
-import  { FC, useEffect, useRef, useState } from 'react'
+import  { ChangeEvent, FC, useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams, } from 'react-router-dom'
-// import backImage from "../assets/Rectangle 59.png"
 import Add from "./Add"
 import { socket } from '../socket';
 import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock';
-import { fetchDeleteUser, fetchGetChatMessage,  fetchGetUserChats } from '../store/acthion';
+import { fetchDeleteUser } from '../store/acthion';
 import Message from './Message';
 import InputEmoji from "react-input-emoji";
 import avatar from "../assets/sonic.jpg"
 import { IUserChatT } from '../models/IUserChat';
-import { fetchDeleteServerChatRoom, fetchGetServerChatRoomMessages, fetchGetServerChatRooms } from '../store/actionServer';
-import { serverApi } from '../store/RTQServer';
+import { fetchDeleteServerChatRoom, fetchGetServerChatRoomMessages } from '../store/actionServer';
+import { fetchGetChatMessage, fetchGetUserChats } from '../store/acthionChat';
 
 
 
@@ -30,12 +29,9 @@ const  MessageContainer : FC=()=> {
   const [arrayURL,setArrayURL] = useState<string[]>([])
 
   const joinRoom = (room:any) => {
-   
     console.log("room")
     socket.emit("join", {"username" : userMe.login, "chat_id" : room});
     setRoomId(room)
-   
-    
   };
  
   const getMessage = async ()=>{
@@ -44,11 +40,10 @@ const  MessageContainer : FC=()=> {
 
   useEffect(()=>{
     //вход в комнату
-  
     if(chatid){
       joinRoom(chatid)
+      getMessage()
       }
-
       return ()=>{
         if(roomId !== chatid && chatid !== undefined && roomId !== ""){
           console.log("ok",roomId,chatid,"выход")
@@ -62,7 +57,7 @@ const  MessageContainer : FC=()=> {
 
   useEffect(()=>{
     if(chatid){
-      getMessage()
+     
     }
   },[chatid])
  useEffect(()=>{
@@ -158,9 +153,9 @@ const  MessageContainer : FC=()=> {
           setMessageArray((prev)=>[...prev,{content: data.content, from_user_id : data.from_user_id, uuid : data.uuid,timestamp : data.timestamp,media : data.media}]) 
         });
       }
-      // return ()=>{
-      //   socket.off("server_chat_message")
-      // }
+        return ()=>{
+          socket.off("server_chat_message")
+        }
   },[chatserverid])
 
 
@@ -187,14 +182,14 @@ const  MessageContainer : FC=()=> {
           <div className="status-bar">
             <div className="user-chat avatar">
               {usersChat && (<>
-              {usersChat.avatar !== "." ? <img src={avatar} alt="" />: <img src={usersChat?.avatar} alt="" /> }
+              {usersChat.avatar  ? <img src={avatar} alt="" />: <img src={usersChat.avatar} alt="" /> }
               <p>{usersChat.login}</p>
               </>)}
             </div>
                 <button onClick={()=>{
                   dispatch(fetchDeleteUser(chatid))
                   navigate("/chat")
-                  dispatch(fetchGetUserChats(""))
+                  dispatch(fetchGetUserChats())
                   }}>удалить</button>
           </div>
             <div className="get-message-cantainer">
@@ -212,7 +207,12 @@ const  MessageContainer : FC=()=> {
               <Add onClick={()=>refImage.current?.click()}/>
               <InputEmoji shouldConvertEmojiToImage={false} shouldReturn={true} inputClass='emoji' onEnter={sendMessage} cleanOnEnter  onChange={setMessageText} value={messageText}    placeholder="Введите сообщение"/>
               <button onClick={()=>{sendMessage()}}>отправить</button>
-              <input ref={refImage} type="file" multiple accept='image/*,.png,.web,.jpg,.gif' onChange={(e)=>{setFile(e.target.files[0])}} className='none'/>
+              <input ref={refImage} type="file" multiple accept='image/*,.png,.web,.jpg,.gif' onChange={(e:ChangeEvent<HTMLInputElement>)=>{
+                    if( e.currentTarget.files){
+                      setFile(e.currentTarget.files[0])
+                    }
+                  }
+                } className='none'/>
             </div>
           </>  
             }

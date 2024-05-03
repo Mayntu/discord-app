@@ -23,7 +23,7 @@ const ChatListItem: FC<ChatListItemProps>=({chatId,chatsUser})=> {
 
   useEffect(()=>{
     findNoMe()
-  },[])
+  },[chatsUser])
 
   return (
     <>

@@ -1,4 +1,3 @@
-
 import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from './hooks/redux-hoock'
 import { setIsAuth } from './store/AuthSlice'
@@ -34,22 +33,21 @@ function App() {
       console.log(data,"connect")
       dispatch(addUsersConnect(data.data))
     })
-  },[])
+  },[socket])
 
   
-  
+
+
   useEffect(()=>{
-   
     if(localStorage.getItem("token")){
       dispatch(setIsAuth(true))
       if(pathname == "/"){
           navigate("/chat")  
       }
-      
     }else{
       navigate("/login")
     }
-  })
+  },[])
 
 
 

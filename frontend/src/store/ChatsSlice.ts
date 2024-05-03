@@ -1,6 +1,7 @@
 import { ActionReducerMapBuilder, PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { IMessage, IUserChat, IUserChatT } from "../models/IUserChat";
-import { fetchFindChat, fetchGetChatMessage, fetchGetUserChats, fetchMedia, fetchTest } from "./acthion";
+import {  fetchMedia, fetchTest } from "./acthion";
+import { fetchFindChat, fetchGetChatMessage, fetchGetUserChats } from "./acthionChat";
 
 
 
@@ -40,42 +41,36 @@ const chatsSlice = createSlice({
             // )
         },
         addUsersConnect(state,{payload}:PayloadAction<any[]>){
-            // {uuid: '086e6487-4f01-41ff-99a2-f2adf26178df', users: Array(2)} 
-            // console.log(state.usersConnect,"connectSlice")
-            // const n = state.socketChat.map(user=>user.users)
-            // // 
-            // for(let i=0;i<n.length;i++){
-            //     console.log(2)
-            //     for(let s=0;i<payload.length;i++){
-            //         const r = n[i].find(user=>user.uuid == payload[s])
-            //         if(r){
-            //             r.status = !r.status
-            //             console.log(r)
-            //         }
-            //     }
-            // }
-                
-            // state.socketChat[0].users[1].login = "wwwwwwwwww"
-            // // state.usersConnect = n
+            const n = state.socketChat.map(user=>user.users)
+            for(let i=0;i<n.length+1;i++){
+                for(let s=0;i<payload.length;i++){
+                    const r = n[i].findIndex(user=>{
+                        return user.uuid == payload[s]
+                    })
+                    if(r !== -1){
+                        state.socketChat[i].users[r].status =  false
+                    }
+                }
+            }
             // console.log(state.usersConnect)
         }
     },
     extraReducers: (builder:  ActionReducerMapBuilder<TChats>)=>{
         // получение чатов 
         builder.addCase(fetchGetUserChats.fulfilled,(state :TChats,{payload} : PayloadAction<any>)=>{
-            state.socketChat = payload.data.data
+            state.socketChat = payload.data
             state.isLoading = true
         })
         // сообщения
         .addCase(fetchGetChatMessage.fulfilled,(state :TChats,{payload}: PayloadAction<any>)=>{
             console.log(payload,"payMessage")
             state.getMessage = payload.messages
-            // поиск чатов
-        })
+           
+        }) // поиск чатов
         .addCase(fetchFindChat.fulfilled,(state,{payload}:PayloadAction<any>)=>{
             state.searcChat = payload.users_results
-            // для теста
-        })
+            
+        })// для теста
         .addCase(fetchTest.fulfilled,(state,{payload}:PayloadAction<any>)=>{
             state.test = JSON.stringify(payload)
         })

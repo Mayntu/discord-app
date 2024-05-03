@@ -9,7 +9,7 @@ import { IcreateServerChat } from "../models/request/ServerRequest";
 export class ServerService{
 
     static async createServer(n:any):Promise<AxiosResponse<any>>{
-        return $api.post<any>("api/v1/createServer",n)
+        return $api.post<any>("api/v1/createServer",n,{headers: {'Content-Type': 'multipart/form-data'}})
     }
     static async getDeleteServer(server_id:string):Promise<AxiosResponse<any>>{
         return $api.post<any>("api/v1/deleteServer",{server_id})

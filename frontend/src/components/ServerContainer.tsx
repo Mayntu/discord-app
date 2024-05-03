@@ -4,7 +4,7 @@ import { usePostCreateServerMutation } from '../store/RTQServer'
 import { useEffect,  useRef, useState } from 'react'
 import { fetchCreateServer, fetchGetServer } from '../store/actionServer'
 import Module from './Module'
-
+import iconCamera from "../assets/camera.png"
 const ServerContainer=()=> {
     // const [result,{data,isLoading}] = usePostCreateServerMutation()
     const dispatch = useAppDispatch()
@@ -21,7 +21,8 @@ const ServerContainer=()=> {
       }
       const formData = new FormData()
       formData.append("file",file)
-      await dispatch(fetchCreateServer({title: "satana123",avatar:"a"}))
+      formData.append("title","somicHerous")
+      await dispatch(fetchCreateServer(formData))
       dispatch(fetchGetServer())
       setIsCreateSreverM(false)
     }
@@ -29,13 +30,10 @@ const ServerContainer=()=> {
       dispatch(fetchGetServer())
     },[])
    
-    const server=async()=>{
-
-         dispatch(fetchCreateServer({title: "satana123",avatar:""}))
-         
-      }
+    // const server=async()=>{
+    //      dispatch(fetchCreateServer({title: "satana123",avatar:""}))
+    //   }
       
-
       const handleImage=()=>{
         if(refImage.current){
           refImage.current.click()
@@ -44,22 +42,35 @@ const ServerContainer=()=> {
     
       }
   return (
+    <>
     <div className="container-server">
     <NavLink to={"/chat"}>
       <div className="block-server-chat">
         просто чаты
       </div>
     </NavLink>
-    <div className="block-server" onClick={()=>{dispatch(fetchpostChangeServersTitle())}}>
+    <div className="block-server" 
+    // onClick={()=>{dispatch(fetchpostChangeServersTitle())}}
+    >
         изменить имя
       </div>
-    <div className="block-server" onClick={handleImage}>
+    <div className="block-server" onClick={()=>setIsCreateSreverM(true)}>
       создать сервер
-      <input ref={refImage} type="file" accept='image/*,.png,.web,.jpg,.gif' onChange={(e)=>{setFile(e.target.files[0])}} className='none'/>
+      
     </div>
-    {isCreateServerM && <Module newFile={newFile}></Module>}
+   
     {serversUser.length && serversUser.map(i=>(<NavLink to={`/server/${i.uuid}`}  key={i.uuid} ><div className="block-server">{i.title}</div></NavLink>))}
   </div>
+   {isCreateServerM && 
+   <Module newFile={newFile}>
+    <div>
+    <div className="avatar-setting ">
+      <img src={iconCamera} alt="" className='imput-setting' onClick={handleImage}/>
+    </div>
+    <input ref={refImage} type="file" accept='image/*,.png,.web,.jpg,.gif' onChange={(e)=>{setFile(e.target.files[0])}} className='none'/>
+    </div>
+    </Module>}
+   </>
   )
 }
 

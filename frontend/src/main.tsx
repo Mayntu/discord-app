@@ -18,15 +18,11 @@ const router = createBrowserRouter([
     path: "/",
     element : <App/>,
     children:[
-    //   {path: "/",element: <ChatList/>,
-    //   children:[
-    //     {path: "/",element: <MessageContainer/>},
-    //     {path: "/:chatid",element: <MessageContainer/>}
-    //   ]
-    // },
+      {path: "/test", element: <Test/>},
       {path: "/chat",element: <ChatList/>,children:[
         {index: true,element: <MessageContainer/>},
         {path: ":chatid",element: <MessageContainer/>}
+       
       ]},
       {path: "/server/:serverid",element: <ServerChatList/>,children:[
         {index: true,element: <MessageContainer/>},

@@ -3,10 +3,9 @@ import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock'
 import ChatListItem from './ChatListItem'
 import icon from "../assets/icons8.png"
 import SettingsBlock from './SettingsBlock'
-import { fetchFindChat, fetchGetUserChats } from '../store/acthion'
 import SaerchBlockUser from './SaerchBlock'
 import { Outlet } from 'react-router-dom'
-import MessageContainer from './MessageContainer'
+import { fetchFindChat, fetchGetUserChats } from '../store/acthionChat'
 
 
 
@@ -15,7 +14,7 @@ import MessageContainer from './MessageContainer'
 const ChatList:FC=()=> {
   const findUsers = useAppSelector(state=>state.chats.searcChat)
   useEffect(()=>{
-    dispatch(fetchGetUserChats(""))
+    dispatch(fetchGetUserChats())
   },[])
   const [isSettings,setIsSettings] = useState<boolean>(true)
   const dispatch = useAppDispatch()
@@ -27,7 +26,7 @@ const ChatList:FC=()=> {
   }
 
    useEffect(()=>{
-    // console.log(socketChat)
+    console.log(socketChat,"socketChatinChatList")
     // console.log(usersConnect,"con")
     // const n = chats2.filter(user=>{
     //   console.log(user.users)
