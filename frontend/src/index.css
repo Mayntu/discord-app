@@ -221,6 +221,13 @@ input{
  
 
 }
+
+.chat-list-container button{
+  margin-bottom: 10px;
+}
+.chat-list-container input{
+  margin-bottom: 10px;
+}
 .chat-list-container{
   /* overflow-x: hidden; */
   overflow-y: scroll;
@@ -517,6 +524,10 @@ width: 70%;
   max-width: 400px;
   color: black;
   flex-wrap: wrap;
+}
+
+.message:hover {
+  background-color: #213547;
 }
 .chat-message{
   gap: 10px;

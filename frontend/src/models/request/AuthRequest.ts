@@ -12,7 +12,4 @@ export interface IAuthRegistration  {
     password: string
 }
 
-export interface IcreateServerChat {
-    uuid_server : string,
-    title: string
-}
+

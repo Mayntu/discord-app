@@ -4,16 +4,18 @@ import { useNavigate, useParams, } from 'react-router-dom'
 import Add from "./Add"
 import { socket } from '../socket';
 import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock';
-import { fetchDeleteUser, fetchGetChatMessage, fetchGetServerChatRoomMessages, fetchGetUserChats } from '../store/acthion';
+import { fetchDeleteUser, fetchGetChatMessage,  fetchGetUserChats } from '../store/acthion';
 import Message from './Message';
 import InputEmoji from "react-input-emoji";
 import avatar from "../assets/sonic.jpg"
 import { IUserChatT } from '../models/IUserChat';
+import { fetchDeleteServerChatRoom, fetchGetServerChatRoomMessages, fetchGetServerChatRooms } from '../store/actionServer';
+import { serverApi } from '../store/RTQServer';
 
 
 
 const  MessageContainer : FC=()=> {
-  const {chatid,chatserverid} = useParams()
+  const {chatid,chatserverid,serverid} = useParams()
   const [messageText,setMessageText] = useState<string>("")
   const [roomId,setRoomId] = useState<string>("")
   const [messageArray,setMessageArray] = useState<any[]>([])
@@ -119,7 +121,6 @@ const  MessageContainer : FC=()=> {
 
 
   useEffect(()=>{
-    console.log(chatserverid)
     if(chatserverid){
       socket.emit("join_server_chat",{chat_id:chatserverid})
       socket.on("join_server_chat",(data:any)=>{
@@ -141,6 +142,7 @@ const  MessageContainer : FC=()=> {
       socket.emit("server_chat_message", {
         "data" : messageText, 
         "chat_id" : chatserverid, 
+        "server_id" : serverid,
         "token" : localStorage.getItem("token"), 
         media: file ? {file, name : file.type} : ""});
         setMessageText("")
@@ -196,7 +198,7 @@ const  MessageContainer : FC=()=> {
                   }}>удалить</button>
           </div>
             <div className="get-message-cantainer">
-              {messageArray.length !==0 ? messageArray.map((ms,index)=><Message key={index} classUser={ms.from_user_id} media={ms.media}  time={ms.timestamp}>{ms.content}</Message>): null}
+              {messageArray.length !==0 ? messageArray.map((ms,index)=><Message key={index} uuid={ms.uuid} classUser={ms.from_user_id} media={ms.media}  time={ms.timestamp}>{ms.content}</Message>): null}
             </div>
             <div className="file-input">
               {file && (
@@ -214,7 +216,7 @@ const  MessageContainer : FC=()=> {
             </div>
           </>  
             }
-            {chatserverid && 
+            {chatserverid && serverid && 
             <>
               <div className="status-bar">
               <div className="user-chat avatar">
@@ -223,13 +225,12 @@ const  MessageContainer : FC=()=> {
                 <p>{usersChat.login}</p>
                 </>)}
               </div>
-                  {/* <button onClick={()=>{
-                    // dispatch(fetchDeleteUser(chatid))
-                    // navigate("/")
-                    }}>удалить</button> */}
+                  <button onClick={()=>{
+                    dispatch(fetchDeleteServerChatRoom({server_chat_room_id: chatserverid, server_uuid: serverid}))
+                    }}>удалить</button>
             </div>
               <div className="get-message-cantainer">
-                {messageArray.length !==0 ? messageArray.map((ms,index)=><Message key={index} classUser={ms.from_user_id} media={ms.media}  time={ms.timestamp}>{ms.content}</Message>): null}
+                {messageArray.length !==0 ? messageArray.map((ms,index)=><Message key={index} classUser={ms.from_user_id} media={ms.media} uuid={ms.uuid}  time={ms.timestamp}>{ms.content}</Message>): null}
               </div>
               <div className="file-input">
                 {file && (<p>pltcm afqk</p>)}

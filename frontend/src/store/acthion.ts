@@ -146,23 +146,12 @@ import { ServerService } from "../services/ServerService"
     },
   )
 
-  export const fetchCreateServer = createAsyncThunk(
-    'server/fetchCreateServer',
-    async (n:any, thunkAPI) => {
-      try {
-        const response = await ServerService.createServer(n)
-        console.log(response.data,"createServer")
-        return response.data
-      } catch (error: any) {
-        return thunkAPI.rejectWithValue(error?.message)
-      }
-    },
-  )
+
 
 
 
 export const fetchDeleteUser = createAsyncThunk(
-  'server/fetchDeleteUser',
+  'chats/fetchDeleteUser',
   async (chat_id:string, thunkAPI) => {
     try {
       const response = await ChatService.postDeleteChat(chat_id)
@@ -174,55 +163,4 @@ export const fetchDeleteUser = createAsyncThunk(
   },
 )
 
-export const fetchCreateServerChat = createAsyncThunk(
-  'server/fetchCreateServerChat',
-  async (payload : IcreateServerChat, thunkAPI) => {
-    try {
-      const response = await ServerService.createServerChat(payload)
-      console.log(response.data,"fetchCreateServerChat")
-      return response.data
-    } catch (error: any) {
-      return thunkAPI.rejectWithValue(error?.message)
-    }
-  },
-)
-export const fetchGetServerChatRooms = createAsyncThunk(
-  'server/fetchGetServerChatRooms',
-  async (payload : string, thunkAPI) => {
-    try {
-      const response = await ServerService.getServerChatRooms(payload)
-      console.log(response.data.data,"fetchGetServerChatRooms")
-      return response.data.data
-    } catch (error: any) {
-      return thunkAPI.rejectWithValue(error?.message)
-    }
-  },
-)
 
-
-export const fetchGetServer = createAsyncThunk(
-  'server/fetchGetServer',
-  async (_, thunkAPI) => {
-    try {
-      const response = await ServerService.getServer()
-      // console.log(response.data.data ,"fetchGetServer")
-      return response.data.data
-    } catch (error: any) {
-      return thunkAPI.rejectWithValue(error?.message)
-    }
-  },
-)
-
-
-export const fetchGetServerChatRoomMessages = createAsyncThunk(
-  'server/fetchGetServerChatRoomMessages',
-  async (payload:string, thunkAPI) => {
-    try {
-      const response = await ServerService.getServerChatRoomMessages(payload)
-      console.log(response.data.server_messages ,"fetchGetServerChatRoomMessages")
-      return response.data.server_messages
-    } catch (error: any) {
-      return thunkAPI.rejectWithValue(error?.message)
-    }
-  },
-)

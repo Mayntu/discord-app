@@ -1,23 +1,48 @@
 import { NavLink } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock'
 import { usePostCreateServerMutation } from '../store/RTQServer'
-import { fetchCreateServer, fetchCreateServerChat, fetchGetServer, fetchGetServerChatRooms } from '../store/acthion'
-import { useEffect } from 'react'
+import { useEffect,  useRef, useState } from 'react'
+import { fetchCreateServer, fetchGetServer } from '../store/actionServer'
+import Module from './Module'
 
 const ServerContainer=()=> {
     // const [result,{data,isLoading}] = usePostCreateServerMutation()
     const dispatch = useAppDispatch()
+    const [isCreateServerM, setIsCreateSreverM] = useState<boolean>(false)
     const {serversUser} = useAppSelector(state=>state.server)
-
+    const [file,setFile] = useState<File>()
+    const refImage = useRef<HTMLInputElement>(null) 
+    
+    const newFile=async()=>{
+      console.log(file)
+      if(!file){
+        alert("please")
+        return
+      }
+      const formData = new FormData()
+      formData.append("file",file)
+      await dispatch(fetchCreateServer({title: "satana123",avatar:"a"}))
+      dispatch(fetchGetServer())
+      setIsCreateSreverM(false)
+    }
     useEffect(()=>{
       dispatch(fetchGetServer())
     },[])
+   
     const server=async()=>{
-        //  await result({title: "satana",avatar:""}).reset()
-         dispatch(fetchCreateServer({title: "satana",avatar:""}))
-          // console.log(data,"data")
+
+         dispatch(fetchCreateServer({title: "satana123",avatar:""}))
+         
       }
       
+
+      const handleImage=()=>{
+        if(refImage.current){
+          refImage.current.click()
+        }
+        setIsCreateSreverM(true)
+    
+      }
   return (
     <div className="container-server">
     <NavLink to={"/chat"}>
@@ -25,34 +50,15 @@ const ServerContainer=()=> {
         просто чаты
       </div>
     </NavLink>
-    {/* <div className="block-server" onClick={()=>{
-      dispatch(fetchCreateServerChat({title: "satana",uuid_server : "b8e373e4-c43c-4484-bc32-aa628a6a38ce"}))
-    }}>
-      создать чат
-      {//2302f077-f01f-4767-ad51-b031bbb60b5c id-servera
-      //2302f077-f01f-4767-ad51-b031bbb60b5c
-      }
-    </div> */}
-    {/* <div className="block-server" onClick={()=>{
-      dispatch(fetchGetServerChatRooms("2302f077-f01f-4767-ad51-b031bbb60b5c"))
-    }}>
-      получить чаты
-    </div> */}
-    {/* <div className="block-server" onClick={()=>{
-      dispatch(fetchGetServer())
-    }}>
-      получить серевера
-    </div> */}
-    {/* <NavLink to={"/server/fjowfwoj"}>
-    <div className="block-server">
-      перейти на сервера
-    </div>
-    </NavLink> */}
-    
-    <div className="block-server" onClick={()=>{server()}}>
+    <div className="block-server" onClick={()=>{dispatch(fetchpostChangeServersTitle())}}>
+        изменить имя
+      </div>
+    <div className="block-server" onClick={handleImage}>
       создать сервер
+      <input ref={refImage} type="file" accept='image/*,.png,.web,.jpg,.gif' onChange={(e)=>{setFile(e.target.files[0])}} className='none'/>
     </div>
-    {serversUser.length && serversUser.map(i=>(<NavLink to={`/server/${i.uuid}`}  key={i.uuid}><div className="block-server">{i.title}</div></NavLink>))}
+    {isCreateServerM && <Module newFile={newFile}></Module>}
+    {serversUser.length && serversUser.map(i=>(<NavLink to={`/server/${i.uuid}`}  key={i.uuid} ><div className="block-server">{i.title}</div></NavLink>))}
   </div>
   )
 }

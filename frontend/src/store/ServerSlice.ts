@@ -1,5 +1,6 @@
 import {  ActionReducerMapBuilder, PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { fetchGetServer, fetchGetServerChatRoomMessages, fetchGetServerChatRooms } from "./acthion";
+import { fetchGetServer, fetchGetServerChatRoomMessages, fetchGetServerChatRooms } from "./actionServer";
+
 
 
 type TChats = {
