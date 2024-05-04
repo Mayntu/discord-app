@@ -1,25 +1,21 @@
-import  { useEffect, useRef, useState } from 'react'
+import  {  useRef, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock'
-import { fetchMedia, fetchTest } from '../store/acthion'
-import mk from "../assets/microphone.png"
+import { fetchMedia, fetchMedia2, fetchTest } from '../store/acthion'
 
 
-let can_record = false
-let is_recording= false
-// let recorder:any = null
 
 const Test=()=> {
-  // console.log(module)
+
     const [nValue,setInValue] = useState("")
     const [file,setFile] = useState()
     const dispatch =useAppDispatch()
     let data = useAppSelector(state=>state.chats.test)
-    let [chunks,setChunks] = useState<any[]>([])
-    let audioBlob = null
-    let recorder = useRef<MediaRecorder>()
-    let [canRecord,setcanRecord] = useState<boolean>(false)
+
+    let [audioBlob,setAudioBlob] = useState<Blob>()
+   
+ 
     let [audio,setAudio] = useState<string>("")
-    let [isRecord,setIsReacord] = useState<boolean>(false)
+
     const playAudio = useRef<HTMLAudioElement>(null)
    
     const [permission, setPermission] = useState(false);
@@ -70,6 +66,7 @@ const Test=()=> {
       mediaRecorder.current.onstop = () => {
         //creates a blob file from the audiochunks data
          const audioBlob = new Blob(audioChunks, { type: mimeType });
+         setAudioBlob(audioBlob)
         //creates a playable URL from the blob file.
          const audioUrl = URL.createObjectURL(audioBlob);
          setAudio(audioUrl);
@@ -78,6 +75,15 @@ const Test=()=> {
     };
 
 
+      const serverSave=()=>{
+        const formData = new FormData()
+          if(audioBlob){
+           
+            formData.append('audio', audioBlob)
+            dispatch(fetchMedia2(formData))
+          }
+        
+      }
 
 
 
@@ -165,6 +171,10 @@ const Test=()=> {
           </button> */}
 
           <audio controls ref={playAudio} src={audio}></audio>
+
+          <button onClick={()=>{serverSave()}} type="button">
+                   server save
+                </button>
              {/* test audio end */}
            </>
 
