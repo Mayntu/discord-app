@@ -3,13 +3,13 @@ import { fetchGetServer, fetchGetServerChatRoomMessages, fetchGetServerChatRooms
 
 
 
-type TChats = {
-        serversUser : any[],
-        serverChatSRooms: any[],
-        serverChatMessages: any[],
+type TServerSlice = {
+    serversUser : IServer[],
+    serverChatSRooms: IServerChatRoom[],
+    serverChatMessages: IServerChatNessage[],
 }
 
-const initialState: TChats= {
+const initialState: TServerSlice= {
     serversUser : [],
     serverChatSRooms: [],
     serverChatMessages: [],
@@ -25,11 +25,11 @@ const serverSlice = createSlice({
         
     },
     extraReducers: (builder:  ActionReducerMapBuilder<any>)=>{
-        builder.addCase(fetchGetServer.fulfilled,(state,{payload}: PayloadAction<any>)=>{
+        builder.addCase(fetchGetServer.fulfilled,(state,{payload}: PayloadAction<IServer[]>)=>{
             state.serversUser = payload
-        }).addCase(fetchGetServerChatRooms.fulfilled,(state,{payload}: PayloadAction<any>)=>{
+        }).addCase(fetchGetServerChatRooms.fulfilled,(state,{payload}: PayloadAction<IServerChatRoom[]>)=>{
             state.serverChatSRooms = payload
-        }).addCase(fetchGetServerChatRoomMessages.fulfilled,((state,{payload}: PayloadAction<any>)=>{
+        }).addCase(fetchGetServerChatRoomMessages.fulfilled,((state,{payload}: PayloadAction<IServerChatNessage[]>)=>{
             state.serverChatMessages = payload
         }))
     }

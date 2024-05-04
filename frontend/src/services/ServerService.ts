@@ -28,7 +28,7 @@ export class ServerService{
     static async createServerChat(server : IcreateServerChat):Promise<AxiosResponse<any>>{
         return $api.post<any>("api/v1/createServerChat",{uuid:server.uuid_server,title: server.title,file: "."})
     }
-    static async getServerChatRooms(server_uuid : string):Promise<AxiosResponse<any>>{
+    static async getServerChatRooms(server_uuid : string):Promise<AxiosResponse<IServersUsers<IServerChatRoom>>>{
         return $api.post<any>("api/v1/getServerChatRooms",{server_uuid})
     }
 
@@ -36,10 +36,10 @@ export class ServerService{
         return $api.post<any>("api/v1/deleteServerChatRoom",{server_uuid,server_chat_room_id})
     }
 
-    static async getServer():Promise<AxiosResponse<any>>{
+    static async getServer():Promise<AxiosResponse<IServersUsers<IServer>>>{
         return $api.get<any>("api/v1/getUsersServers")
     }
-    static async getServerChatRoomMessages(chat_id: string):Promise<AxiosResponse<any>>{
+    static async getServerChatRoomMessages(chat_id: string):Promise<AxiosResponse<IServerChatNessageUser>>{
         return $api.post<any>("api/v1/getServerChatRoomMessages",{chat_id})
     }
 
