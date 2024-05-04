@@ -3,6 +3,11 @@ import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock'
 import { fetchMedia, fetchTest } from '../store/acthion'
 import mk from "../assets/microphone.png"
 
+
+let can_record = false
+let is_recording= false
+// let recorder:any = null
+
 const Test=()=> {
   // console.log(module)
     const [nValue,setInValue] = useState("")
@@ -10,94 +15,117 @@ const Test=()=> {
     const dispatch =useAppDispatch()
     let data = useAppSelector(state=>state.chats.test)
     let [chunks,setChunks] = useState<any[]>([])
-    let recorder = null
     let audioBlob = null
+    let recorder = useRef<MediaRecorder>()
     let [canRecord,setcanRecord] = useState<boolean>(false)
-    let [audio,setaudio] = useState<string>("")
+    let [audio,setAudio] = useState<string>("")
     let [isRecord,setIsReacord] = useState<boolean>(false)
     const playAudio = useRef<HTMLAudioElement>(null)
-    let mediaRecorder:any = null
+   
+    const [permission, setPermission] = useState(false);
+    const mimeType = "audio/webm"
+    const [audioChunks, setAudioChunks] = useState([]);
+    const mediaRecorder = useRef<MediaRecorder>();
+    const [stream, setStream] = useState<MediaStream>();
+    const [recordingStatus, setRecordingStatus] = useState("inactive");
+   
+   
+    const getMicrophonePermission =async ()=>{
+      if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
+        const streamData = await navigator.mediaDevices.getUserMedia({
+          audio: true,
+          video: false,
+      });
+      console.log(streamData)
+      setPermission(true);
+      setStream(streamData)
+      }
+    
+    }
 
-    // async function startRecord() {
-    //   if (!navigator.mediaDevices && !navigator.mediaDevices.getUserMedia) {
-    //     return console.warn('Not supported')
-    //   }
-    
-    
-    //   if (!mediaRecorder) {
-    //     try {
-    //       const stream = await navigator.mediaDevices.getUserMedia({
-    //         audio: true
-    //       })
-    //       mediaRecorder = new MediaRecorder(stream)
-    //       mediaRecorder.start()
-    //       mediaRecorder.ondataavailable = (e) => {
-    //         chunks.push(e.data)
-    //       }
-    //       mediaRecorder.onstop = mediaRecorderStop
-    //     } catch (e) {
-    //       console.error(e)
-    //       record_img.src = ' img/microphone.png'
-    //     }
-    //   } else {
-    //     mediaRecorder.stop()
-    //   }
-    // }
+
+    const startRecording = async () => {
+      setRecordingStatus("recording");
+      //create new Media recorder instance using the stream
+      const media = new MediaRecorder(stream);
+      //set the MediaRecorder instance to the mediaRecorder ref
+      mediaRecorder.current = media;
+      //invokes the start method to start the recording process
+      mediaRecorder.current.start();
+      let localAudioChunks:any = [];
+      mediaRecorder.current.ondataavailable = (event) => {
+         if (typeof event.data === "undefined") return;
+         if (event.data.size === 0) return;
+         localAudioChunks.push(event.data);
+      };
+      setAudioChunks(localAudioChunks);
+    };
+
+
+
+    const stopRecording = () => {
+      setRecordingStatus("inactive");
+      //stops the recording instance
+      mediaRecorder.current.stop();
+      mediaRecorder.current.onstop = () => {
+        //creates a blob file from the audiochunks data
+         const audioBlob = new Blob(audioChunks, { type: mimeType });
+        //creates a playable URL from the blob file.
+         const audioUrl = URL.createObjectURL(audioBlob);
+         setAudio(audioUrl);
+         setAudioChunks([]);
+      };
+    };
+
+
 
 
 
  
-    const setupAudio=()=>{
-      console.log("setup")
-      if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
-        navigator.mediaDevices.getUserMedia({
-          audio:true
-        }).then(stream=>{
-          recorder = new MediaRecorder(stream)
-          recorder.ondataavailable = e =>{
-            setChunks([...chunks,e.data])
-          }
-          recorder.onstop=e=>{
-            const blob = new Blob(chunks,{type:"audio/ogg; codecs=opus"})
-            setChunks([])
-            const audioURL = window.URL.createObjectURL(blob);
-            setaudio(audioURL)
-          }
-          setcanRecord(true)
-        })
-        .catch(err=>console.log(err))
-      }
-    }
+  //   const setupAudio=()=>{
+  //     console.log("setup")
+  //     if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
+  //       navigator.mediaDevices.getUserMedia({audio:true})
+  //       .then(SetupStream)
+  //       .catch(err=>console.log(err,"iuheuhfuehfuheu"))
+  //     }
+  //   }
 
-    const SetupStream=(stream:any)=>{
-      recorder = new MediaRecorder(stream)
-      recorder.ondataavailable = e =>{
-        setChunks([...chunks,e.data])
-      }
-      recorder.onstop=e=>{
-        const blob = new Blob(chunks,{type:"audio/ogg; codecs=opus"})
-        setChunks([])
-        const audioURL = window.URL.createObjectURL(blob);
-        setaudio(audioURL)
-      }
-      setcanRecord(true)
-  }
+  //   const SetupStream=(stream:any)=>{
+  //     const media = new MediaRecorder(stream)
+  //     recorder.current = media 
+  //     recorder.current.ondataavailable = e =>{
+  //       console.log("chunk")
+  //       setChunks([...chunks,e.data])
+  //     }
+  //     recorder.current.onstop=()=>{
+  //       if(chunks.length){
+  //         console.log(0)
+  //       }
+  //       const blob = new Blob(chunks,{type:"audio/ogg; codecs=opus"})
+  //       const audioURL = window.URL.createObjectURL(blob);
+  //       setaudio(audioURL)
+  //       setChunks([])
+  //     }
+  //     setcanRecord(true)
+  // }
 
 
 
-    const ToggleMic=()=>{
-      if(!canRecord) return
+    // const ToggleMic=()=>{
+    //   if(!canRecord) return
 
-      isRecord = !isRecord
-      if(isRecord){
-        recorder.start()
-      }else{
-        recorder.stop()
-      }
-    }
-    useEffect(()=>{
-      setupAudio()
-    },[])
+    //   // isRecord = !isRecord
+    //   setIsReacord(!isRecord)
+    //   if(isRecord){
+    //     recorder.current.start()
+    //   }else{
+    //     recorder.current.stop()
+    //   }
+    // }
+    // useEffect(()=>{
+    //   setupAudio()
+    // },[])
     
 
   return (
@@ -117,21 +145,35 @@ const Test=()=> {
            <>
            {/* test audio start*/}
            
-
-           <button className="btn" id="record_btn">
-            <img src={mk} alt="record" id="record_img" onClick={()=>ToggleMic()}/>
-          </button>
+           {!permission ? (
+                <button onClick={getMicrophonePermission} type="button">
+                    Get Microphone
+                </button>
+                ) : null}
+                {permission && recordingStatus === "inactive" ? (
+                <button onClick={startRecording} type="button">
+                    Start Recording
+                </button>
+                ) : null}
+                {recordingStatus === "recording" ? (
+                <button onClick={stopRecording} type="button">
+                    Stop Recording
+                </button>
+                ) : null}
+           {/* <button className="btn" id="record_btn">
+            <img src={mk} alt="record" id="record_img" onClick={()=>getMicrophonePermission()}/>
+          </button> */}
 
           <audio controls ref={playAudio} src={audio}></audio>
              {/* test audio end */}
            </>
 
 
-
+{/* 
         <input type="text" value={nValue} onChange={(e)=>{setInValue(e.target.value)}} />
                                                     {/* если ничего не надо очисти */}
-        <button onClick={()=>{dispatch(fetchTest(nValue))}}>запрос</button>
-        <p>ОТВЕТ : {data}</p>
+        {/* <button onClick={()=>{dispatch(fetchTest(nValue))}}>запрос</button>
+        <p>ОТВЕТ : {data}</p>  */}
     </div>
   )
 }
