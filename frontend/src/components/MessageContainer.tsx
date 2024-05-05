@@ -1,19 +1,19 @@
-import  { ChangeEvent, FC, useEffect, useRef, useState } from 'react'
+import  { FC, useEffect,  useState } from 'react'
 import { useNavigate, useParams, } from 'react-router-dom'
-import Add from "./Add"
 import { socket } from '../socket';
 import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock';
 import { fetchDeleteUser } from '../store/acthion';
 import Message from './Message';
-import InputEmoji from "react-input-emoji";
 import avatar from "../assets/sonic.jpg"
 import { IUserChatT } from '../models/IUserChat';
 import { fetchDeleteServerChatRoom, fetchGetServerChatRoomMessages } from '../store/actionServer';
 import { fetchGetChatMessage, fetchGetUserChats } from '../store/acthionChat';
+import InputMessage from './InputMessage';
 
 
 
 const  MessageContainer : FC=()=> {
+  let [audioBlob,setAudioBlob] = useState<Blob>()
   const {chatid,chatserverid,serverid} = useParams()
   const [messageText,setMessageText] = useState<string>("")
   const [roomId,setRoomId] = useState<string>("")
@@ -22,7 +22,6 @@ const  MessageContainer : FC=()=> {
   const message = useAppSelector(state=>state.chats.getMessage)
   const serverMessages = useAppSelector(state=>state.server.serverChatMessages)
   const userMe = useAppSelector(state=>state.auth.user)
-  const refImage = useRef<HTMLInputElement>(null) 
   const [file,setFile] = useState<File | undefined>()
   const [usersChat,setUsersChat]= useState<IUserChatT>()
   const navigate = useNavigate()
@@ -55,11 +54,6 @@ const  MessageContainer : FC=()=> {
       }
   },[chatid,socket])
 
-  useEffect(()=>{
-    if(chatid){
-     
-    }
-  },[chatid])
  useEffect(()=>{
   if(Object.keys(userMe).length !== 0){
     socket.on("join",(data)=>{
@@ -88,6 +82,7 @@ const  MessageContainer : FC=()=> {
         setArrayURL([])
         setFile(undefined)
     }
+ 
 
   }; 
 
@@ -96,7 +91,7 @@ const  MessageContainer : FC=()=> {
     // получаю сообщения
       if(chatid){
         socket.on("message", (data:any) => {
-          data = JSON.parse(data)
+          data = JSON.parse(data.message)
           console.log( data)
           setMessageArray((prev)=>[...prev,{content: data.content, from_user_id : data.from_user_id, uuid : data.uuid,timestamp : data.timestamp,media : data.media}]) 
         });
@@ -108,6 +103,9 @@ const  MessageContainer : FC=()=> {
         
     // из-за зависимости с params socket накладываеться на предыдущий и просходит отправка кучи сообщений  решение?
   },[socket,chatid])
+
+
+
   
   ///////////////////////////////////////////////////////////////////
                   //SERVER
@@ -141,6 +139,8 @@ const  MessageContainer : FC=()=> {
         "token" : localStorage.getItem("token"), 
         media: file ? {file, name : file.type} : ""});
         setMessageText("")
+        setArrayURL([])
+        setFile(undefined)
     }
   }; 
 
@@ -148,8 +148,8 @@ const  MessageContainer : FC=()=> {
     // получаю сообщения
       if(chatserverid){
         socket.on("server_chat_message", (data:any) => {
-          data = JSON.parse(data.message)
           console.log( data,"dataServerMessage")
+          data = JSON.parse(data.message)
           setMessageArray((prev)=>[...prev,{content: data.content, from_user_id : data.from_user_id, uuid : data.uuid,timestamp : data.timestamp,media : data.media}]) 
         });
       }
@@ -174,9 +174,7 @@ const  MessageContainer : FC=()=> {
 
   return (
     <>
-      <div className='message-container'
-      //  style={{backgroundImage : `url(${backImage})`}}
-       >
+      <div className='message-container'>
           {chatid  &&
           <>   
           <div className="status-bar">
@@ -200,20 +198,14 @@ const  MessageContainer : FC=()=> {
               <img src={arrayURL[0]}/>
               )}
             </div>
-            <div className="message-input-container" 
-            onDrop={(e)=>{dropImage(e)}} 
-            
-            onDragOver={e=>e.preventDefault()}>
-              <Add onClick={()=>refImage.current?.click()}/>
-              <InputEmoji shouldConvertEmojiToImage={false} shouldReturn={true} inputClass='emoji' onEnter={sendMessage} cleanOnEnter  onChange={setMessageText} value={messageText}    placeholder="Введите сообщение"/>
-              <button onClick={()=>{sendMessage()}}>отправить</button>
-              <input ref={refImage} type="file" multiple accept='image/*,.png,.web,.jpg,.gif' onChange={(e:ChangeEvent<HTMLInputElement>)=>{
-                    if( e.currentTarget.files){
-                      setFile(e.currentTarget.files[0])
-                    }
-                  }
-                } className='none'/>
-            </div>
+            <InputMessage 
+              setAudioBlob={setAudioBlob}
+              sendMessage={sendMessage} 
+              setFile={setFile} 
+              setMessageText={setMessageText} 
+              messageText={messageText} 
+              dropImage={dropImage}
+            />
           </>  
             }
             {chatserverid && serverid && 
@@ -235,12 +227,15 @@ const  MessageContainer : FC=()=> {
               <div className="file-input">
                 {file && (<p>pltcm afqk</p>)}
               </div>
-              <div className="message-input-container">
-                <Add onClick={()=>refImage.current?.click()}/>
-                <InputEmoji shouldReturn={true} shouldConvertEmojiToImage={false}  inputClass='emoji' onEnter={sendMessageServer} cleanOnEnter  onChange={setMessageText} value={messageText}    placeholder="Введите сообщение"/>
-                <button onClick={()=>{sendMessageServer()}}>отправить</button>
-                <input ref={refImage} type="file" accept='image/*,.png,.web,.jpg,.gif' onChange={(e)=>{setFile(e.target.files[0])}} className='none'/>
-              </div>
+              <InputMessage 
+               setAudioBlob={setAudioBlob}
+                sendMessage={sendMessageServer}
+                setFile={setFile} 
+                setMessageText={setMessageText} 
+                messageText={messageText} 
+                dropImage={dropImage}
+               />
+
             </>  
             }
             {!chatid && !chatserverid && <p>Hello add chat</p>}

@@ -512,8 +512,18 @@ width: 70%;
 .message-input-container>.react-emoji{
   max-width: 80%;
 }
-
-
+.message-input-container >.btn-image{
+  max-width: 50px;
+  max-height: 50px;
+}
+.btn-image{
+  border-radius: 100px;
+  cursor: pointer;
+  width: 70px;
+  height: 70px;
+  background-color: #1059FF;
+  padding: 10px;
+}
 .message{
   gap: 5px;
   display: flex;

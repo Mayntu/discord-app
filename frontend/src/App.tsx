@@ -31,7 +31,7 @@ function App() {
     connect()
     socket.on("connected", async (data:any)=>{
       console.log(data,"connect")
-      dispatch(addUsersConnect(data.data))
+      // dispatch(addUsersConnect(data.data))
     })
   },[socket])
 

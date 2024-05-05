@@ -37,7 +37,8 @@ const  Message: FC<MessageProps>=({classUser,children,time,media,uuid})=> {
       <button onClick={()=>{dispatch(fetchDeleteServersMessage(uuid))}}>удалить</button>
       <div className='image-message'>
         <img src={"http://localhost:5173/public/"+media} alt="" />
-      </div> 
+      </div>
+      {media && ( <audio src={"http://localhost:5173/public/"+media} controls></audio>)} 
      </>
     </div>
   

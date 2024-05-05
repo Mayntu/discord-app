@@ -1,12 +1,10 @@
 import { NavLink } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock'
-import { usePostCreateServerMutation } from '../store/RTQServer'
 import { useEffect,  useRef, useState } from 'react'
 import { fetchCreateServer, fetchGetServer } from '../store/actionServer'
 import Module from './Module'
 import iconCamera from "../assets/camera.png"
 const ServerContainer=()=> {
-    // const [result,{data,isLoading}] = usePostCreateServerMutation()
     const dispatch = useAppDispatch()
     const [isCreateServerM, setIsCreateSreverM] = useState<boolean>(false)
     const {serversUser} = useAppSelector(state=>state.server)
@@ -30,9 +28,9 @@ const ServerContainer=()=> {
       dispatch(fetchGetServer())
     },[])
    
-    // const server=async()=>{
-    //      dispatch(fetchCreateServer({title: "satana123",avatar:""}))
-    //   }
+    const server=async()=>{
+         dispatch(fetchCreateServer({title: "satana123",avatar:""}))
+      }
       
       const handleImage=()=>{
         if(refImage.current){
@@ -54,7 +52,7 @@ const ServerContainer=()=> {
     >
         изменить имя
       </div>
-    <div className="block-server" onClick={()=>setIsCreateSreverM(true)}>
+    <div className="block-server" onClick={()=> server()}>
       создать сервер
       
     </div>

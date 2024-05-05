@@ -8,16 +8,16 @@ import { IcreateServerChat } from "../models/request/ServerRequest";
 
 export class ServerService{
 
-    static async createServer(n:any):Promise<AxiosResponse<any>>{
-        return $api.post<any>("api/v1/createServer",n,{headers: {'Content-Type': 'multipart/form-data'}})
-    }
+    // static async createServer(n:any):Promise<AxiosResponse<any>>{
+    //     return $api.post<any>("api/v1/createServer",n,{headers: {'Content-Type': 'multipart/form-data'}})
+    // }
     static async getDeleteServer(server_id:string):Promise<AxiosResponse<any>>{
         return $api.post<any>("api/v1/deleteServer",{server_id})
     }
 
     /// здесь нужно пересмтореть 
-    // static async postChangeServersAvatar(server_uuid: string,title: string):Promise<AxiosResponse<any>>{
-    //     return $api.post<any>("api/v1/changeServersAvatar",{server_uuid,title})
+    // static async  createServer(server_uuid: string,title: string):Promise<AxiosResponse<any>>{
+    //     return $api.post<any>("api/v1/changeServersAvatar",{server_uuid,title,file: 'dceec'})
     // }
 
 

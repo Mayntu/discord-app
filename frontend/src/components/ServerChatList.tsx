@@ -19,7 +19,7 @@ const ServerChatList:FC=()=> {
 
     
     const serverRooms = useAppSelector(state=>state.server.serverChatSRooms)
-    // console.log(serverid)
+  
     
  
 
