@@ -27,12 +27,14 @@ from server.views import (
     api_delete_server_chat_room,
     api_change_servers_title,
     api_change_servers_avatar,
+    api_save_audio_message,
 )
 
 
 urlpatterns : list = [
     path("api/v1/authorization", api_auth, name="api_auth"),
     path("api/v1/registration", api_reg, name="api_reg"),
+
     path("api/v1/getUsersChats", api_get_users_chats, name="api_get_users_chats"),
     path("api/v1/saveMessage", api_save_message, name="api_save_message"),
     path("api/v1/getChatMessages", api_get_chat_messages, name="api_get_chat_messages"),
@@ -45,6 +47,7 @@ urlpatterns : list = [
     path("api/v1/changeProfileAvatar", api_change_profile_avatar, name="api_change_profile_avatar"),
     path("api/v1/getUsersChat", api_get_users_chat, name="api_get_users_chat"),
     path("api/v1/changeUsersLogin", api_change_users_login, name="api_change_users_login"),
+
     path("api/v1/getUsersServers", api_get_users_servers, name="api_get_users_servers"),
     path("api/v1/createServer", api_create_server, name="api_create_server"),
     path("api/v1/getServersUsers", api_get_servers_users, name="api_get_servers_users"),
@@ -57,5 +60,6 @@ urlpatterns : list = [
     path("api/v1/deleteServersMessage", api_delete_servers_message, name="api_delete_servers_message"),
     path("api/v1/deleteServerChatRoom", api_delete_server_chat_room, name="api_delete_server_chat_room"),
     path("api/v1/changeServersTitle", api_change_servers_title, name="api_change_servers_title"),
-    path("api/v1/changeServersAvatar", api_change_servers_avatar, name="api_change_servers_avatar")
+    path("api/v1/changeServersAvatar", api_change_servers_avatar, name="api_change_servers_avatar"),
+    path("api/v1/saveAudioMessage", api_save_audio_message, name="api_save_audio_message"),
 ]

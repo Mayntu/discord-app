@@ -24,6 +24,7 @@ from server.utils import (
     get_token,
     handle_upload_file,
     handle_upload_file_server,
+    handle_upload_audio,
 )
 
 
@@ -213,6 +214,8 @@ def api_save_message(request):
     message.chat_id = chat
     message.from_user_id = from_user_id
     message.content = text
+
+    
     if img:
         message.media = media
     else:
@@ -824,7 +827,7 @@ def api_delete_servers_message(request):
         server_message : ServerMessage = ServerMessage.objects.get(uuid=server_message_uuid)
 
 
-        server_message_uuid.delete()
+        server_message.delete()
 
 
         return JsonResponse(data={"result" : True, "message" : "server message was deleted successfully"})
@@ -883,7 +886,7 @@ def api_change_servers_title(request):
 
         server.title = title
         
-        server.save
+        server.save()
 
 
     except Exception as e:
@@ -927,4 +930,12 @@ def api_change_servers_avatar(request):
 
 
     return JsonResponse(data={"result" : True, "message" : "saved to files", "filename" : filename})
+
+
+
+def api_save_audio_message(request):
+    data = request.FILES
+    audio_name : str = handle_upload_audio(file=data["audio"])
+    print(audio_name)
+    return JsonResponse(data={"result" : True, "message" : "saved"})
 

@@ -53,7 +53,7 @@ def handle_message(message):
         if result["result"] == True:
             message : str = dumps(result["message_data"])
             print(message)
-            send(message=message, room=chat_id)
+            emit("message", {"message" : message}, room=chat_id)
 
 
 @socketio.on("server_chat_message")

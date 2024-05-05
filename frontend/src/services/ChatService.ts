@@ -43,7 +43,7 @@ export class ChatService {
     static async saveM2(media : FormData):Promise<AxiosResponse<any>>{
 
                          //вот тут пропиши апи для получения аудио
-               return $api.post<any>("api/v1/changeProfileAvatar",media,{
+               return $api.post<any>("api/v1/saveAudioMessage",media,{
                             headers: {
                             'Content-Type': 'multipart/form-data'
                                     }
