@@ -13,7 +13,7 @@ import InputMessage from './InputMessage';
 
 
 const  MessageContainer : FC=()=> {
-  let [audioBlob,setAudioBlob] = useState<Blob>()
+
   const {chatid,chatserverid,serverid} = useParams()
   const [messageText,setMessageText] = useState<string>("")
   const [roomId,setRoomId] = useState<string>("")
@@ -199,7 +199,7 @@ const  MessageContainer : FC=()=> {
               )}
             </div>
             <InputMessage 
-              setAudioBlob={setAudioBlob}
+              
               sendMessage={sendMessage} 
               setFile={setFile} 
               setMessageText={setMessageText} 
@@ -228,7 +228,7 @@ const  MessageContainer : FC=()=> {
                 {file && (<p>pltcm afqk</p>)}
               </div>
               <InputMessage 
-               setAudioBlob={setAudioBlob}
+             
                 sendMessage={sendMessageServer}
                 setFile={setFile} 
                 setMessageText={setMessageText} 

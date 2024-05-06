@@ -7,7 +7,7 @@ import store from './store/index.ts'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import MessageContainer from './components/MessageContainer.tsx'
 import LoginForm from './components/LoginForm.tsx'
-import Test from './components/Test.tsx'
+import Test from './components/tests/Test.tsx'
 import ChatList from './components/ChatList.tsx'
 import ServerChatList from './components/ServerChatList.tsx'
 
@@ -37,7 +37,11 @@ const router = createBrowserRouter([
   },{
     path: "/test",
     element: <Test/>
-  }
+  },{
+    path: "/test/:roomID",
+    element: <Test/>
+  },
+ 
 ])
 
 

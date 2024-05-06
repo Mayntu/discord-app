@@ -6,17 +6,19 @@ import { socket } from "../socket";
 import { useParams } from "react-router-dom";
 
 interface  IInputMessage{
+  
   dropImage : (e:React.DragEvent<HTMLDivElement>)=>void,
   sendMessage: ()=> void,
   setFile:  React.Dispatch<React.SetStateAction<any>>,
   setMessageText : React.Dispatch<React.SetStateAction<string>>,
   messageText :string,
-  setAudioBlob:React.Dispatch<React.SetStateAction<Blob| undefined>> 
+  // setAudioBlob:React.Dispatch<React.SetStateAction<Blob| undefined>> 
 }
 
 
 
-const InputMessage:FC<IInputMessage>=({dropImage,sendMessage,setFile,setMessageText,messageText, setAudioBlob})=> {
+const InputMessage:FC<IInputMessage>=({dropImage,sendMessage,setFile,setMessageText,messageText})=> {
+  let [_,setAudioBlob] = useState<Blob>()
   const refImage = useRef<HTMLInputElement>(null) 
   const [stream, setStream] = useState<MediaStream>();
   const [permission, setPermission] = useState<boolean>(false);

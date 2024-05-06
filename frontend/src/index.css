@@ -632,7 +632,9 @@ width: 70%;
   align-items: center;
   justify-content: center;
 }
-
+.test video{
+  border: 1px solid black;
+}
 .test input{
   border: 1px solid black;
 }
