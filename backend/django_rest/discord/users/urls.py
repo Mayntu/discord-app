@@ -9,7 +9,7 @@ from users.views import (
 )
 
 
-urlpatterngs : list = [
+urlpatterns : list = [
     path("api/v1/authorization", api_auth, name="api_auth"),
     path("api/v1/registration", api_reg, name="api_reg"),
     path("api/v1/getUsersInfo", api_get_users_info, name="api_get_users_info"),
