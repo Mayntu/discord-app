@@ -1,19 +1,6 @@
 from django.urls import path
 from server.views import (
-    api_auth,
-    api_reg,
-    api_get_users_chats,
-    api_save_message,
-    api_get_chat_messages,
-    api_find_users,
-    api_create_chat,
-    api_make_user_online,
-    api_delete_message,
-    api_delete_users_chat,
-    api_get_users_info,
-    api_change_profile_avatar,
     api_get_users_chat,
-    api_change_users_login,
     api_get_users_servers,
     api_create_server,
     api_get_servers_users,
@@ -32,22 +19,7 @@ from server.views import (
 
 
 urlpatterns : list = [
-    path("api/v1/authorization", api_auth, name="api_auth"),
-    path("api/v1/registration", api_reg, name="api_reg"),
-
-    path("api/v1/getUsersChats", api_get_users_chats, name="api_get_users_chats"),
-    path("api/v1/saveMessage", api_save_message, name="api_save_message"),
-    path("api/v1/getChatMessages", api_get_chat_messages, name="api_get_chat_messages"),
-    path("api/v1/findUsers", api_find_users, name="api_find_users"),
-    path("api/v1/createChat", api_create_chat, name="api_create_chat"),
-    path("api/v1/makeUserOnline", api_make_user_online, name="api_make_user_online"),
-    path("api/v1/deleteMessage", api_delete_message, name="api_delete_message"),
-    path("api/v1/deleteUsersChat", api_delete_users_chat, name="api_delete_users_chat"),
-    path("api/v1/getUsersInfo", api_get_users_info, name="api_get_users_info"),
-    path("api/v1/changeProfileAvatar", api_change_profile_avatar, name="api_change_profile_avatar"),
     path("api/v1/getUsersChat", api_get_users_chat, name="api_get_users_chat"),
-    path("api/v1/changeUsersLogin", api_change_users_login, name="api_change_users_login"),
-
     path("api/v1/getUsersServers", api_get_users_servers, name="api_get_users_servers"),
     path("api/v1/createServer", api_create_server, name="api_create_server"),
     path("api/v1/getServersUsers", api_get_servers_users, name="api_get_servers_users"),
