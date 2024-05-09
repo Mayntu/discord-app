@@ -16,6 +16,7 @@ from server.models import (
     Server,
     ServerChatRoom,
     ServerMessage,
+    InvitationLink,
 )
 from server.serializers import (
     ServerSerializer,
@@ -31,6 +32,7 @@ from chats.utils import (
 )
 from server.utils import (
     handle_upload_file_server,
+    generate_link,
 )
 
 
@@ -104,6 +106,7 @@ def api_create_server(request):
     avatar : str = files.get("file")
 
 
+    print(data)
     filename : str = ""
     if avatar:
         filename : str = handle_upload_file(file=avatar)
@@ -493,6 +496,21 @@ def api_change_servers_avatar(request):
 
 
     return JsonResponse(data={"result" : True, "message" : "saved to files", "filename" : filename})
+
+
+
+def api_get_invitation_link(request):
+    data : dict = json.loads(request.body)
+
+    server_uuid : str = data.get("server_uuid")
+    link : str = generate_link(server_uuid=server_uuid)
+
+    invitation_link : InvitationLink = InvitationLink()
+    invitation_link.data = link
+    invitation_link.server_uuid = server_uuid
+    invitation_link.save()
+
+    return JsonResponse(data={"result" : True, "link" : invitation_link.data})
 
 
 

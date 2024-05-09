@@ -27,3 +27,9 @@ class ServerMessage(models.Model):
     content = models.CharField(max_length=2048, blank=False, verbose_name="content")
     media = models.CharField(max_length=512, null=True, blank=True, verbose_name="media")
     timestamp = models.DateTimeField(auto_now_add=True, verbose_name="date time")
+
+
+class InvitationLink(models.Model):
+    uuid = models.UUIDField(default=uuid4, primary_key=True, verbose_name="UUID_")
+    data = models.CharField(max_length=64, verbose_name="invitation_link_data")
+    server_uuid = models.CharField(max_length=64, verbose_name="server_uuid")

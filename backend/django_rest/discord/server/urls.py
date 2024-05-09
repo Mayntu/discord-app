@@ -14,6 +14,7 @@ from server.views import (
     api_delete_server_chat_room,
     api_change_servers_title,
     api_change_servers_avatar,
+    api_get_invitation_link,
     api_save_audio_message,
 )
 
@@ -33,5 +34,6 @@ urlpatterns : list = [
     path("api/v1/deleteServerChatRoom", api_delete_server_chat_room, name="api_delete_server_chat_room"),
     path("api/v1/changeServersTitle", api_change_servers_title, name="api_change_servers_title"),
     path("api/v1/changeServersAvatar", api_change_servers_avatar, name="api_change_servers_avatar"),
+    path("api/v1/getInvitationLink", api_get_invitation_link, name="api_get_invitation_link"),
     path("api/v1/saveAudioMessage", api_save_audio_message, name="api_save_audio_message"),
 ]
