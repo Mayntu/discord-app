@@ -7,6 +7,10 @@ from users.models import (
 from users.serializers import (
     UserSerializer,
 )
+from server.models import (
+    Server,
+    InvitationLink,
+)
 
 from users.utils import (
     generate_jwt,
@@ -185,3 +189,33 @@ def api_make_user_online(request):
     
     return JsonResponse(data={"result" : False, "error" : "not valid token"})
 
+
+
+def api_join_server(request, link_data : str):
+    headers : dict = request.headers
+    token : str = headers.get("Authorization").replace('"', "")
+    token_content : dict = get_token(token=token)
+
+    if not token_content:
+        return JsonResponse(data={"result" : False, "message" : "not valid token"})
+
+
+    try:
+        invitation_link : InvitationLink = InvitationLink.objects.get(data=link_data)
+    except Exception as e:
+        print(e)
+        return JsonResponse(data={"result" : False, "message" : "not valid link"})
+    
+    server_uuid : str = invitation_link.server_uuid
+
+    try:
+        server : Server = Server.objects.get(uuid=server_uuid)
+        
+        user_uuid : str = token_content.get("uuid")
+
+        user : User = User.objects.get(uuid=user_uuid)
+        
+        server.users.add(user)
+    except Exception as e:
+        print(e)
+        return JsonResponse(data={"result" : True, "message" : "server not exists"})
