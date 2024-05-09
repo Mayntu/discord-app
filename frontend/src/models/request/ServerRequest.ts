@@ -5,6 +5,6 @@ export interface IcreateServerChat {
 
 
 export interface  IDeleteSereverChatRoom{
-    server_uuid : string;
+    server_id : string;
     server_chat_room_id: string
 }

@@ -15,10 +15,10 @@ export class ServerService{
         return $api.post<any>("api/v1/deleteServer",{server_id})
     }
 
-    /// здесь нужно пересмтореть 
-    // static async  createServer(server_uuid: string,title: string):Promise<AxiosResponse<any>>{
-    //     return $api.post<any>("api/v1/changeServersAvatar",{server_uuid,title,file: 'dceec'})
-    // }
+    // / здесь нужно пересмтореть 
+    static async  createServer(server_uuid: string,title: string):Promise<AxiosResponse<any>>{
+        return $api.post<any>("api/v1/createServer",{title:"ujhuhuhuhuh",file: 'dceec'})
+    }
 
 
     static async postChangeServersTitle(uuid:string,title:string):Promise<AxiosResponse<any>>{
@@ -32,8 +32,9 @@ export class ServerService{
         return $api.post<any>("api/v1/getServerChatRooms",{server_uuid})
     }
 
-    static async postDeleteServerChatRoom(server_uuid : string,server_chat_room_id: string):Promise<AxiosResponse<any>>{
-        return $api.post<any>("api/v1/deleteServerChatRoom",{server_uuid,server_chat_room_id})
+    static async postDeleteServerChatRoom(server_id : string,server_chat_room_id: string):Promise<AxiosResponse<any>>{
+        console.log(server_id,server_chat_room_id)
+        return $api.post<any>("api/v1/deleteServerChatRoom",{server_id,server_chat_room_id})
     }
 
     static async getServer():Promise<AxiosResponse<IServersUsers<IServer>>>{

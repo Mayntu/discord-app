@@ -20,8 +20,9 @@ const ServerContainer=()=> {
       const formData = new FormData()
       formData.append("file",file)
       formData.append("title","somicHerous")
+      console.log(formData,"formdata")
       await dispatch(fetchCreateServer(formData))
-      dispatch(fetchGetServer())
+      // dispatch(fetchGetServer())
       setIsCreateSreverM(false)
     }
     useEffect(()=>{
@@ -52,7 +53,7 @@ const ServerContainer=()=> {
     >
         изменить имя
       </div>
-    <div className="block-server" onClick={()=> server()}>
+    <div className="block-server" onClick={()=> setIsCreateSreverM(true)}>
       создать сервер
       
     </div>

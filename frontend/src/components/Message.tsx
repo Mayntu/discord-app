@@ -22,7 +22,7 @@ const  Message: FC<MessageProps>=({classUser,children,time,media,uuid})=> {
     <div className={classUser == me.uuid || me.uuid == "" || undefined ? 'message my-message'  : 'message'}>
       <div className={classUser == me.uuid || me.uuid == "" || undefined ? 'chat-message'  : 'chat-message'}>
         <div className="avatar avatar-message">
-          {me.avatar == "." ?  (<img src={avatar} alt="" />) :   (<img src={"http://localhost:5173/"+me.avatar} alt="" />)}
+          {me.avatar == "" ?  (<img src={"http://localhost:5173/"+avatar} alt="" />) :   (<img src={"http://localhost:5173/"+me.avatar} alt="" />)}
         </div>
           <div className="column">
             <p>{children}</p>

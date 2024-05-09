@@ -86,8 +86,8 @@ export const fetchCreateServerChat = createAsyncThunk(
     'server/ fetchDeleteServerChatRoom',
     async (payload:IDeleteSereverChatRoom, thunkAPI) => {
       try {
-        const response = await ServerService.postDeleteServerChatRoom(payload.server_uuid,payload.server_chat_room_id)
-        console.log(response.data,"fetchDeleteServer")
+        const response = await ServerService.postDeleteServerChatRoom(payload.server_id,payload.server_chat_room_id)
+        console.log(response.data,"fetchDeleteServerChatRoom")
         return response.data
       } catch (error: any) {
         return thunkAPI.rejectWithValue(error?.message)

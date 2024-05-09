@@ -218,7 +218,7 @@ const  MessageContainer : FC=()=> {
                 </>)}
               </div>
                   <button onClick={()=>{
-                    dispatch(fetchDeleteServerChatRoom({server_chat_room_id: chatserverid, server_uuid: serverid}))
+                    dispatch(fetchDeleteServerChatRoom({server_chat_room_id: chatserverid, server_id: serverid}))
                     }}>удалить</button>
             </div>
               <div className="get-message-cantainer">
