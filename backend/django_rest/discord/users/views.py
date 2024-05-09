@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 
 from users.models import (
     User,
@@ -216,6 +216,8 @@ def api_join_server(request, link_data : str):
         user : User = User.objects.get(uuid=user_uuid)
         
         server.users.add(user)
+
+        return HttpResponseRedirect(redirect_to="/server/")
     except Exception as e:
         print(e)
         return JsonResponse(data={"result" : True, "message" : "server not exists"})
