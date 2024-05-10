@@ -47,6 +47,8 @@ export class ServerService{
     static async postDeleteServersMessage(server_message_uuid: string):Promise<AxiosResponse<any>>{
         return $api.post<any>("api/v1/deleteServersMessage",{server_message_uuid})
     }
-   
-   
+
+   static async postInvitationLink(server_uuid: string):Promise<AxiosResponse<any>>{
+    return $api.post<any>("api/v1/getInvitationLink",{server_uuid})
+}
 }

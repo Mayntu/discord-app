@@ -2,7 +2,7 @@ import  { FC, useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock'
 import { NavLink, Outlet, useParams } from 'react-router-dom'
 
-import { fetchCreateServerChat, fetchDeleteServer, fetchGetServerChatRooms } from '../store/actionServer'
+import { fetchCreateServerChat, fetchDeleteServer, fetchGetServerChatRooms, fetchpostInvitationLink } from '../store/actionServer'
 
 
 
@@ -27,6 +27,7 @@ const ServerChatList:FC=()=> {
     <>
      <div className='chat-list-container'>
      <button onClick={()=>{serverid && dispatch(fetchDeleteServer(serverid))}}>dalete server</button>
+     <button onClick={()=>{serverid && dispatch(fetchpostInvitationLink(serverid))}}>пригласить</button>
       <input type="text" onChange={(e)=>{setChatName(e.target.value)}} value={chatName}/>
      
       <button onClick={()=>{ 

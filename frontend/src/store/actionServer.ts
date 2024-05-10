@@ -120,3 +120,17 @@ export const fetchCreateServerChat = createAsyncThunk(
       }
     },
   )
+
+
+  export const fetchpostInvitationLink = createAsyncThunk(
+    'server/fetchpostInvitationLink',
+    async (payload:string, thunkAPI) => {
+      try {
+        const response = await ServerService.postInvitationLink(payload)
+        console.log(response.data,"fetchInvitationLink")
+        return response.data
+      } catch (error: any) {
+        return thunkAPI.rejectWithValue(error?.message)
+      }
+    },
+  )
