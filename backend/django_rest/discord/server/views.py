@@ -30,9 +30,11 @@ from chats.utils import (
     handle_upload_file,
     handle_upload_audio,
 )
+from chats.speach_recognise import recognise
 from server.utils import (
     handle_upload_file_server,
     generate_link,
+    handle_upload_audio_server,
 )
 
 
@@ -119,6 +121,7 @@ def api_create_server(request):
     )
 
     os.mkdir(f"{BASE_DIR.parent.parent.parent}/frontend/public/media/images/servers/{server.uuid}")
+    os.mkdir(f"{BASE_DIR.parent.parent.parent}/frontend/public/media/audios/servers/{server.uuid}")
     
 
 
@@ -278,12 +281,19 @@ def api_save_server_chat_message(request):
 
 
     server : Server = Server.objects.get(uuid=server_uuid)
+    print(server_uuid)
 
     
     print(img)
     
     if img:
-        media : str = handle_upload_file_server(file=img, server_id=server_uuid)
+        if not str(img) == "mp3":
+            media : str = handle_upload_file_server(file=img, server_id=server_uuid) 
+        else:
+            media : str = handle_upload_audio_server(file=img, server_id=server_uuid)
+            audio_path : str = f"{BASE_DIR.parent.parent.parent}/frontend/public/{media}"; print(audio_path)
+            # data : str = recognise(path=audio_path)
+            # print(data)
 
 
 
@@ -519,4 +529,28 @@ def api_save_audio_message(request):
     audio_name : str = handle_upload_audio(file=data["audio"])
     print(audio_name)
     return JsonResponse(data={"result" : True, "message" : "saved"})
+
+
+
+def api_recognize_audio_server(request):
+    headers : dict = request.headers
+
+    token : str = headers.get("Authorization").replace('"', "")
+    token_content : dict = get_token(token=token)
+    
+
+    if token_content:
+        data : dict = json.loads(request.body)
+
+        message_uuid : str = data.get("message_id")
+        message : ServerMessage = ServerMessage.objects.get(uuid=message_uuid)
+
+        if not message.content:
+            message.content = recognise(path=open(file=message.media, mode="rb"))
+            message.save()
+        
+
+        return JsonResponse(data={"result" : True, "message" : "chat delete successfully"})
+    
+    return JsonResponse(data={"result" : False, "message" : "not valid token"})
 

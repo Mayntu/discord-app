@@ -16,6 +16,7 @@ from server.views import (
     api_change_servers_avatar,
     api_get_invitation_link,
     api_save_audio_message,
+    api_recognize_audio_server,
 )
 
 
@@ -36,4 +37,5 @@ urlpatterns : list = [
     path("api/v1/changeServersAvatar", api_change_servers_avatar, name="api_change_servers_avatar"),
     path("api/v1/getInvitationLink", api_get_invitation_link, name="api_get_invitation_link"),
     path("api/v1/saveAudioMessage", api_save_audio_message, name="api_save_audio_message"),
+    path("api/v1/recognizeAudioServer", api_recognize_audio_server, name="api_recognize_audio_server"),
 ]

@@ -32,6 +32,8 @@ INSTALLED_APPS = [
     'chats'
 ]
 
+VOSK_MODEL_PATH : str = "chats/recognizer/ru"
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

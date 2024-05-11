@@ -17,6 +17,7 @@ from users.utils import (
 from chats.utils import (
     handle_upload_file,
 )
+from chats.speach_recognise import recognise
 
 import json
 
@@ -284,6 +285,30 @@ def api_delete_users_chat(request):
 
         return JsonResponse(data={"result" : True, "message" : "chat delete successfully"})
     
+    
+    return JsonResponse(data={"result" : False, "message" : "not valid token"})
+
+
+
+def api_recognize_audio(request):
+    headers : dict = request.headers
+
+    token : str = headers.get("Authorization").replace('"', "")
+    token_content : dict = get_token(token=token)
+    
+
+    if token_content:
+        data : dict = json.loads(request.body)
+
+        message_uuid : str = data.get("message_id")
+        message : Message = Message.objects.get(uuid=message_uuid)
+
+        if not message.content:
+            message.content = recognise(path=open(file=message.media, mode="rb"))
+            message.save()
+        
+
+        return JsonResponse(data={"result" : True, "message" : "chat delete successfully"})
     
     return JsonResponse(data={"result" : False, "message" : "not valid token"})
 
