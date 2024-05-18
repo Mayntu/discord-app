@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { socket, socketWebRTC } from "../socket";
-
+import freeice from "freeice"
 const useStateWithCallback = (initialState:string[]) => {
   const [state, setState] = useState<string[]>(initialState);
   const cbRef = useRef(null);
@@ -32,7 +32,7 @@ const Test =()=> {
   let streamData = useRef<MediaStream>()
   const videoPlayer = useRef<HTMLVideoElement>(null) 
   const peerMediaElements = useRef<any>({})
-
+  const peerConnecthions = useRef<any>({})
   const addNewClients = useCallback((newClient:string,cb:()=>void)=>{
     if(!clients.includes(newClient)){
       setClients(list=>[...list,newClient],cb)
@@ -78,10 +78,53 @@ useEffect(()=>{
 
   useEffect(()=>{
     async function handleNewPeer({peerId,createOffer}) {
-      
+      if(peerId in peerConnecthions.current){
+        return console.log("already connected")
+      }else{
+        peerConnecthions.current[peerId]  = new RTCPeerConnection({
+          iceServers : freeice()
+        })
+      }
+
+      peerConnecthions.current[peerId].onicecandidate = (event:any)=>{
+        if(event.candidate){
+          socketWebRTC.emit("relay-ice",{
+            peerId,
+            iceCandidate: event.candidate
+          })
+        }
+      }
+
+      let tracksNumber = 0
+      peerConnecthions.current[peerId].ontrack = ({streams: [remoteStream]})=>{
+          tracksNumber++
+        if(tracksNumber ===2){
+          addNewClients(peerId,()=>{
+            peerMediaElements.current[peerId].srcObject = remoteStream
+          })
+        }
+      }
+
+
+      streamData.current?.getTracks().forEach(track=>{
+        peerConnecthions.current[peerId].addTrack(track,streamData.current)
+      })
+
+      if(createOffer){
+        const offer = await peerConnecthions.current[peerId].createOffer()
+
+        await peerConnecthions.current[peerId].setLocalDescription(offer)
+
+        socketWebRTC.emit("relay-sdp",{
+          peerId,
+          sessionDescripthion: offer
+        })
+      }
+
     }
 
     socketWebRTC.on("user-connect",data=>{
+      handleNewPeer({peerId:data.sid,createOffer:true})
       console.log(data,"user-connect")
     })
     socketWebRTC.on("user-list",data=>{
@@ -90,6 +133,63 @@ useEffect(()=>{
   },[socketWebRTC])
 
 
+  useEffect(()=>{
+
+    async function setRemoteMedia({peerID, sessionDescription: remoteDescription}) {
+      await peerConnecthions.current[peerID]?.setRemoteDescription(
+        new RTCSessionDescription(remoteDescription)
+      );
+
+      if (remoteDescription.type === 'offer') {
+        const answer = await peerConnecthions.current[peerID].createAnswer();
+
+        await peerConnecthions.current[peerID].setLocalDescription(answer);
+
+        socket.emit("RELAY_SDP", {
+          peerID,
+          sessionDescription: answer,
+        });
+      }
+    }
+
+    socketWebRTC.on("session-description", setRemoteMedia)
+  },[])
+
+  useEffect(() => {
+    socket.on("ICE_CANDIDATE", ({peerID, iceCandidate}) => {
+      peerConnecthions.current[peerID]?.addIceCandidate(
+        new RTCIceCandidate(iceCandidate)
+      );
+    });
+
+    return () => {
+      socket.off(ACTIONS.ICE_CANDIDATE);
+    }
+  }, []);
+
+  useEffect(() => {
+    const handleRemovePeer = ({peerID}) => {
+      if (peerConnecthions.current[peerID]) {
+        peerConnecthions.current[peerID].close();
+      }
+
+      delete peerConnecthions.current[peerID];
+      delete peerMediaElements.current[peerID];
+
+     setClients(list => list.filter(c => c !== peerID));
+    };
+
+    socket.on("REMOVE_PEER", handleRemovePeer);
+
+    return () => {
+      socket.off("REMOVE_PEER");
+    }
+  }, []);
+
+
+
+
+  
  return (
    <div className="test">
     {roomID ? 
