@@ -1,57 +1,92 @@
-from flask import Flask, request, session, render_template
+from flask import Flask, render_template, request, redirect, url_for, session
 from flask_socketio import SocketIO, emit, join_room, leave_room
+
+
 from engineio.payload import Payload
 Payload.max_decode_packets = 200
-app : Flask = Flask(__name__)
-app.config["SECRET_KEY"] = "supersecretkey"
 
-socketio : SocketIO = SocketIO(
-    app=app
-)
+app = Flask(__name__)
+app.config['SECRET_KEY'] = "thisismys3cr3tk3y"
 
-CONNECTED_USERS : list = []
-ROOMS : dict = {
-    "room_id1" : []
-}
+socketio = SocketIO(app)
+
+
+_users_in_room = {}
+_room_of_sid = {}
+_name_of_sid = {}
+
 
 @app.route("/", methods=["GET", "POST"])
-def main():
-    return "index test"
-
-
-@app.route("/test", methods=["GET", "POST"])
-def test_view():
+def index():
     return render_template("test.html")
 
 
-
 @socketio.on("connect")
-def user_connect():
-    print(f"{request.sid}")
-    CONNECTED_USERS.append(request.sid)
-    print(CONNECTED_USERS)
-    print(ROOMS)
-
+def on_connect():
+    sid = request.sid
+    print("New socket connected ", sid)
+    
 
 @socketio.on("join-room")
-def join_room(data):
-    room_id : str = data.get("roomID")
-    print(room_id)
-    if isinstance(ROOMS.get(room_id), list):
-        ROOMS[room_id].append(request.sid)
-        emit("join-room", {"data" : ROOMS[room_id]}, broadcast=True)
+def on_join_room(data):
+    sid = request.sid
+    room_id = data["room_id"]
+    display_name = session[room_id]["name"]
     
+    join_room(room_id)
+    _room_of_sid[sid] = room_id
+    _name_of_sid[sid] = display_name
+    
+    print("[{}] New member joined: {}<{}>".format(room_id, display_name, sid))
+    emit("user-connect", {"sid": sid, "name": display_name}, broadcast=True, include_self=False, room=room_id)
+    
+    if room_id not in _users_in_room:
+        _users_in_room[room_id] = [sid]
+        emit("user-list", {"my_id": sid})
+    else:
+        usrlist = {u_id:_name_of_sid[u_id] for u_id in _users_in_room[room_id]}
+        emit("user-list", {"list": usrlist, "my_id": sid})
+        _users_in_room[room_id].append(sid)
+
+    print("\nusers: ", _users_in_room, "\n")
 
 
 @socketio.on("disconnect")
-def user_dis_connect():
-    print(request.sid)
-    CONNECTED_USERS.remove(request.sid)
+def on_disconnect():
+    sid = request.sid
+    room_id = _room_of_sid[sid]
+    display_name = _name_of_sid[sid]
 
+    print("[{}] Member left: {}<{}>".format(room_id, display_name, sid))
+    emit("user-disconnect", {"sid": sid}, broadcast=True, include_self=False, room=room_id)
+
+    _users_in_room[room_id].remove(sid)
+    try:
+        if len(_users_in_room[room_id]) == 0:
+            _users_in_room.pop(room_id)
+    except:
+        print("no users")
+
+    _room_of_sid.pop(sid)
+    _name_of_sid.pop(sid)
+
+    print("\nusers: ", _users_in_room, "\n")
+
+
+@socketio.on("data")
+def on_data(data):
+    sender_sid = data['sender_id']
+    target_sid = data['target_id']
+    if sender_sid != request.sid:
+        print("[Not supposed to happen!] request.sid and sender_id don't match!!!")
+
+    if data["type"] != "new-ice-candidate":
+        print('{} message from {} to {}'.format(data["type"], sender_sid, target_sid))
+    socketio.emit('data', data, room=target_sid)
 
 if __name__ == "__main__":
-    app.run(
+    socketio.run(
+        app, 
         debug=True,
-        host="0.0.0.0",
-        port=5555,
+        host="0.0.0.0"
     )
