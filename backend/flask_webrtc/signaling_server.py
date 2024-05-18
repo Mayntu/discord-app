@@ -46,7 +46,7 @@ def on_join_room(data):
     else:
         _users_in_room[room_id].append(sid)
         usrlist = {u_id:_name_of_sid[u_id] for u_id in _users_in_room[room_id]}
-        emit("user-list", {"list": usrlist}, broadcast=True, include_self=False, room=room_id)
+        emit("user-list", {"list": usrlist}, broadcast=True, include_self=True, room=room_id)
 
     print("\nusers: ", _users_in_room, "\n")
 
