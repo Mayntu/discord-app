@@ -46,7 +46,6 @@ def on_join_room(data):
     
 
     
-    #
     print("[{}] New member joined: {}<{}>".format(room_id, display_name, sid))
     emit("user-connect", {"sid": sid, "name": display_name}, broadcast=True, include_self=False, room=room_id)
     
