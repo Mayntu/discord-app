@@ -155,6 +155,7 @@ def api_save_message(request):
     message_data["content"] = message.content
     message_data["media"] = message.media
     message_data["timestamp"] = message.timestamp
+    message_data["type"] = "media" if img else "text"
 
     chat.messages.add(message)
 
