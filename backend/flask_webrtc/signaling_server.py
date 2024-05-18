@@ -31,7 +31,7 @@ def on_connect():
 def on_join_room(data):
     sid = request.sid
     room_id = data["room_id"]
-    display_name = session[room_id]["name"]
+    display_name = data["name"]
     
     join_room(room_id)
     _room_of_sid[sid] = room_id
