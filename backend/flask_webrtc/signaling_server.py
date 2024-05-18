@@ -40,9 +40,6 @@ def on_join_room(data):
     _name_of_sid[sid] = display_name
 
     
-    for user_id in _users_in_room[room_id]:
-        emit(ACTIONS.ADD_PEER, {"peerID" : request.sid, "createOffer" : False}, to=user_id)
-        emit(ACTIONS.ADD_PEER, {"peerID" : user_id, "createOffer" : True})
     
 
     
@@ -57,6 +54,12 @@ def on_join_room(data):
         usrlist = {u_id:_name_of_sid[u_id] for u_id in _users_in_room[room_id]}
         emit("user-list", {"list": usrlist}, broadcast=True, include_self=True, room=room_id)
 
+    for user_id in _users_in_room[room_id]:
+        emit(ACTIONS.ADD_PEER, {"peerID" : request.sid, "createOffer" : False}, to=user_id)
+        emit(ACTIONS.ADD_PEER, {"peerID" : user_id, "createOffer" : True})
+    
+
+    
     print("\nusers: ", _users_in_room, "\n")
 
 
