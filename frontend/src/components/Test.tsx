@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
-import { socket, socketWebRTC } from "../socket";
+import {  socketWebRTC } from "../socket";
 import freeice from "freeice"
 const useStateWithCallback = (initialState:string[]) => {
   const [state, setState] = useState<string[]>(initialState);
@@ -66,10 +66,14 @@ const Test =()=> {
 useEffect(()=>{
   startCamera()
 
-  return ()=>{
-    streamData.current?.getTracks().forEach(track=>track.stop())
-  }
-},[])
+
+    return () => {
+      streamData.current?.getTracks().forEach(track=>track.stop())
+
+      socketWebRTC.emit("leave");
+    };
+  
+},[roomID])
 
   const provideMediaRef = useCallback((id:string,node:any)=>{
     peerMediaElements.current[id] = node
@@ -77,20 +81,21 @@ useEffect(()=>{
 
 
   useEffect(()=>{
-    async function handleNewPeer({peerId,createOffer}) {
+    async function handleNewPeer({peerID:peerId ,createOffer}) {
       if(peerId in peerConnecthions.current){
         return console.log("already connected")
-      }else{
+      }
+
         peerConnecthions.current[peerId]  = new RTCPeerConnection({
           iceServers : freeice()
         })
-      }
+        console.log(peerId,"peer", peerConnecthions.current[peerId])
 
       peerConnecthions.current[peerId].onicecandidate = (event:any)=>{
         if(event.candidate){
           socketWebRTC.emit("relay-ice",{
             peerId,
-            iceCandidate: event.candidate
+            ice_candidate: event.candidate
           })
         }
       }
@@ -112,58 +117,68 @@ useEffect(()=>{
 
       if(createOffer){
         const offer = await peerConnecthions.current[peerId].createOffer()
-
+        console.log(offer,createOffer,"offer")
         await peerConnecthions.current[peerId].setLocalDescription(offer)
 
         socketWebRTC.emit("relay-sdp",{
           peerId,
-          sessionDescripthion: offer
+          session_description: offer
         })
       }
 
     }
 
-    socketWebRTC.on("user-connect",data=>{
-      handleNewPeer({peerId:data.sid,createOffer:true})
-      console.log(data,"user-connect")
-    })
-    socketWebRTC.on("user-list",data=>{
-      console.log(data,"user-list")
-    })
-  },[socketWebRTC])
+
+    socketWebRTC.on("add-peer", handleNewPeer);
+
+    return () => {
+      socketWebRTC.off("add-peer");
+    }
+
+    // socketWebRTC.on("user-connect",data=>{
+    //   handleNewPeer({peerId:data.sid,createOffer:true})
+    //   console.log(data,"user-connect")
+    // })
+    // socketWebRTC.on("user-list",data=>{
+    //   console.log(data,"user-list")
+    // })
+  },[])
 
 
   useEffect(()=>{
 
     async function setRemoteMedia({peerID, sessionDescription: remoteDescription}) {
-      await peerConnecthions.current[peerID]?.setRemoteDescription(
-        new RTCSessionDescription(remoteDescription)
-      );
+      console.log(remoteDescription,"discrepthion")
+      console.log(peerConnecthions.current[peerID],"do",peerID)
+      await peerConnecthions.current[peerID]?.setRemoteDescription(remoteDescription);
+      console.log(peerConnecthions.current[peerID],"posle",peerID)
+
 
       if (remoteDescription.type === 'offer') {
-        const answer = await peerConnecthions.current[peerID].createAnswer();
+        // console.log(peerConnecthions.current[peerID],"do answer")
+        const answer = await peerConnecthions.current[peerID].createAnswer()
+        // console.log(answer)
+        await peerConnecthions.current[peerID].setLocalDescription(answer)
 
-        await peerConnecthions.current[peerID].setLocalDescription(answer);
-
-        socket.emit("RELAY_SDP", {
-          peerID,
-          sessionDescription: answer,
+        socketWebRTC.emit("relay-sdp", {
+          peer_id: peerID,
+          session_description: answer,
         });
       }
     }
 
-    socketWebRTC.on("session-description", setRemoteMedia)
+    socketWebRTC.on("session-descrption", setRemoteMedia)
   },[])
 
   useEffect(() => {
-    socket.on("ICE_CANDIDATE", ({peerID, iceCandidate}) => {
+    socketWebRTC.on("ice-candidate", ({peerID, iceCandidate}) => {
       peerConnecthions.current[peerID]?.addIceCandidate(
         new RTCIceCandidate(iceCandidate)
       );
     });
 
     return () => {
-      socket.off(ACTIONS.ICE_CANDIDATE);
+      socketWebRTC.off("ice-candidate");
     }
   }, []);
 
@@ -179,17 +194,17 @@ useEffect(()=>{
      setClients(list => list.filter(c => c !== peerID));
     };
 
-    socket.on("REMOVE_PEER", handleRemovePeer);
+    socketWebRTC.on("remove-peer", handleRemovePeer);
 
     return () => {
-      socket.off("REMOVE_PEER");
+      socketWebRTC.off("remove-peer");
     }
   }, []);
 
 
 
 
-  
+
  return (
    <div className="test">
     {roomID ? 
@@ -229,6 +244,59 @@ useEffect(()=>{
 
 
 export default Test
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
  {/* <img src="media/images/758b3624-b9c9-4e34-8ffe-08baeadfeba4.png" alt="" /> */}
