@@ -112,6 +112,7 @@ def relay_sdp(data):
 def relay_ice(data):
     peer_id : str = data.get("peer_id")
     ice_candidate : str = data.get("ice_candidate")
+    print("RELAY_ICE")
     emit(ACTIONS.ICE_CANDIDATE, {"peerID" : request.sid, "iceCandidate" : ice_candidate}, to=peer_id)
 
 

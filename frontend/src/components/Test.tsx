@@ -91,10 +91,11 @@ useEffect(()=>{
         })
         console.log(peerId,"peer", peerConnecthions.current[peerId])
 
-      peerConnecthions.current[peerId].onicecandidate = (event:any)=>{
+      peerConnecthions.current[peerId].onicecandidate = (event: { candidate: any; })=>{
+        console.log("candidat")
         if(event.candidate){
           socketWebRTC.emit("relay-ice",{
-            peerId,
+            peer_id : peerId,
             ice_candidate: event.candidate
           })
         }
@@ -105,6 +106,7 @@ useEffect(()=>{
           tracksNumber++
         if(tracksNumber ===2){
           addNewClients(peerId,()=>{
+            console.log("new peerID")
             peerMediaElements.current[peerId].srcObject = remoteStream
           })
         }
@@ -121,7 +123,7 @@ useEffect(()=>{
         await peerConnecthions.current[peerId].setLocalDescription(offer)
 
         socketWebRTC.emit("relay-sdp",{
-          peerId,
+          peer_id: peerId,
           session_description: offer
         })
       }
@@ -148,18 +150,18 @@ useEffect(()=>{
   useEffect(()=>{
 
     async function setRemoteMedia({peerID, sessionDescription: remoteDescription}) {
-      console.log(remoteDescription,"discrepthion")
-      console.log(peerConnecthions.current[peerID],"do",peerID)
+      // console.log(remoteDescription,"discrepthion")
+      // console.log(peerConnecthions.current[peerID],"do",peerID)
       await peerConnecthions.current[peerID]?.setRemoteDescription(remoteDescription);
-      console.log(peerConnecthions.current[peerID],"posle",peerID)
+      // console.log(peerConnecthions.current[peerID],"posle",peerID)
 
 
-      if (remoteDescription.type === 'offer') {
+      if (remoteDescription.type === 'offer' && peerConnecthions.current[peerID]) {
         // console.log(peerConnecthions.current[peerID],"do answer")
         const answer = await peerConnecthions.current[peerID].createAnswer()
         // console.log(answer)
         await peerConnecthions.current[peerID].setLocalDescription(answer)
-
+        console.log(peerConnecthions.current[peerID],"answer")
         socketWebRTC.emit("relay-sdp", {
           peer_id: peerID,
           session_description: answer,
@@ -172,6 +174,7 @@ useEffect(()=>{
 
   useEffect(() => {
     socketWebRTC.on("ice-candidate", ({peerID, iceCandidate}) => {
+      console.log("ice-candidate")
       peerConnecthions.current[peerID]?.addIceCandidate(
         new RTCIceCandidate(iceCandidate)
       );
