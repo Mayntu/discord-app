@@ -8,7 +8,7 @@ Payload.max_decode_packets = 200
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "thisismys3cr3tk3y"
 
-socketio = SocketIO(app)
+socketio : SocketIO = SocketIO(app, cors_allowed_origins="*")
 
 
 _users_in_room = {}
