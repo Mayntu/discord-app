@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
+import { socket, socketWebRTC } from "../socket";
 
 const useStateWithCallback = (initialState:string[]) => {
   const [state, setState] = useState<string[]>(initialState);
@@ -74,6 +75,21 @@ useEffect(()=>{
     peerMediaElements.current[id] = node
   },[])
 
+
+  useEffect(()=>{
+    async function handleNewPeer({peerId,createOffer}) {
+      
+    }
+
+    socketWebRTC.on("user-connect",data=>{
+      console.log(data,"user-connect")
+    })
+    socketWebRTC.on("user-list",data=>{
+      console.log(data,"user-list")
+    })
+  },[socketWebRTC])
+
+
  return (
    <div className="test">
     {roomID ? 
@@ -97,7 +113,10 @@ useEffect(()=>{
     <>
       <input type="text" placeholder="roomid" value={room} onChange={(e)=>{setRoom(e.target.value)}}/>
       <button onClick={()=>{
-        room && navigate(`/test/:${room}`)
+
+        room && 
+        socketWebRTC.emit("join-room",{room_id :room, name: "wdwdwdwdwd"})
+        navigate(`/test/:${room}`)
       }}>Войти</button>
     </>
     }
