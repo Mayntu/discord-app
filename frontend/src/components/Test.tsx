@@ -1,60 +1,111 @@
+import { useCallback, useEffect, useRef, useState } from "react"
+import { useNavigate, useParams } from "react-router-dom"
 
-import { useEffect,useState,useRef } from "react"
-import { socket } from "../../socket";
-import { useParams } from "react-router-dom";
+const useStateWithCallback = (initialState:string[]) => {
+  const [state, setState] = useState<string[]>(initialState);
+  const cbRef = useRef(null);
 
+  const updateState = useCallback((newState, cb) => {
+    cbRef.current = cb;
 
-const Test=()=> {
-    const {roomID}=useParams()
-   const[videoURL,setvideoURL] = useState()
-   const videoRef = useRef()
-  const [stream, setStream] = useState<MediaStream>();
+    setState(prev => typeof newState === 'function' ? newState(prev) : newState);
+  }, []);
 
-  const config = {
-    audio: true,
-    video: true
-   }
-   const getMediaStream= async()=>{
-      const localStream = await navigator.mediaDevices.getUserMedia(config)
-      setStream(localStream)
-      console.log(localStream.getTracks())
-      videoRef.current.srcObject = localStream
-      setvideoURL(localStream)
-      // медиапоток состоит из 1 или более медиатреков
-      socket.emit("stream",localStream)
-    
-   }
-   
-   const P2P=()=>{
+  useEffect(() => {
+    if (cbRef.current) {
+      cbRef.current(state);
+      cbRef.current = null;
+    }
+  }, [state]);
 
-   }
-   const stop=()=>{
-    console.log(stream)
-   }
-
-   const vhod=()=>{
-    
-   }
-   useEffect(()=>{
-    getMediaStream()
-    stop()
-   },[])
-   useEffect(()=>{
-    stop()
-   },[])
-
-  return (
-    <div className='test'>
-        Test
-        
-        <input type="text" placeholder="id room" />
-        <button onClick={()=>{}} >Войти</button>
-        {roomID &&  <video ref={videoRef} autoPlay playsInline muted={true} ></video>}
-   
-          
-    </div>
-  )
+  return [state, updateState];
 }
+
+
+
+const Test =()=> {
+  const [clients,setClients] = useStateWithCallback([])
+  const navigate = useNavigate()
+  const [room,setRoom] = useState<string>("")
+  const {roomID} = useParams()
+  let streamData = useRef<MediaStream>()
+  const videoPlayer = useRef<HTMLVideoElement>(null) 
+  const peerMediaElements = useRef<any>({})
+
+  const addNewClients = useCallback((newClient:string,cb:()=>void)=>{
+    if(!clients.includes(newClient)){
+      setClients(list=>[...list,newClient],cb)
+      console.log("client")
+    }
+  },[clients,setClients])
+
+
+  const startCamera= async()=>{
+    if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
+           streamData.current = await navigator.mediaDevices.getUserMedia({
+            audio: true,
+            video: {
+              height: 360
+            }
+        })
+
+       
+        addNewClients("LOCAL_VIDEO",()=>{
+          const localVideoElement = peerMediaElements.current["LOCAL_VIDEO"]
+          if(localVideoElement){
+            localVideoElement.volume = 0
+            localVideoElement.srcObject = streamData.current
+          }
+        })
+
+
+  }
+}
+
+useEffect(()=>{
+  startCamera()
+
+  return ()=>{
+    streamData.current?.getTracks().forEach(track=>track.stop())
+  }
+},[])
+
+  const provideMediaRef = useCallback((id:string,node:any)=>{
+    peerMediaElements.current[id] = node
+  },[])
+
+ return (
+   <div className="test">
+    {roomID ? 
+      clients.map((i)=>
+      (<div key={i}>
+          <video  autoPlay muted ref={instance=>{
+            provideMediaRef(i,instance)
+          }}></video>
+          <p>{i}</p>
+      </div>
+    )
+  )
+      
+      :
+    
+    
+    
+    
+    
+    
+    <>
+      <input type="text" placeholder="roomid" value={room} onChange={(e)=>{setRoom(e.target.value)}}/>
+      <button onClick={()=>{
+        room && navigate(`/test/:${room}`)
+      }}>Войти</button>
+    </>
+    }
+        
+   </div>
+ )
+}
+
 
 
 

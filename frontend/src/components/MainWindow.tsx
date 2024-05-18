@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
-import { BsCameraVideo, BsPhone } from 'react-icons/bs'
+import { socket } from '../socket'
 
-import socket from '../utils/socket'
+
+
 
 export const MainWindow = ({ startCall }) => {
  const [localId, setLocalId] = useState('')
@@ -44,10 +45,10 @@ export const MainWindow = ({ startCall }) => {
        />
        <div className='control'>
          <button onClick={() => callWithVideo(true)}>
-           <BsCameraVideo />
+        
          </button>
          <button onClick={() => callWithVideo(false)}>
-           <BsPhone />
+       
          </button>
        </div>
      </div>

@@ -1,6 +1,6 @@
 import Emitter from './Emitter'
 import MediaDevice from './MediaDevice'
-import socket from './socket'
+
 
 const CONFIG = { iceServers: [{ urls: ['stun:stun.l.google.com:19302'] }] }
 

@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { BsCameraVideo, BsPhone } from 'react-icons/bs'
-import { FiPhoneOff } from 'react-icons/fi'
+
 
 export const CallWindow = ({
  remoteSrc,
@@ -98,16 +97,16 @@ export const CallWindow = ({
            className={video ? '' : 'reject'}
            onClick={() => toggleMediaDevice('video')}
          >
-           <BsCameraVideo />
+     
          </button>
          <button
            className={audio ? '' : 'reject'}
            onClick={() => toggleMediaDevice('audio')}
          >
-           <BsPhone />
+      
          </button>
          <button className='reject' onClick={() => finishCall(true)}>
-           <FiPhoneOff />
+         
          </button>
        </div>
      </div>
