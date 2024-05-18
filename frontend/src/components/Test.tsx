@@ -33,22 +33,31 @@ const Test =()=> {
   const videoPlayer = useRef<HTMLVideoElement>(null) 
   const peerMediaElements = useRef<any>({})
   const peerConnecthions = useRef<any>({})
+  
+  
+  
   const addNewClients = useCallback((newClient:string,cb:()=>void)=>{
     if(!clients.includes(newClient)){
       setClients(list=>[...list,newClient],cb)
-      console.log("client")
+      console.log("client",clients,newClient)
     }
   },[clients,setClients])
 
 
+
+
+useEffect(()=>{
+
   const startCamera= async()=>{
-    if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
+    // if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
            streamData.current = await navigator.mediaDevices.getUserMedia({
             audio: true,
             video: {
-              height: 360
+              height: 360,
+              width: 600
             }
-        })
+        }
+      )
 
        
         addNewClients("LOCAL_VIDEO",()=>{
@@ -60,11 +69,15 @@ const Test =()=> {
         })
 
 
-  }
+  // }
 }
 
-useEffect(()=>{
-  startCamera()
+
+  if(roomID){
+    startCamera()
+    .then(()=>{socketWebRTC.emit("join-room",{room_id :room, name: "wdwdwdwdwd"})})
+    .catch((er)=>console.log(er))
+  }
 
 
     return () => {
@@ -81,30 +94,34 @@ useEffect(()=>{
 
 
   useEffect(()=>{
-    async function handleNewPeer({peerID:peerId ,createOffer}) {
+    async function handleNewPeer({peerID:peerId ,createOffer} ) {
       if(peerId in peerConnecthions.current){
         return console.log("already connected")
       }
-
+      console.log(peerId ,"peerId",createOffer, "createOffer")
         peerConnecthions.current[peerId]  = new RTCPeerConnection({
           iceServers : freeice()
         })
         console.log(peerId,"peer", peerConnecthions.current[peerId])
 
-      peerConnecthions.current[peerId].onicecandidate = (event: { candidate: any; })=>{
+      peerConnecthions.current[peerId].onicecandidate = ({candidate})=>{
         console.log("candidat")
-        if(event.candidate){
+        if(candidate){
           socketWebRTC.emit("relay-ice",{
             peer_id : peerId,
-            ice_candidate: event.candidate
+            ice_candidate: candidate
           })
         }
       }
+      peerConnecthions.current[peerId].Icecandidateerror = (event)=>{
+        console.log(event,"ERROR")
+      }
+
 
       let tracksNumber = 0
       peerConnecthions.current[peerId].ontrack = ({streams: [remoteStream]})=>{
           tracksNumber++
-        if(tracksNumber ===2){
+        if(tracksNumber === 2){
           addNewClients(peerId,()=>{
             console.log("new peerID")
             peerMediaElements.current[peerId].srcObject = remoteStream
@@ -112,8 +129,9 @@ useEffect(()=>{
         }
       }
 
-
-      streamData.current?.getTracks().forEach(track=>{
+      console.log(streamData.current,"stream")
+      streamData.current.getTracks().forEach(track=>{
+        console.log("addtrack")
         peerConnecthions.current[peerId].addTrack(track,streamData.current)
       })
 
@@ -121,7 +139,7 @@ useEffect(()=>{
         const offer = await peerConnecthions.current[peerId].createOffer()
         console.log(offer,createOffer,"offer")
         await peerConnecthions.current[peerId].setLocalDescription(offer)
-
+        console.log(peerConnecthions.current[peerId],"offer2")
         socketWebRTC.emit("relay-sdp",{
           peer_id: peerId,
           session_description: offer
@@ -152,7 +170,7 @@ useEffect(()=>{
     async function setRemoteMedia({peerID, sessionDescription: remoteDescription}) {
       // console.log(remoteDescription,"discrepthion")
       // console.log(peerConnecthions.current[peerID],"do",peerID)
-      await peerConnecthions.current[peerID]?.setRemoteDescription(remoteDescription);
+      await peerConnecthions.current[peerID]?.setRemoteDescription( new RTCSessionDescription(remoteDescription));
       // console.log(peerConnecthions.current[peerID],"posle",peerID)
 
 
@@ -233,7 +251,7 @@ useEffect(()=>{
       <button onClick={()=>{
 
         room && 
-        socketWebRTC.emit("join-room",{room_id :room, name: "wdwdwdwdwd"})
+        // socketWebRTC.emit("join-room",{room_id :room, name: "wdwdwdwdwd"})
         navigate(`/test/:${room}`)
       }}>Войти</button>
     </>
