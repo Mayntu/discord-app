@@ -5,6 +5,8 @@ from flask_socketio import SocketIO, emit, join_room, leave_room
 from engineio.payload import Payload
 Payload.max_decode_packets = 200
 
+from events import ACTIONS
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "thisismys3cr3tk3y"
 
@@ -36,6 +38,14 @@ def on_join_room(data):
     join_room(room_id)
     _room_of_sid[sid] = room_id
     _name_of_sid[sid] = display_name
+
+    
+    for user_id in _users_in_room[room_id]:
+        emit(ACTIONS.ADD_PEER, {"peerID" : request.sid, "createOffer" : False}, to=user_id)
+        emit(ACTIONS.ADD_PEER, {"peerID" : user_id, "createOffer" : True})
+    
+
+    
     
     print("[{}] New member joined: {}<{}>".format(room_id, display_name, sid))
     emit("user-connect", {"sid": sid, "name": display_name}, broadcast=True, include_self=False, room=room_id)
@@ -67,6 +77,10 @@ def on_disconnect():
     except:
         print("no users")
 
+    for user_id in _users_in_room:
+        emit(ACTIONS.REMOVE_PEER, {"peerID" : request.sid}, to=user_id)
+        emit(ACTIONS.REMOVE_PEER, {"peerID" : user_id})
+    
     _room_of_sid.pop(sid)
     _name_of_sid.pop(sid)
 
@@ -83,6 +97,22 @@ def on_data(data):
     if data["type"] != "new-ice-candidate":
         print('{} message from {} to {}'.format(data["type"], sender_sid, target_sid))
     socketio.emit('data', data, room=target_sid)
+
+
+@socketio.on(ACTIONS.RELAY_SDP)
+def relay_sdp(data):
+    peer_id : str = data.get("peer_id")
+    session_description : str = data.get("session_description")
+    emit(ACTIONS.SESSION_DESCRPTION, {"peerID" : request.sid, "sessionDescription" : session_description}, to=peer_id)
+
+
+@socketio.on(ACTIONS.RELAY_ICE)
+def relay_ice(data):
+    peer_id : str = data.get("peer_id")
+    ice_candidate : str = data.get("ice_candidate")
+    emit(ACTIONS.ICE_CANDIDATE, {"peerID" : request.sid, "iceCandidate" : ice_candidate}, to=peer_id)
+
+
 
 if __name__ == "__main__":
     socketio.run(

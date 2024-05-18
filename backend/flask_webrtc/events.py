@@ -1,0 +1,10 @@
+class ACTIONS:
+    JOIN : str = "join-room"
+    LEAVE : str = "leave"
+    SHARE_ROOMS : str = "share-rooms"
+    ADD_PEER : str = "add-peer"
+    REMOVE_PEER : str = "remove-peer"
+    RELAY_SDP : str = "relay-sdp"
+    RELAY_ICE : str = "relay-ice"
+    ICE_CANDIDATE : str = "ice-candidate"
+    SESSION_DESCRPTION : str = "session-descrption"
