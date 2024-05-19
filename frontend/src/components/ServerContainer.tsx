@@ -21,8 +21,7 @@ const ServerContainer=()=> {
       formData.append("file",file)
       formData.append("title","somicHerous")
       console.log(formData,"formdata")
-      await dispatch(fetchCreateServer(formData))
-      // dispatch(fetchGetServer())
+      await dispatch(fetchCreateServer(formData)).then(()=>{dispatch(fetchGetServer())})
       setIsCreateSreverM(false)
     }
     useEffect(()=>{
@@ -58,7 +57,7 @@ const ServerContainer=()=> {
       
     </div>
    
-    {serversUser.length && serversUser.map(i=>(<NavLink to={`/server/${i.uuid}`}  key={i.uuid} ><div className="block-server">{i.title}</div></NavLink>))}
+    {serversUser.map(i=>(<NavLink to={`/server/${i.uuid}`}  key={i.uuid} ><div className="block-server">{i.title}</div></NavLink>))}
   </div>
    {isCreateServerM && 
    <Module newFile={newFile}>

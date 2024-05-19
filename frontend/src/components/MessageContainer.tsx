@@ -6,7 +6,7 @@ import { fetchDeleteUser } from '../store/acthion';
 import Message from './Message';
 import avatar from "../assets/sonic.jpg"
 import { IUserChatT } from '../models/IUserChat';
-import { fetchDeleteServerChatRoom, fetchGetServerChatRoomMessages } from '../store/actionServer';
+import { fetchDeleteServerChatRoom, fetchGetServerChatRoomMessages, fetchGetServerChatRooms } from '../store/actionServer';
 import { fetchGetChatMessage, fetchGetUserChats } from '../store/acthionChat';
 import InputMessage from './InputMessage';
 
@@ -174,9 +174,10 @@ const  MessageContainer : FC=()=> {
 
   return (
     <>
-      <div className='message-container'>
+      
           {chatid  &&
           <>   
+          <div className='message-container'>
           <div className="status-bar">
             <div className="user-chat avatar">
               {usersChat && (<>
@@ -186,60 +187,66 @@ const  MessageContainer : FC=()=> {
             </div>
                 <button onClick={()=>{
                   dispatch(fetchDeleteUser(chatid))
-                  navigate("/chat")
-                  dispatch(fetchGetUserChats())
+                  .then(()=>{navigate("/chat")})
+                  .then(()=>{dispatch(fetchGetUserChats())})
                   }}>удалить</button>
           </div>
             <div className="get-message-cantainer">
               {messageArray.length !==0 ? messageArray.map((ms,index)=><Message key={index} uuid={ms.uuid} classUser={ms.from_user_id} media={ms.media}  time={ms.timestamp}>{ms.content}</Message>): null}
             </div>
             <div className="file-input">
-              {file && (
-              <img src={arrayURL[0]}/>
-              )}
+              {file && (<img src={arrayURL[0]}/>)}
             </div>
             <InputMessage 
-              
               sendMessage={sendMessage} 
               setFile={setFile} 
               setMessageText={setMessageText} 
               messageText={messageText} 
               dropImage={dropImage}
             />
+            </div>
           </>  
             }
             {chatserverid && serverid && 
             <>
-              <div className="status-bar">
-              <div className="user-chat avatar">
-                {usersChat && (<>
-                {usersChat.avatar !== "." ? <img src={avatar} alt="" />: <img src={usersChat?.avatar} alt="" /> }
-                <p>{usersChat.login}</p>
-                </>)}
+            <div className="server-message-container ">
+              <div className="message-container">
+                <div className="status-bar">
+                <div className="user-chat avatar">
+                  {usersChat && (<>
+                  {usersChat.avatar !== "." ? <img src={avatar} alt="" />: <img src={usersChat?.avatar} alt="" /> }
+                  <p>{usersChat.login}</p>
+                  </>)}
+                </div>
+                    <button onClick={()=>{
+                      dispatch(fetchDeleteServerChatRoom({server_chat_room_id: chatserverid, server_id: serverid}))
+                      .then(()=>navigate(`/server/${serverid}`))
+                      .then(()=>{dispatch(fetchGetServerChatRooms(serverid))})
+                      }}>удалить</button>
               </div>
-                  <button onClick={()=>{
-                    dispatch(fetchDeleteServerChatRoom({server_chat_room_id: chatserverid, server_id: serverid}))
-                    }}>удалить</button>
-            </div>
-              <div className="get-message-cantainer">
-                {messageArray.length !==0 ? messageArray.map((ms,index)=><Message key={index} classUser={ms.from_user_id} media={ms.media} uuid={ms.uuid}  time={ms.timestamp}>{ms.content}</Message>): null}
+                <div className="get-message-cantainer">
+                  {messageArray.length !==0 ? messageArray.map((ms,index)=><Message key={index} classUser={ms.from_user_id} media={ms.media} uuid={ms.uuid}  time={ms.timestamp}>{ms.content}</Message>): null}
+                </div>
+                <div className="file-input">
+                  {file && (<p>pltcm afqk</p>)}
+                </div>
+                <InputMessage 
+                  sendMessage={sendMessageServer}
+                  setFile={setFile} 
+                  setMessageText={setMessageText} 
+                  messageText={messageText} 
+                  dropImage={dropImage}
+                />
+              
+                </div>
+                <div className="message-container-server-user">
+                  <p>klsckmsckmksmcomskcm</p>
+                </div>
               </div>
-              <div className="file-input">
-                {file && (<p>pltcm afqk</p>)}
-              </div>
-              <InputMessage 
-             
-                sendMessage={sendMessageServer}
-                setFile={setFile} 
-                setMessageText={setMessageText} 
-                messageText={messageText} 
-                dropImage={dropImage}
-               />
-
             </>  
             }
-            {!chatid && !chatserverid && <p>Hello add chat</p>}
-      </div>
+            {!chatid && !chatserverid && <div className="message-container"><p>Hello add chat</p></div>}
+     
 
      
     </>

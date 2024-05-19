@@ -36,7 +36,7 @@ const InputMessage:FC<IInputMessage>=({dropImage,sendMessage,setFile,setMessageT
         audio: true,
         video: false,
     });
-    console.log(streamData, "startMedia")
+    // console.log(streamData, "startMedia")
     setPermission(true);
     setStream(streamData)
    
@@ -86,13 +86,13 @@ const InputMessage:FC<IInputMessage>=({dropImage,sendMessage,setFile,setMessageT
       //creates a playable URL from the blob file.
       //  const audioUrl = URL.createObjectURL(audioBlob);
        setAudioChunks([]);
-       console.log("Stop")
+      //  console.log("Stop")
       //  const formData = new FormData()
        if(audioBlob){
-         console.log("fetchaudio")
+        //  console.log("fetchaudio")
         setAudioBlob(audioBlob)
         if(audioBlob){
-          console.log("audioBlob",audioBlob)
+          // console.log("audioBlob",audioBlob)
           if(chatid){
             socket.emit("message", {
               "data" : "что писать?", 

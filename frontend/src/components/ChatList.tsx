@@ -23,16 +23,17 @@ const ChatList:FC=()=> {
   
   const seacrhChat = (e:string)=>{
       dispatch(fetchFindChat(e))
+      dispatch(fetchGetUserChats())
   }
 
-   useEffect(()=>{
-    console.log(socketChat,"socketChatinChatList")
-    // console.log(usersConnect,"con")
-    // const n = chats2.filter(user=>{
-    //   console.log(user.users)
-    //   return user.users})
-    // console.log(n,"con2")
-  },[socketChat])
+  //  useEffect(()=>{
+  //   console.log(socketChat,"socketChatinChatList")
+  //   // console.log(usersConnect,"con")
+  //   // const n = chats2.filter(user=>{
+  //   //   console.log(user.users)
+  //   //   return user.users})
+  //   // console.log(n,"con2")
+  // },[socketChat])
 
   return ( 
     <>

@@ -451,6 +451,20 @@ input{
 .message-container input{
 width: 70%;
 }
+
+.server-message-container{
+  max-width: 100%;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+}
+
+.message-container-server-user{
+  background-color: #101115;
+  max-width: 20%;
+  width: 200px;
+}
 .user-chat{
   display: flex;
   flex-direction: row;
