@@ -5,16 +5,20 @@ import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock';
 import { fetchDeleteUser } from '../store/acthion';
 import Message from './Message';
 import avatar from "../assets/sonic.jpg"
+import callIcon from "../assets/call.png"
 import { IUserChatT } from '../models/IUserChat';
 import { fetchDeleteServerChatRoom, fetchGetServerChatRoomMessages, fetchGetServerChatRooms } from '../store/actionServer';
 import { fetchGetChatMessage, fetchGetUserChats } from '../store/acthionChat';
 import InputMessage from './InputMessage';
+import ServerUsersList from './ServerUsersList';
+import VideoCallBlock from './VideoCallBlock';
 
 
 
 const  MessageContainer : FC=()=> {
 
   const {chatid,chatserverid,serverid} = useParams()
+  const [isCallBlock,setIsCallBlock] = useState<boolean>(false)
   const [messageText,setMessageText] = useState<string>("")
   const [roomId,setRoomId] = useState<string>("")
   const [messageArray,setMessageArray] = useState<any[]>([])
@@ -172,6 +176,10 @@ const  MessageContainer : FC=()=> {
   }
   }
 
+
+// const startVideoCall=()=>{
+
+// }
   return (
     <>
       
@@ -181,7 +189,7 @@ const  MessageContainer : FC=()=> {
           <div className="status-bar">
             <div className="user-chat avatar">
               {usersChat && (<>
-              {usersChat.avatar  ? <img src={avatar} alt="" />: <img src={usersChat.avatar} alt="" /> }
+              {usersChat.avatar== ""  ? <img src={"http://localhost:5173/"+avatar} alt="" />: <img src={"http://localhost:5173/"+usersChat.avatar} alt="" /> }
               <p>{usersChat.login}</p>
               </>)}
             </div>
@@ -190,6 +198,7 @@ const  MessageContainer : FC=()=> {
                   .then(()=>{navigate("/chat")})
                   .then(()=>{dispatch(fetchGetUserChats())})
                   }}>удалить</button>
+                  <img src={callIcon} className='icon-message' onClick={()=>{setIsCallBlock(true)}}/>
           </div>
             <div className="get-message-cantainer">
               {messageArray.length !==0 ? messageArray.map((ms,index)=><Message key={index} uuid={ms.uuid} classUser={ms.from_user_id} media={ms.media}  time={ms.timestamp}>{ms.content}</Message>): null}
@@ -204,6 +213,7 @@ const  MessageContainer : FC=()=> {
               messageText={messageText} 
               dropImage={dropImage}
             />
+             {isCallBlock && <VideoCallBlock user={userMe.login} setIsCallBlock={setIsCallBlock}/>}
             </div>
           </>  
             }
@@ -223,6 +233,8 @@ const  MessageContainer : FC=()=> {
                       .then(()=>navigate(`/server/${serverid}`))
                       .then(()=>{dispatch(fetchGetServerChatRooms(serverid))})
                       }}>удалить</button>
+
+                      <img/>
               </div>
                 <div className="get-message-cantainer">
                   {messageArray.length !==0 ? messageArray.map((ms,index)=><Message key={index} classUser={ms.from_user_id} media={ms.media} uuid={ms.uuid}  time={ms.timestamp}>{ms.content}</Message>): null}
@@ -239,15 +251,13 @@ const  MessageContainer : FC=()=> {
                 />
               
                 </div>
-                <div className="message-container-server-user">
-                  <p>klsckmsckmksmcomskcm</p>
-                </div>
+               <ServerUsersList/>
               </div>
             </>  
             }
             {!chatid && !chatserverid && <div className="message-container"><p>Hello add chat</p></div>}
      
-
+           
      
     </>
   )

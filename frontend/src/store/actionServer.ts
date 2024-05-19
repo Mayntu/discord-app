@@ -33,7 +33,7 @@ export const fetchCreateServerChat = createAsyncThunk(
     'server/fetchGetServer',
     async (_, thunkAPI) => {
       try {
-        const response = await ServerService.getServer()
+        const response = await ServerService.getServerUsers()
         console.log(response.data.data ,"fetchGetServer")
         return response.data.data
       } catch (error: any) {
@@ -69,6 +69,19 @@ export const fetchCreateServerChat = createAsyncThunk(
     },
   )
 
+
+  export const fetchgetUsersServerChat = createAsyncThunk(
+    'server/fetchgetUsersServerChat',
+    async (payload: string, thunkAPI) => {
+      try {
+        const response = await ServerService.getUsersServerChat(payload)
+        console.log(response.data,"fetchgetUsersServerChat")
+        return response.data
+      } catch (error: any) {
+        return thunkAPI.rejectWithValue(error?.message)
+      }
+    },
+  )
   export const fetchDeleteServer = createAsyncThunk(
     'server/fetchDeleteServer',
     async (payload:string, thunkAPI) => {

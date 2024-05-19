@@ -74,9 +74,7 @@ const chatsSlice = createSlice({
         .addCase(fetchTest.fulfilled,(state,{payload}:PayloadAction<any>)=>{
             state.test = JSON.stringify(payload)
         })
-        .addCase(fetchMedia.fulfilled,()=>{
-            
-        })
+       
     }
 })
 

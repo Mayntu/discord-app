@@ -48,20 +48,10 @@ const InputMessage:FC<IInputMessage>=({dropImage,sendMessage,setFile,setMessageT
   
   const startRecording = async () => {
     setRecordingStatus("recording");
-    //create new Media recorder instance using the stream
     console.log("streamStart")
     if(stream){
       const media = new MediaRecorder(stream);
-      //set the MediaRecorder instance to the mediaRecorder ref
       mediaRecorder.current = media;
-      //invokes the start method to start the recording process
-      // let start = 0
-      // setInterval(()=>{
-      //   start=1 + start
-      //   console.log("in",start)
-      //   setTimer((prev)=>prev+`00.00.1${+start}`)
-      //   console.log("in",start,timer)
-      // },1000)
       mediaRecorder.current.start();
       let localAudioChunks:any = [];
       mediaRecorder.current.ondataavailable = (event) => {
@@ -77,42 +67,37 @@ const InputMessage:FC<IInputMessage>=({dropImage,sendMessage,setFile,setMessageT
 
   const stopRecording = () => {
     setRecordingStatus("inactive");
-    //stops the recording instance
-    mediaRecorder.current.stop();
-    mediaRecorder.current.onstop = () => {
-      //creates a blob file from the audiochunks data
-       const audioBlob = new Blob(audioChunks, { type:  'audio/mp3' });
-       setAudioBlob(audioBlob)
-      //creates a playable URL from the blob file.
-      //  const audioUrl = URL.createObjectURL(audioBlob);
-       setAudioChunks([]);
-      //  console.log("Stop")
-      //  const formData = new FormData()
-       if(audioBlob){
-        //  console.log("fetchaudio")
-        setAudioBlob(audioBlob)
-        if(audioBlob){
-          // console.log("audioBlob",audioBlob)
-          if(chatid){
-            socket.emit("message", {
-              "data" : "что писать?", 
-              "chat_id" : chatid,
-              "token" : localStorage.getItem("token"), 
-              media:{file : audioBlob, name : "audio/mp3"} });
-          }
-          if(chatserverid){
-            socket.emit("server_chat_message", {
-              "data" : "что писать?", 
-              "chat_id" : chatserverid, 
-              "server_id" : serverid,
-              "token" : localStorage.getItem("token"), 
-              media:  {file : audioBlob, name : "audio/mp3"}});
-          }
-       
-            setAudioBlob(undefined)
-        }
-       }
-    };
+  
+    if(mediaRecorder.current){
+      mediaRecorder.current.stop();
+      mediaRecorder.current.onstop = () => {
+      
+         const audioBlob = new Blob(audioChunks, { type:  'audio/mp3' });
+         setAudioBlob(audioBlob)
+        //creates a playable URL from the blob file.
+         setAudioChunks([]);
+         if(audioBlob){
+          setAudioBlob(audioBlob)
+            if(chatid){
+              socket.emit("message", {
+                "data" : "что писать?", 
+                "chat_id" : chatid,
+                "token" : localStorage.getItem("token"), 
+                media:{file : audioBlob, name : "audio/mp3"} });
+            }
+            if(chatserverid){
+              socket.emit("server_chat_message", {
+                "data" : "что писать?", 
+                "chat_id" : chatserverid, 
+                "server_id" : serverid,
+                "token" : localStorage.getItem("token"), 
+                media:  {file : audioBlob, name : "audio/mp3"}});
+            }
+              setAudioBlob(undefined)
+         }
+      };
+    }
+  
  
   };
 

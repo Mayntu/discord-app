@@ -37,7 +37,7 @@ export class ServerService{
         return $api.post<any>("api/v1/deleteServerChatRoom",{server_id,server_chat_room_id})
     }
 
-    static async getServer():Promise<AxiosResponse<IServersUsers<IServer>>>{
+    static async getServerUsers():Promise<AxiosResponse<IServersUsers<IServer>>>{
         return $api.get<any>("api/v1/getUsersServers")
     }
     static async getServerChatRoomMessages(chat_id: string):Promise<AxiosResponse<IServerChatNessageUser>>{
@@ -47,6 +47,12 @@ export class ServerService{
     static async postDeleteServersMessage(server_message_uuid: string):Promise<AxiosResponse<any>>{
         return $api.post<any>("api/v1/deleteServersMessage",{server_message_uuid})
     }
+
+
+    static async getUsersServerChat(chat_id: string):Promise<AxiosResponse<any>>{
+        return $api.post<any>("api/v1/getUsersServerChat",{chat_id})
+    }
+
 
    static async postInvitationLink(server_uuid: string):Promise<AxiosResponse<any>>{
     return $api.post<any>("api/v1/getInvitationLink",{server_uuid})
