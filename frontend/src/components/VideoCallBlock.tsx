@@ -1,10 +1,12 @@
-import React, { Dispatch, FC, SetStateAction, useCallback, useEffect, useRef } from 'react'
+import React, { Dispatch, FC, SetStateAction, useCallback, useEffect, useRef, useState } from 'react'
 import { useStateWithCallback } from '../hooks/useStateWithCallback'
 import { useParams } from 'react-router-dom'
 import { socketWebRTC } from '../socket'
 import redCall from "../assets/call-red.png"
 import mic from "../assets/mic2.png"
 import mic2 from "../assets/mic3.png"
+import camera from "../assets/nomuted.png"
+import cameraMuted from "../assets/muted.png"
 import freeice from "freeice"
 
 interface newPeer{
@@ -24,8 +26,8 @@ const VideoCallBlock:FC<IVideoCallBlock>=({user,setIsCallBlock})=> {
     let streamData = useRef<MediaStream>()
     const peerMediaElements = useRef<any>({})
     const peerConnecthions = useRef<any>({})
-
-
+    const [audioMuted,setAudioMuted ] = useState<boolean>(false)
+    const [videoMuted,setVideoMuted] = useState<boolean>(false)
 
     const addNewClients = useCallback((newClient:string,cb:()=>void)=>{
         if(!clients.includes(newClient)){
@@ -209,7 +211,13 @@ const VideoCallBlock:FC<IVideoCallBlock>=({user,setIsCallBlock})=> {
 
 
 
+      const mutedAudio=(flag: boolean)=>{
+        streamData.current?.getAudioTracks().forEach(track=>track.enabled = !flag)
+      }
 
+      const mutedVideo=(flag: boolean)=>{
+        streamData.current?.getVideoTracks().forEach(track=>track.enabled = !flag)
+      }
   return (
     <div className='VideoCallBlock'>
         <div className="videoUsers">
@@ -218,7 +226,8 @@ const VideoCallBlock:FC<IVideoCallBlock>=({user,setIsCallBlock})=> {
                         <video
                             className={i == "LOCAL_VIDEO" ? "local-video": ""}
                             autoPlay
-                            muted
+                            playsInline
+                            muted={i === "LOCAL_VIDEO"}
                             ref={instance=>{
                                 provideMediaRef(i,instance)
                             }}>
@@ -231,7 +240,14 @@ const VideoCallBlock:FC<IVideoCallBlock>=({user,setIsCallBlock})=> {
         <div className="icon-call">
                 <p>lksockwo</p>
                 <img src={redCall} alt="" onClick={()=>{setIsCallBlock(false)}}/>
-                <img src={mic} alt="" onClick={()=>{}}/>
+                <img src={audioMuted ? mic : mic2} alt="" onClick={()=>{
+                    setAudioMuted(!audioMuted)
+                    mutedAudio(audioMuted)
+                    }}/>
+                <img src={videoMuted ? camera : cameraMuted} alt="" onClick={()=>{
+                    setVideoMuted(!videoMuted)
+                    mutedVideo(videoMuted)
+                    }}/>
         </div>
     </div>
   )
