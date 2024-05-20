@@ -1,7 +1,7 @@
 import { ActionReducerMapBuilder, PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { IMessage, IUserChat, IUserChatT } from "../models/IUserChat";
+import { IMessage, IUserChat, IUserChatT, IUserChatTSearch } from "../models/IUserChat";
 import {  fetchMedia, fetchTest } from "./acthion";
-import { fetchFindChat, fetchGetChatMessage, fetchGetUserChats } from "./acthionChat";
+import { fetchCreateChat, fetchFindChat, fetchGetChatMessage, fetchGetUserChats } from "./acthionChat";
 
 
 
@@ -11,10 +11,11 @@ type TChats = {
     socketChat : IUserChat[],
     users : IUserChatT[],
     getMessage : IMessage[],
-    searcChat : IUserChatT[],
+    searcChat : IUserChatTSearch[],
     test : any,
     isLoading : boolean,
     usersConnect : any[]
+    newChatid: string
 }
 
 const initialState: TChats= {
@@ -24,7 +25,8 @@ const initialState: TChats= {
     searcChat: [],
     test : [],
     isLoading : false,
-    usersConnect:[]
+    usersConnect:[],
+    newChatid: ""
 }
 
 
@@ -53,6 +55,9 @@ const chatsSlice = createSlice({
                 }
             }
             // console.log(state.usersConnect)
+        },
+        stateNull(state,{payload}:PayloadAction<any[]>){
+            state.searcChat = payload
         }
     },
     extraReducers: (builder:  ActionReducerMapBuilder<TChats>)=>{
@@ -74,10 +79,13 @@ const chatsSlice = createSlice({
         .addCase(fetchTest.fulfilled,(state,{payload}:PayloadAction<any>)=>{
             state.test = JSON.stringify(payload)
         })
+        .addCase(fetchCreateChat.fulfilled,(state,{payload}:PayloadAction<any>)=>{
+            state.newChatid = payload.chat_id
+        })
        
     }
 })
 
-export const {addUsersChat, addUsersConnect} = chatsSlice.actions
+export const {addUsersChat, addUsersConnect,stateNull} = chatsSlice.actions
 
 export default chatsSlice.reducer

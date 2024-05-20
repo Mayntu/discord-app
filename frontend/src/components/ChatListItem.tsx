@@ -39,10 +39,10 @@ const ChatListItem: FC<ChatListItemProps>=({chatId,chatsUser})=> {
       // }
      >
         <div className="avatar">
-            <img src={avatar} alt="" title={noMe?.login} />
+            <img src={noMe?.avatar ? "http://localhost:5173/public/"+ noMe.avatar : avatar} alt="" title={noMe?.login} />
         </div>
         <div className="content-chat" title={noMe?.login}>
-          {noMe?.status && <div className="status"></div>}
+          {noMe?.status ? <div className="status"></div> : <div className="status-red"></div>}
             <div className="row-content-chat">
                 {noMe?.login} {noMe?.status}
             </div>

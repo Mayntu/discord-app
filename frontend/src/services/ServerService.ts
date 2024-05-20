@@ -8,17 +8,17 @@ import { IcreateServerChat } from "../models/request/ServerRequest";
 
 export class ServerService{
 
-    // static async createServer(n:any):Promise<AxiosResponse<any>>{
-    //     return $api.post<any>("api/v1/createServer",n,{headers: {'Content-Type': 'multipart/form-data'}})
-    // }
+    static async createServer(n:any):Promise<AxiosResponse<any>>{
+        return $api.post<any>("api/v1/createServer",n,{headers: {'Content-Type': 'multipart/form-data'}})
+    }
     static async getDeleteServer(server_id:string):Promise<AxiosResponse<any>>{
         return $api.post<any>("api/v1/deleteServer",{server_id})
     }
 
     // / здесь нужно пересмтореть 
-    static async  createServer(server_uuid: string,title: string):Promise<AxiosResponse<any>>{
-        return $api.post<any>("api/v1/createServer",{title:"ujhuhuhuhuh",file: 'dceec'})
-    }
+    // static async  createServer(server_uuid: string,title: string):Promise<AxiosResponse<any>>{
+    //     return $api.post<any>("api/v1/createServer",{title:"ujhuhuhuhuh",file: 'dceec'})
+    // }
 
 
     static async postChangeServersTitle(uuid:string,title:string):Promise<AxiosResponse<any>>{
@@ -55,6 +55,9 @@ export class ServerService{
 
 
    static async postInvitationLink(server_uuid: string):Promise<AxiosResponse<any>>{
-    return $api.post<any>("api/v1/getInvitationLink",{server_uuid})
-}
+        return $api.post<any>("api/v1/getInvitationLink",{server_uuid})
+    }
+    static async postInvitationLinkUser(linkid: string):Promise<AxiosResponse<any>>{
+        return $api.get<any>(`invite/${linkid}`)
+    }
 }

@@ -28,11 +28,13 @@ function App() {
 
 
   useEffect(()=>{
-    connect()
-    socket.on("connected", async (data:any)=>{
-      console.log(data,"connect")
-      // dispatch(addUsersConnect(data.data))
-    })
+   
+      connect()
+      socket.on("connected", async (data:any)=>{
+        console.log(data,"connect")
+        dispatch(addUsersConnect(data.data))
+      }) 
+    
   },[socket])
 
   
@@ -42,7 +44,7 @@ function App() {
     if(localStorage.getItem("token")){
       dispatch(setIsAuth(true))
       if(pathname == "/"){
-          navigate("/chat")  
+          navigate("/chat") 
       }
     }else{
       navigate("/login")

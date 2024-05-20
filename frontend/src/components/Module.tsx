@@ -3,7 +3,7 @@ import { FC, ReactNode } from 'react'
 
 interface ModuleProps{
     newFile : ()=>{}
-    children: ReactNode
+    children?: ReactNode
 }
 
 

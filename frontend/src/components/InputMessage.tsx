@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, useEffect, useRef, useState } from "react"
+import { ChangeEvent, FC,  useRef, useState } from "react"
 import Add from "./Add"
 import InputEmoji from "react-input-emoji";
 import micImage from "../assets/microphone.png"
@@ -36,7 +36,6 @@ const InputMessage:FC<IInputMessage>=({dropImage,sendMessage,setFile,setMessageT
         audio: true,
         video: false,
     });
-    // console.log(streamData, "startMedia")
     setPermission(true);
     setStream(streamData)
    
@@ -105,13 +104,13 @@ const InputMessage:FC<IInputMessage>=({dropImage,sendMessage,setFile,setMessageT
 
 
 
-    useEffect(()=>{
-      getMicrophonePermission()
-    },[])
+    // useEffect(()=>{
+    //   getMicrophonePermission()
+    // },[])
 
   const micClick= async()=>{
     if(!permission){
-      await getMicrophonePermission()
+       getMicrophonePermission()
     }
     if(permission && recordingStatus === "inactive"){
       startRecording()

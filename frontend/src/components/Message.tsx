@@ -3,6 +3,7 @@ import avatar from "../assets/sonic.jpg"
 import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock'
 import { fetchDeleteServersMessage, fetchGetServerChatRoomMessages } from '../store/actionServer'
 import { useParams } from 'react-router-dom'
+import { fetchDeleteChatMessage, fetchGetChatMessage } from '../store/acthionChat'
 
 
 interface MessageProps{
@@ -18,7 +19,7 @@ interface MessageProps{
 const  Message: FC<MessageProps>=({classUser,children,time,media,uuid})=> {
   const me = useAppSelector(state=>state.auth.user)
   const dispatch = useAppDispatch()
-  const {chatserverid} = useParams()
+  const {chatserverid,chatid} = useParams()
   return (
     <>
     <div className={classUser == me.uuid || me.uuid == "" || undefined ? 'message my-message'  : 'message'}>
@@ -36,7 +37,10 @@ const  Message: FC<MessageProps>=({classUser,children,time,media,uuid})=> {
           </div>
       </div>
       <>
-      <button onClick={()=>{chatserverid && dispatch(fetchDeleteServersMessage(uuid)).then(()=>{dispatch(fetchGetServerChatRoomMessages(chatserverid))})}}>удалить</button>
+      <button onClick={()=>{
+        chatserverid && dispatch(fetchDeleteServersMessage(uuid)).then(()=>{dispatch(fetchGetServerChatRoomMessages(chatserverid))})
+        chatid &&  dispatch(fetchDeleteChatMessage(uuid)).then(()=>{dispatch(fetchGetChatMessage(chatid))})
+        }}>удалить</button>
       <div className='image-message'>
         <img src={"http://localhost:5173/public/"+media} alt="" />
       </div>

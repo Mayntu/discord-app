@@ -126,7 +126,7 @@ export const fetchCreateServerChat = createAsyncThunk(
     async (payload:any, thunkAPI) => {
       try {
         const response = await ServerService.postChangeServersTitle(payload.server_uuid,payload.title)
-        console.log(response.data,"fetchDeleteServer")
+        console.log(response.data,"fetchpostChangeServersTitle")
         return response.data
       } catch (error: any) {
         return thunkAPI.rejectWithValue(error?.message)
@@ -141,6 +141,19 @@ export const fetchCreateServerChat = createAsyncThunk(
       try {
         const response = await ServerService.postInvitationLink(payload)
         console.log(response.data,"fetchInvitationLink")
+        return response.data
+      } catch (error: any) {
+        return thunkAPI.rejectWithValue(error?.message)
+      }
+    },
+  )
+
+  export const fetchpostInvitationLinkUser = createAsyncThunk(
+    'server/postInvitationLinkUser',
+    async (payload:string, thunkAPI) => {
+      try {
+        const response = await ServerService.postInvitationLinkUser(payload)
+        console.log(response.data,"fetchInvitationLinkUser")
         return response.data
       } catch (error: any) {
         return thunkAPI.rejectWithValue(error?.message)

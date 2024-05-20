@@ -8,6 +8,12 @@ export interface IUserChatT  {
     is_current : boolean
 }
 
+export interface IUserChatTSearch  {
+    avatar : string,
+    login : string,
+    uuid : string,
+    is_online : boolean,
+}
 
 export interface  IUserChat {
     uuid: string;

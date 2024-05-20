@@ -74,7 +74,7 @@ const  SettingsBlock:FC<SettingsBlockProps>=({setIsSettings})=> {
       </div>
         <div className="UserBlock">
           <div className="avatar-setting">
-            {user.avatar == "." ? <img src={"http://localhost:5173/public/"+avatar} alt=""/>  :  <img src={"http://localhost:5173/public/"+user.avatar} alt="" />}
+            {user.avatar == "" ? <img src={"http://localhost:5173/"+avatar} alt=""/>  :  <img src={"http://localhost:5173/public/"+user.avatar} alt="" />}
 
           </div>
           <p>{user.login}</p>
@@ -90,8 +90,8 @@ const  SettingsBlock:FC<SettingsBlockProps>=({setIsSettings})=> {
       <div className="UserBlock editBlock">
             <div className="avatar-setting ">
             <img src={iconCamera} alt="" className='imput-setting' onClick={handleImage}/>
-            {user.avatar == "." ? <img src={"http://localhost:5173/public/"+avatar} alt=""/>  :  <img src={"http://localhost:5173/public/"+user.avatar} alt="" />}
-            <input ref={refImage} type="file" accept='image/*,.png,.web,.jpg,.gif' onChange={(e)=>{setFile(e.target.files[0])}} className='none'/>
+            {user.avatar == "" ? <img src={"http://localhost:5173/"+avatar} alt=""/>  :  <img src={"http://localhost:5173/public/"+user.avatar} alt="" />}
+            <input ref={refImage} type="file" accept='image/*,.png,.web,.jpg,.gif' onChange={(e)=>{e.target.files &&  setFile(e.target.files[0])}} className='none'/>
           </div>
           <div className="settingBlock">
             <input type="text" placeholder='new login' onChange={(e)=>setlogin(e.target.value)} value={login}  />

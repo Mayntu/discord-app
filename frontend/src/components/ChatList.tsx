@@ -49,7 +49,7 @@ const ChatList:FC=()=> {
             {/* блок поиск по условию */}
         {findUsers?.length !== 0  && findUsers ? 
           <div className="find-container">
-            {findUsers.map(user=>(<SaerchBlockUser user={user}/>))}
+            {findUsers.map(user=>(<SaerchBlockUser user={user} key={user.uuid}/>))}
           </div>
         : null}
         {/* отображение item чатов */}
