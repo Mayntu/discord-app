@@ -9,15 +9,17 @@ interface  IInputMessage{
   
   dropImage : (e:React.DragEvent<HTMLDivElement>)=>void,
   sendMessage: ()=> void,
-  setFile:  React.Dispatch<React.SetStateAction<any>>,
+  setFile:  React.Dispatch<React.SetStateAction<File | undefined>>,
   setMessageText : React.Dispatch<React.SetStateAction<string>>,
   messageText :string,
+  setArrayURL : React.Dispatch<React.SetStateAction<string[]>>
+
   // setAudioBlob:React.Dispatch<React.SetStateAction<Blob| undefined>> 
 }
 
 
 
-const InputMessage:FC<IInputMessage>=({dropImage,sendMessage,setFile,setMessageText,messageText})=> {
+const InputMessage:FC<IInputMessage>=({dropImage,sendMessage,setFile,setMessageText,messageText, setArrayURL})=> {
   let [_,setAudioBlob] = useState<Blob>()
   const refImage = useRef<HTMLInputElement>(null) 
   const [stream, setStream] = useState<MediaStream>();
@@ -130,7 +132,15 @@ const InputMessage:FC<IInputMessage>=({dropImage,sendMessage,setFile,setMessageT
       <img src={micImage} className="btn-image" onClick={micClick}/>
       {/* {timer} */}
       <input ref={refImage} type="file" multiple accept='image/*,.png,.web,.jpg,.gif' onChange={(e:ChangeEvent<HTMLInputElement>)=>{
-            if( e.currentTarget.files){
+            if(e.currentTarget.files){
+              setArrayURL([])
+              console.log(e.currentTarget.files,"conFiles")
+              const files = [...e.currentTarget.files]
+              for(let i=0;i<files.length;i++){
+                 setArrayURL(prev=>[...prev,window.URL.createObjectURL(files[i])])
+              }
+             
+             
               setFile(e.currentTarget.files[0])
             }
           }

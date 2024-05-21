@@ -27,7 +27,8 @@ const  MessageContainer : FC=()=> {
   const message = useAppSelector(state=>state.chats.getMessage)
   const serverMessages = useAppSelector(state=>state.server.serverChatMessages)
   const userMe = useAppSelector(state=>state.auth.user)
-  const [file,setFile] = useState<File | undefined>()
+  const [file,setFile] = useState<File>()
+  const [files,setFiles] = useState<File[] | undefined>()
   const [usersChat,setUsersChat]= useState<IUserChatT>()
   const navigate = useNavigate()
   const [arrayURL,setArrayURL] = useState<string[]>([])
@@ -60,7 +61,7 @@ const  MessageContainer : FC=()=> {
   },[chatid,socket])
 
  useEffect(()=>{
-  if(Object.keys(userMe).length !== 0){
+  if(userMe && Object.keys(userMe).length !== 0 ){
     socket.on("join",(data)=>{
       console.log(data.users_data.users_data,"user")
       const user  = data.users_data.users_data.find(usern=>usern.uuid !== userMe.uuid)
@@ -83,7 +84,8 @@ const  MessageContainer : FC=()=> {
         "data" : messageText, 
         "chat_id" : chatid, 
         "token" : localStorage.getItem("token"), 
-        media: file ? {file, name : file?.type} : ""});
+        // media: file ? {file, name : file?.type} : ""});
+        media: files ? {file:files, name : files[0]?.type} : ""});
         setMessageText("")
         setArrayURL([])
         setFile(undefined)
@@ -168,11 +170,15 @@ const  MessageContainer : FC=()=> {
 
   const dropImage=(e:React.DragEvent<HTMLDivElement>)=>{
     e.preventDefault()
+    setArrayURL([])
     const files = [...e.dataTransfer.files]
     console.log(files)
     if(files && files.length){
       setFile(files[0])
-      setArrayURL([window.URL.createObjectURL(files[0])]) 
+      console.log(files)
+      setFiles(files)
+      files.filter((i)=>setArrayURL((prev)=>[...prev,window.URL.createObjectURL(i)]) )
+      // setArrayURL([window.URL.createObjectURL(files[0])]) 
   }else{
       
   }
@@ -206,7 +212,7 @@ const  MessageContainer : FC=()=> {
               {messageArray.length !==0 ? messageArray.map((ms,index)=><Message key={index} uuid={ms.uuid} classUser={ms.from_user_id} media={ms.media}  time={ms.timestamp}>{ms.content}</Message>): null}
             </div>
             <div className="file-input">
-              {file && (<img src={arrayURL[0]}/>)}
+              {file &&  arrayURL.map(i=>(<img src={i} key={i}/>)) }
             </div>
             <InputMessage 
               sendMessage={sendMessage} 
@@ -214,6 +220,7 @@ const  MessageContainer : FC=()=> {
               setMessageText={setMessageText} 
               messageText={messageText} 
               dropImage={dropImage}
+              setArrayURL={setArrayURL}
             />
              {isCallBlock && <VideoCallBlock user={userMe.login} setIsCallBlock={setIsCallBlock}/>}
             </div>
@@ -250,6 +257,7 @@ const  MessageContainer : FC=()=> {
                   setMessageText={setMessageText} 
                   messageText={messageText} 
                   dropImage={dropImage}
+                  setArrayURL={setArrayURL}
                 />
               
                 </div>

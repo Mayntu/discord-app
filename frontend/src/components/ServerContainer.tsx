@@ -59,7 +59,7 @@ const ServerContainer=()=> {
  
    {/* invite/4McBNSuX6N1kTX1Rb71Yr6MQq9BQtn7cxTi7qNObqTcWN913K4ZFUVKZP9Tjf */}
    {/* http://127.0.0.1:8000/invite/id */}
-    {serversUser.length && serversUser.map(i=>(<NavLink to={`/server/${i.uuid}`}  key={i.uuid} ><div className="block-server">{i.title}</div></NavLink>))}
+    {serversUser && serversUser.length && serversUser.map(i=>(<NavLink to={`/server/${i.uuid}`}  key={i.uuid} ><div className="block-server">{i.title}</div></NavLink>))}
   </div>
    {isCreateServerM && 
    <Module newFile={newFile}>

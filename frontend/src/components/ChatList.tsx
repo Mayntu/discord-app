@@ -53,7 +53,7 @@ const ChatList:FC=()=> {
           </div>
         : null}
         {/* отображение item чатов */}
-        {socketChat.map(i=>(<ChatListItem key={i.uuid}  chatId={i.uuid} chatsUser={i.users}/>))}
+        { socketChat.map(i=>(<ChatListItem key={i.uuid}  chatId={i.uuid} chatsUser={i.users}/>))}
       </div>}
       {!isSettings && <SettingsBlock setIsSettings={setIsSettings}/>}
       <Outlet></Outlet>

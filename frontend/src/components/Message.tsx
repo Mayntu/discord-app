@@ -23,9 +23,9 @@ const  Message: FC<MessageProps>=({classUser,children,time,media,uuid})=> {
   const {chatserverid,chatid} = useParams()
 
  
-  useEffect(()=>{
-    console.log(NoMe,"nome",classUser)
-  },[NoMe])
+  // useEffect(()=>{
+  //   console.log(NoMe,"nome",classUser)
+  // },[NoMe])
 
   return (
     <>
