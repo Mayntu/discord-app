@@ -199,7 +199,7 @@ const VideoCallBlock:FC<IVideoCallBlock>=({user,setIsCallBlock})=> {
           delete peerConnecthions.current[peerID];
           delete peerMediaElements.current[peerID];
     
-         setClients(list => list.filter(c => c !== peerID));
+         setClients(list => list.filter(c => c !== peerID),()=>{});
         };
     
         socketWebRTC.on("remove-peer", handleRemovePeer);

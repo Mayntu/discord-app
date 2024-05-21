@@ -68,7 +68,7 @@ const chatsSlice = createSlice({
         })
         // сообщения
         .addCase(fetchGetChatMessage.fulfilled,(state :TChats,{payload}: PayloadAction<any>)=>{
-            console.log(payload,"payMessage")
+            // console.log(payload,"payMessage")
             state.getMessage = payload.messages
            
         }) // поиск чатов

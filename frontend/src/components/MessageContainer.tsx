@@ -12,6 +12,7 @@ import { fetchGetChatMessage, fetchGetUserChats } from '../store/acthionChat';
 import InputMessage from './InputMessage';
 import ServerUsersList from './ServerUsersList';
 import VideoCallBlock from './VideoCallBlock';
+import { addUsersChat } from '../store/ChatsSlice';
 
 
 
@@ -64,6 +65,7 @@ const  MessageContainer : FC=()=> {
       console.log(data.users_data.users_data,"user")
       const user  = data.users_data.users_data.find(usern=>usern.uuid !== userMe.uuid)
       setUsersChat(user)
+      dispatch(addUsersChat(user))
     })
   }
   },[userMe])
