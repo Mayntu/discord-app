@@ -7,10 +7,12 @@ import { socket } from './socket'
 import $api from './http'
 import { addUsersConnect } from './store/ChatsSlice'
 import ServerContainer from './components/ServerContainer'
+import ModuleImage from './components/ModuleImage'
 
 
 function App() {
   const {isAuth,error,isLoading} = useAppSelector(state=> state.auth)
+  const {isViewModule} = useAppSelector(state=> state.module)
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const {pathname} = useLocation()
@@ -65,7 +67,7 @@ function App() {
           <section className='container-chat-message'>
             {isAuth && <Outlet></Outlet>}
           </section>
-         
+        {isViewModule && <ModuleImage/>}
       </section>
    
     

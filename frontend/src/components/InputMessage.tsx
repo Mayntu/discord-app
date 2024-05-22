@@ -139,8 +139,6 @@ const InputMessage:FC<IInputMessage>=({dropImage,sendMessage,setFile,setMessageT
               for(let i=0;i<files.length;i++){
                  setArrayURL(prev=>[...prev,window.URL.createObjectURL(files[i])])
               }
-             
-             
               setFile(e.currentTarget.files[0])
             }
           }

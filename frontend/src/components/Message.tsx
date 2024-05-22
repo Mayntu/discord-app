@@ -1,9 +1,11 @@
-import  { FC, ReactNode, useEffect, } from 'react'
+import  { FC, ReactNode, useEffect, useState, } from 'react'
 import avatar from "../assets/sonic.jpg"
 import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock'
 import { fetchDeleteServersMessage, fetchGetServerChatRoomMessages } from '../store/actionServer'
 import { useParams } from 'react-router-dom'
 import { fetchDeleteChatMessage, fetchGetChatMessage } from '../store/acthionChat'
+import Module from './Module'
+import { isModule } from '../store/ModuleSlice'
 
 
 interface MessageProps{
@@ -21,6 +23,7 @@ const  Message: FC<MessageProps>=({classUser,children,time,media,uuid})=> {
   const NoMe = useAppSelector(state=>state.chats.users)
   const dispatch = useAppDispatch()
   const {chatserverid,chatid} = useParams()
+
 
  
   // useEffect(()=>{
@@ -48,9 +51,10 @@ const  Message: FC<MessageProps>=({classUser,children,time,media,uuid})=> {
         chatserverid && dispatch(fetchDeleteServersMessage(uuid)).then(()=>{dispatch(fetchGetServerChatRoomMessages(chatserverid))})
         chatid &&  dispatch(fetchDeleteChatMessage(uuid)).then(()=>{dispatch(fetchGetChatMessage(chatid))})
         }}>удалить</button>
-      <div className='image-message'>
+      <div className='image-message' onClick={()=>{dispatch(isModule({isViewModule: true,imageSrc:"http://localhost:5173/public/"+media }))}}>
         <img src={"http://localhost:5173/public/"+media} alt="" />
       </div>
+    
       {media && ( <audio src={"http://localhost:5173/public/"+media} controls></audio>)} 
      </>
     </div>

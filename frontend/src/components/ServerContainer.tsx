@@ -4,6 +4,7 @@ import { useEffect,  useRef, useState } from 'react'
 import { fetchCreateServer, fetchGetServer, fetchpostChangeServersTitle } from '../store/actionServer'
 import Module from './Module'
 import iconCamera from "../assets/camera.png"
+import { isModule } from '../store/ModuleSlice'
 const ServerContainer=()=> {
     const dispatch = useAppDispatch()
     const [isCreateServerM, setIsCreateSreverM] = useState<boolean>(false)
@@ -52,7 +53,15 @@ const ServerContainer=()=> {
     >
         изменить имя
       </div>
-    <div className="block-server" onClick={()=> setIsCreateSreverM(true)}>
+    <div className="block-server" onClick={()=> {
+      setIsCreateSreverM(true)
+      // dispatch(isModule({isViewModule:true,children: (<div>
+      //   <div className="avatar-setting ">
+      //     <img src={iconCamera} alt="" className='imput-setting' onClick={handleImage}/>
+      //   </div>
+      // <input ref={refImage} type="file" accept='image/*,.png,.web,.jpg,.gif' onChange={(e)=>{if(e.target.files) setFile(e.target.files[0])}} className='none'/>
+      // </div>), newFile}))
+      }}>
       создать сервер
       
     </div>
