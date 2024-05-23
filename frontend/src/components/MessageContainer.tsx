@@ -7,17 +7,16 @@ import Message from './Message';
 import avatar from "../assets/sonic.jpg"
 import callIcon from "../assets/call.png"
 import { IUserChatT } from '../models/IUserChat';
-import { fetchDeleteServerChatRoom, fetchGetServerChatRoomMessages, fetchGetServerChatRooms } from '../store/actionServer';
-import { fetchGetChatMessage, fetchGetUserChats } from '../store/acthionChat';
+import { fetchDeleteServerChatRoom, fetchDeleteServersMessage, fetchGetServerChatRoomMessages, fetchGetServerChatRooms } from '../store/actionServer';
+import { fetchDeleteChatMessage, fetchGetChatMessage, fetchGetUserChats } from '../store/acthionChat';
 import InputMessage from './InputMessage';
 import ServerUsersList from './ServerUsersList';
 import VideoCallBlock from './VideoCallBlock';
-import { addUsersChat } from '../store/ChatsSlice';
+import { addMessage, addUsersChat } from '../store/ChatsSlice';
 
 
 
 const  MessageContainer : FC=()=> {
-
   const {chatid,chatserverid,serverid} = useParams()
   const [isCallBlock,setIsCallBlock] = useState<boolean>(false)
   const [messageText,setMessageText] = useState<string>("")
@@ -25,6 +24,7 @@ const  MessageContainer : FC=()=> {
   const [messageArray,setMessageArray] = useState<any[]>([])
   const dispatch = useAppDispatch()
   const message = useAppSelector(state=>state.chats.getMessage)
+  const messageUser = useAppSelector(state=>state.chats.message)
   const serverMessages = useAppSelector(state=>state.server.serverChatMessages)
   const userMe = useAppSelector(state=>state.auth.user)
   const [file,setFile] = useState<File>()
@@ -185,9 +185,7 @@ const  MessageContainer : FC=()=> {
   }
 
 
-// const startVideoCall=()=>{
 
-// }
   return (
     <>
       
@@ -214,7 +212,18 @@ const  MessageContainer : FC=()=> {
             <div className="file-input">
               {file &&  arrayURL.map(i=>(<img src={i} key={i}/>)) }
             </div>
-            <div>wpfkwkfpowkfokwof</div>
+            {messageUser.uuid &&   
+            <div> 
+              <button onClick={()=>dispatch(addMessage(""))}>X</button>
+              <button onClick={()=>{
+                chatid &&  dispatch(fetchDeleteChatMessage(messageUser.uuid)).then(()=>{dispatch(fetchGetChatMessage(chatid))}).then(()=>dispatch(addMessage("")))
+                }}>удалить
+              </button>
+              <button>Ответ</button>
+              
+            </div>
+        }
+          
             <InputMessage 
               sendMessage={sendMessage} 
               setFile={setFile} 
@@ -252,6 +261,14 @@ const  MessageContainer : FC=()=> {
                 <div className="file-input">
                   {file && (<p>pltcm afqk</p>)}
                 </div>
+                {messageUser.uuid &&   
+                  <div> 
+                    <button onClick={()=>{
+                      chatserverid && dispatch(fetchDeleteServersMessage(messageUser.uuid)).then(()=>{dispatch(fetchGetServerChatRoomMessages(chatserverid))}).then(()=>dispatch(addMessage("")))
+                      }}>удалить
+                    </button>
+                  </div>
+                }
                 <InputMessage 
                   sendMessage={sendMessageServer}
                   setFile={setFile} 

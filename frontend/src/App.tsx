@@ -23,22 +23,22 @@ function App() {
 
 
 
-  const connect=async()=>{
-    const userM = await $api.get<any>("api/v1/getUsersInfo")
-    console.log("con")
-    socket.emit("user_connected",{token:userM.data.user_data.uuid})
-  }
+  // const connect=async()=>{
+  //   const userM = await $api.get<any>("api/v1/getUsersInfo")
+  //   console.log("con")
+  //   socket.emit("user_connected",{token:userM.data.user_data.uuid})
+  // }
 
 
-  useEffect(()=>{
+  // useEffect(()=>{
    
-      connect()
-      socket.on("connected", async (data:any)=>{
-        console.log(data,"connect")
-        dispatch(addUsersConnect(data.data))
-      }) 
+  //     connect()
+  //     socket.on("connected", async (data:any)=>{
+  //       console.log(data,"connect")
+  //       dispatch(addUsersConnect(data.data))
+  //     }) 
     
-  },[socket])
+  // },[socket])
 
   
 

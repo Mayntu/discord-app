@@ -1,11 +1,8 @@
 import  { FC, ReactNode, useState,  } from 'react'
 import avatar from "../assets/sonic.jpg"
 import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock'
-import { fetchDeleteServersMessage, fetchGetServerChatRoomMessages } from '../store/actionServer'
-import { useParams } from 'react-router-dom'
-import { fetchDeleteChatMessage, fetchGetChatMessage } from '../store/acthionChat'
 import { isModule } from '../store/ModuleSlice'
-import pen from "../assets/pencil.png"
+import { addMessage } from '../store/ChatsSlice'
 
 
 interface MessageProps{
@@ -22,16 +19,21 @@ const  Message: FC<MessageProps>=({classUser,children,time,media,uuid})=> {
   const me = useAppSelector(state=>state.auth.user)
   const NoMe = useAppSelector(state=>state.chats.users)
   const dispatch = useAppDispatch()
-  const {chatserverid,chatid} = useParams()
-  const [isContextmenu,setIsContextmenu] = useState<boolean>(false)
+  const messageUser = useAppSelector(state=>state.chats.message)
 
 
  
- 
+  const isMeduleSet=()=>{
+    if(messageUser.uuid){
+      dispatch(addMessage(""))
+    }else{
+      dispatch(addMessage(uuid))
+    }
+  }
 
   return (
     <>
-    <div className={classUser == me.uuid || me.uuid == "" || undefined ? 'message my-message'  : 'message'} onClick={()=>{setIsContextmenu(true)}}>
+    <div className={classUser == me.uuid || me.uuid == "" || undefined ? 'message my-message'  : 'message'} onClick={isMeduleSet}>
       <div className={classUser == me.uuid || me.uuid == "" || undefined ? 'chat-message'  : 'chat-message'}>
         <div className="avatar avatar-message">
           {
@@ -41,7 +43,7 @@ const  Message: FC<MessageProps>=({classUser,children,time,media,uuid})=> {
             NoMe.avatar == "" ? (<img src={"http://localhost:5173"+avatar} alt="" />) :   (<img src={"http://localhost:5173/"+NoMe.avatar} alt="" />)
           }
         </div>
-          <div className="column">
+          <div className="row">
             <p>{children}</p>
           <p>{`
           ${new Date(time).getHours()>10 ? new Date(time).getHours() : "0"+new Date(time).getHours()}
@@ -49,15 +51,15 @@ const  Message: FC<MessageProps>=({classUser,children,time,media,uuid})=> {
           : ${new Date(time).getSeconds()>10 ? new Date(time).getSeconds() : "0"+new Date(time).getSeconds() }`}</p>
           </div>
       </div>
+      <p>{` ${new Date(time).getHours()>10 ? new Date(time).getHours() : "0"+new Date(time).getHours()}
+          : ${new Date(time).getMinutes()>10 ? new Date(time).getMinutes() : "0"+new Date(time).getMinutes()}
+          : ${new Date(time).getSeconds()>10 ? new Date(time).getSeconds() : "0"+new Date(time).getSeconds() }`}</p>
+          
       <>
-      <button onClick={()=>{
-        chatserverid && dispatch(fetchDeleteServersMessage(uuid)).then(()=>{dispatch(fetchGetServerChatRoomMessages(chatserverid))})
-        chatid &&  dispatch(fetchDeleteChatMessage(uuid)).then(()=>{dispatch(fetchGetChatMessage(chatid))})
-        }}>удалить</button>
       <div className='image-message' onClick={()=>{dispatch(isModule({isViewModule: true,imageSrc:"http://localhost:5173/public/"+media }))}}>
         <img src={"http://localhost:5173/public/"+media} alt="" />
       </div>
-        {isContextmenu && <div className='context-message'><img src={pen}/></div>}
+      
       {media && ( <audio src={"http://localhost:5173/public/"+media} controls></audio>)} 
      </>
     </div>

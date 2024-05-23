@@ -6,6 +6,9 @@ import SettingsBlock from './SettingsBlock'
 import SaerchBlockUser from './SaerchBlock'
 import { Outlet } from 'react-router-dom'
 import { fetchFindChat, fetchGetUserChats } from '../store/acthionChat'
+import $api from '../http'
+import { socket } from '../socket'
+import { addUsersConnect } from '../store/ChatsSlice'
 
 
 
@@ -14,26 +17,31 @@ import { fetchFindChat, fetchGetUserChats } from '../store/acthionChat'
 const ChatList:FC=()=> {
   const findUsers = useAppSelector(state=>state.chats.searcChat)
   useEffect(()=>{
-    dispatch(fetchGetUserChats())
+    dispatch(fetchGetUserChats()).then(()=>{
+      connect()
+      socket.on("connected", async (data:any)=>{
+        console.log(data,"connect")
+        dispatch(addUsersConnect(data.data))
+      }) 
+    })
   },[])
   const [isSettings,setIsSettings] = useState<boolean>(true)
   const dispatch = useAppDispatch()
   const {socketChat} = useAppSelector(state=>state.chats)
-  const usersConnect = useAppSelector(state=>state.chats.usersConnect)
+
+
+  const connect=async()=>{
+    const userM = await $api.get<any>("api/v1/getUsersInfo")
+    console.log("con")
+    socket.emit("user_connected",{token:userM.data.user_data.uuid})
+  }
   
   const seacrhChat = (e:string)=>{
       dispatch(fetchFindChat(e))
       dispatch(fetchGetUserChats())
   }
 
-  //  useEffect(()=>{
-  //   console.log(socketChat,"socketChatinChatList")
-  //   // console.log(usersConnect,"con")
-  //   // const n = chats2.filter(user=>{
-  //   //   console.log(user.users)
-  //   //   return user.users})
-  //   // console.log(n,"con2")
-  // },[socketChat])
+
 
   return ( 
     <>

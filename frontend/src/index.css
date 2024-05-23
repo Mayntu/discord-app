@@ -595,9 +595,16 @@ width: 70%;
   flex-direction: column;
 
 }
+.row{
+  gap: 8px;
+  display: flex;
+ 
+  text-align: right;
+  flex-direction: row;
+}
 
 .column p {
-  max-width: 100%;
+  /* max-width: 100%; */
 }
 .image-message{
   display: block;

@@ -15,7 +15,8 @@ type TChats = {
     test : any,
     isLoading : boolean,
     usersConnect : any[]
-    newChatid: string
+    newChatid: string,
+    message : IMessage
 }
 
 const initialState: TChats= {
@@ -26,7 +27,8 @@ const initialState: TChats= {
     test : [],
     isLoading : false,
     usersConnect:[],
-    newChatid: ""
+    newChatid: "",
+    message: {} as IMessage
 }
 
 
@@ -58,6 +60,9 @@ const chatsSlice = createSlice({
         },
         stateNull(state,{payload}:PayloadAction<any[]>){
             state.searcChat = payload
+        },
+        addMessage(state,{payload}:PayloadAction<string>){
+            state.message.uuid = payload
         }
     },
     extraReducers: (builder:  ActionReducerMapBuilder<TChats>)=>{
@@ -86,6 +91,6 @@ const chatsSlice = createSlice({
     }
 })
 
-export const {addUsersChat, addUsersConnect,stateNull} = chatsSlice.actions
+export const {addUsersChat, addUsersConnect,stateNull, addMessage} = chatsSlice.actions
 
 export default chatsSlice.reducer
