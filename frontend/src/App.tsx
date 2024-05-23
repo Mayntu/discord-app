@@ -25,6 +25,7 @@ function App() {
 
   const connect=async()=>{
     const userM = await $api.get<any>("api/v1/getUsersInfo")
+    console.log("con")
     socket.emit("user_connected",{token:userM.data.user_data.uuid})
   }
 

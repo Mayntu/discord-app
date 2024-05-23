@@ -35,7 +35,7 @@ const ServerChatList:FC=()=> {
      <div className='chat-list-container'>
       <button onClick={deleteServer}>dalete server</button>
       <button onClick={()=>{serverid && dispatch(fetchpostInvitationLink(serverid))}}>пригласить</button>
-      <button onClick={()=>{serverid && dispatch(fetchpostInvitationLinkUser("6oqa8oO5SHtP7tfAQ3GfcggYw8PxS3psjss7Qra6m8CXE7UTeBE2bcHNjgWZ8"))}}>пригласить юзера</button>
+      <button onClick={()=>{serverid && dispatch(fetchpostInvitationLinkUser("pqZTpwMIz6XLGK9BtjMFKKxQyeiOwLJ67IVaztT0xnnCd5aBSaldnnSIhFEdt"))}}>пригласить юзера</button>
       <input type="text" onChange={(e)=>{setChatName(e.target.value)}} value={chatName}/>
      
       <button onClick={()=>{ 
