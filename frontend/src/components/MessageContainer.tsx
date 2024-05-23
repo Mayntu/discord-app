@@ -214,6 +214,7 @@ const  MessageContainer : FC=()=> {
             <div className="file-input">
               {file &&  arrayURL.map(i=>(<img src={i} key={i}/>)) }
             </div>
+            <div>wpfkwkfpowkfokwof</div>
             <InputMessage 
               sendMessage={sendMessage} 
               setFile={setFile} 

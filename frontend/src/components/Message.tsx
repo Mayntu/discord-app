@@ -1,11 +1,11 @@
-import  { FC, ReactNode, useEffect, useState, } from 'react'
+import  { FC, ReactNode, useState,  } from 'react'
 import avatar from "../assets/sonic.jpg"
 import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock'
 import { fetchDeleteServersMessage, fetchGetServerChatRoomMessages } from '../store/actionServer'
 import { useParams } from 'react-router-dom'
 import { fetchDeleteChatMessage, fetchGetChatMessage } from '../store/acthionChat'
-import Module from './Module'
 import { isModule } from '../store/ModuleSlice'
+import pen from "../assets/pencil.png"
 
 
 interface MessageProps{
@@ -13,7 +13,7 @@ interface MessageProps{
     classUser : string,
     time: string,
     media : string 
-   uuid: string
+    uuid: string
 }
 
 
@@ -23,20 +23,23 @@ const  Message: FC<MessageProps>=({classUser,children,time,media,uuid})=> {
   const NoMe = useAppSelector(state=>state.chats.users)
   const dispatch = useAppDispatch()
   const {chatserverid,chatid} = useParams()
+  const [isContextmenu,setIsContextmenu] = useState<boolean>(false)
 
 
  
-  // useEffect(()=>{
-  //   console.log(NoMe,"nome",classUser)
-  // },[NoMe])
+ 
 
   return (
     <>
-    <div className={classUser == me.uuid || me.uuid == "" || undefined ? 'message my-message'  : 'message'}>
+    <div className={classUser == me.uuid || me.uuid == "" || undefined ? 'message my-message'  : 'message'} onClick={()=>{setIsContextmenu(true)}}>
       <div className={classUser == me.uuid || me.uuid == "" || undefined ? 'chat-message'  : 'chat-message'}>
         <div className="avatar avatar-message">
-          {classUser == me.uuid  ?  me.avatar == "" ? (<img src={"http://localhost:5173"+avatar} alt="" />) :   (<img src={"http://localhost:5173/"+me.avatar} alt="" />) :  NoMe.avatar == "" ? (<img src={"http://localhost:5173"+avatar} alt="" />) :   (<img src={"http://localhost:5173/"+NoMe.avatar} alt="" />)}
-          {/* {me.avatar == "" ?  (<img src={"http://localhost:5173/"+avatar} alt="" />) :   (<img src={"http://localhost:5173/"+me.avatar} alt="" />)} */}
+          {
+          classUser == me.uuid  ? 
+            me.avatar == "" ? (<img src={"http://localhost:5173"+avatar} alt="" />) :   (<img src={"http://localhost:5173/"+me.avatar} alt="" />) 
+            :  
+            NoMe.avatar == "" ? (<img src={"http://localhost:5173"+avatar} alt="" />) :   (<img src={"http://localhost:5173/"+NoMe.avatar} alt="" />)
+          }
         </div>
           <div className="column">
             <p>{children}</p>
@@ -54,7 +57,7 @@ const  Message: FC<MessageProps>=({classUser,children,time,media,uuid})=> {
       <div className='image-message' onClick={()=>{dispatch(isModule({isViewModule: true,imageSrc:"http://localhost:5173/public/"+media }))}}>
         <img src={"http://localhost:5173/public/"+media} alt="" />
       </div>
-    
+        {isContextmenu && <div className='context-message'><img src={pen}/></div>}
       {media && ( <audio src={"http://localhost:5173/public/"+media} controls></audio>)} 
      </>
     </div>

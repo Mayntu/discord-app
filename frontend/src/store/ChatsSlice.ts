@@ -9,7 +9,7 @@ import { fetchCreateChat, fetchFindChat, fetchGetChatMessage, fetchGetUserChats 
 
 type TChats = {
     socketChat : IUserChat[],
-    users : IUserChatT[],
+    users : IUserChatT,
     getMessage : IMessage[],
     searcChat : IUserChatTSearch[],
     test : any,
@@ -20,7 +20,7 @@ type TChats = {
 
 const initialState: TChats= {
     socketChat : [],
-    users : [],
+    users : {} as IUserChatT,
     getMessage: [],
     searcChat: [],
     test : [],
