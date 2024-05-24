@@ -1,0 +1,32 @@
+.block-gif-search{
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid red;
+    align-items: center;
+    padding: 7px;
+}
+.block-gif-search input{
+    padding: 4px;
+    height: 30px;
+    margin-bottom: 5px;
+}
+.block-gif{
+    max-width: 400px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    max-height: 300px;
+      overflow: auto;
+}
+
+.block-gif > img{
+    width: 200px;
+    padding: 2px;
+    height: 100px;
+}
+
+::-webkit-scrollbar{
+    width: 0px;
+}
+

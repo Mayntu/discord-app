@@ -4,6 +4,7 @@ import InputEmoji from "react-input-emoji";
 import micImage from "../assets/microphone.png"
 import { socket } from "../socket";
 import { useParams } from "react-router-dom";
+import GIfBlock from "./GIfBlock";
 
 interface  IInputMessage{
   
@@ -27,6 +28,7 @@ const InputMessage:FC<IInputMessage>=({dropImage,sendMessage,setFile,setMessageT
   const [recordingStatus, setRecordingStatus] = useState<"inactive" | "recording">("inactive");
   const [audioChunks, setAudioChunks] = useState([]);
   const {chatid,chatserverid,serverid} = useParams()
+  const [isGifBlock, setISGifBlock] = useState<boolean>(false)
   // const [timer, setTimer] = useState("00.00.00");
   const mediaRecorder = useRef<MediaRecorder>();
  
@@ -127,7 +129,7 @@ const InputMessage:FC<IInputMessage>=({dropImage,sendMessage,setFile,setMessageT
 
 
   // url Async requesting function
-function httpGetAsync(theUrl, callback)
+function httpGetAsync(theUrl:string, callback:(str:string)=>void)
 {
     // create the request object
     var xmlHttp = new XMLHttpRequest();
@@ -152,7 +154,7 @@ function httpGetAsync(theUrl, callback)
 
 
 // callback for the top 8 GIFs of search
-function tenorCallback_search(responsetext)
+function tenorCallback_search(responsetext:string)
 {
     // Parse the JSON response
     var response_objects = JSON.parse(responsetext);
@@ -196,6 +198,7 @@ useEffect(()=>{
   grab_data();
 },[])
   return (
+    <>
     <div className="message-input-container" 
     onDrop={(e)=>{dropImage(e)}} 
     onDragOver={e=>e.preventDefault()}>
@@ -215,7 +218,11 @@ useEffect(()=>{
             }
           }
         } className='none'/>
+      <button onClick={()=>setISGifBlock(!isGifBlock)}>gif</button>
+     
     </div>
+       {isGifBlock && <GIfBlock/>}
+    </>
   )
 }
 
