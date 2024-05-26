@@ -356,7 +356,7 @@ def api_get_server_room_messages(request):
         server_chat_room : ServerChatRoom = ServerChatRoom.objects.get(uuid=server_chat_room_id)
 
         
-        messages = server_chat_room.messages.all().order_by("timestamp")[:count]
+        messages = server_chat_room.messages.all().order_by("-timestamp")[:count:-1]
 
 
         server_message_serializer : ServerMessageSerializer = ServerMessageSerializer(messages, many=True)

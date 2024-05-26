@@ -195,7 +195,7 @@ def api_get_chat_messages(request):
         chat : Chat = Chat.objects.get(uuid=chat_id)
 
         
-        messages = chat.messages.all().order_by("timestamp")[:count]
+        messages = chat.messages.all().order_by("-timestamp")[:count:-1]
 
 
         messages_serializer = MessageSerializer(messages, many=True)
