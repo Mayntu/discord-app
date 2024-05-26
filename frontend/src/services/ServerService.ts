@@ -60,4 +60,13 @@ export class ServerService{
     static async postInvitationLinkUser(linkid: string):Promise<AxiosResponse<any>>{
         return $api.get<any>(`invite/${linkid}`)
     }
+    static async getServersUsers(server_uuid: string):Promise<AxiosResponse<any>>{
+        return $api.post<any>(`api/v1/getServersUsers`,{uuid: server_uuid})
+    }
+
+
+    //api/v1/changeServerMessage
+    static async getchangeServerMessage(message_uuid: string,new_content: string):Promise<AxiosResponse<any>>{
+        return $api.post<any>(`api/v1/changeServerMessage`,{message_uuid,new_content})
+    }
 }

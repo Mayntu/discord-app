@@ -70,18 +70,18 @@ export const fetchCreateServerChat = createAsyncThunk(
   )
 
 
-  export const fetchgetUsersServerChat = createAsyncThunk(
-    'server/fetchgetUsersServerChat',
-    async (payload: string, thunkAPI) => {
-      try {
-        const response = await ServerService.getUsersServerChat(payload)
-        console.log(response.data,"fetchgetUsersServerChat")
-        return response.data
-      } catch (error: any) {
-        return thunkAPI.rejectWithValue(error?.message)
-      }
-    },
-  )
+  // export const fetchgetUsersServerChat = createAsyncThunk(
+  //   'server/fetchgetUsersServerChat',
+  //   async (payload: string, thunkAPI) => {
+  //     try {
+  //       const response = await ServerService.getUsersServerChat(payload)
+  //       console.log(response.data,"fetchgetUsersServerChat")
+  //       return response.data
+  //     } catch (error: any) {
+  //       return thunkAPI.rejectWithValue(error?.message)
+  //     }
+  //   },
+  // )
   export const fetchDeleteServer = createAsyncThunk(
     'server/fetchDeleteServer',
     async (payload:string, thunkAPI) => {
@@ -121,6 +121,19 @@ export const fetchCreateServerChat = createAsyncThunk(
     },
   )
 
+  export const fetchGetchangeServerMessage = createAsyncThunk(
+    'server/fetchgetchangeServerMessage',
+    async ({message_uuid,new_content}:any, thunkAPI) => {
+      try {
+        const response = await ServerService.getchangeServerMessage(message_uuid,new_content)
+        console.log(response.data,"fetchgetchangeServerMessage")
+        return response.data
+      } catch (error: any) {
+        return thunkAPI.rejectWithValue(error?.message)
+      }
+    },
+  )
+
   export const fetchpostChangeServersTitle = createAsyncThunk(
     'server/fetchpostChangeServersTitle',
     async (payload:any, thunkAPI) => {
@@ -147,7 +160,18 @@ export const fetchCreateServerChat = createAsyncThunk(
       }
     },
   )
-
+  export const fetchgetServersUsers = createAsyncThunk(
+    'server/getServersUsers',
+    async (payload:string, thunkAPI) => {
+      try {
+        const response = await ServerService.getServersUsers(payload)
+        console.log(response.data,"fetchgetServersUsers")
+        return response.data
+      } catch (error: any) {
+        return thunkAPI.rejectWithValue(error?.message)
+      }
+    },
+  )
   export const fetchpostInvitationLinkUser = createAsyncThunk(
     'server/postInvitationLinkUser',
     async (payload:string, thunkAPI) => {

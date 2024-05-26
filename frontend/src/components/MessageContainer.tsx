@@ -7,7 +7,7 @@ import Message from './Message';
 import avatar from "../assets/sonic.jpg"
 import callIcon from "../assets/call.png"
 import { IUserChatT } from '../models/IUserChat';
-import { fetchDeleteServerChatRoom, fetchDeleteServersMessage, fetchGetServerChatRoomMessages, fetchGetServerChatRooms } from '../store/actionServer';
+import { fetchDeleteServerChatRoom, fetchDeleteServersMessage, fetchGetServerChatRoomMessages, fetchGetServerChatRooms, fetchGetchangeServerMessage } from '../store/actionServer';
 import { fetchDeleteChatMessage, fetchGetChatMessage, fetchGetUserChats } from '../store/acthionChat';
 import InputMessage from './InputMessage';
 import ServerUsersList from './ServerUsersList';
@@ -268,6 +268,7 @@ const  MessageContainer : FC=()=> {
                       chatserverid && dispatch(fetchDeleteServersMessage(messageUser.uuid)).then(()=>{dispatch(fetchGetServerChatRoomMessages(chatserverid))}).then(()=>dispatch(addMessage("")))
                       }}>удалить
                     </button>
+                    <button onClick={()=>{dispatch(fetchGetchangeServerMessage({message_uuid: messageUser.uuid,new_content:"iuwhduwhdu"}))}}>Изменить</button>
                   </div>
                 }
                 <InputMessage 
