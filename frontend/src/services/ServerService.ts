@@ -41,7 +41,7 @@ export class ServerService{
         return $api.get<any>("api/v1/getUsersServers")
     }
     static async getServerChatRoomMessages(chat_id: string):Promise<AxiosResponse<IServerChatNessageUser>>{
-        return $api.post<any>("api/v1/getServerChatRoomMessages",{chat_id})
+        return $api.post<any>("api/v1/getServerChatRoomMessages",{chat_id,count:10})
     }
 
     static async postDeleteServersMessage(server_message_uuid: string):Promise<AxiosResponse<any>>{

@@ -74,6 +74,7 @@ const  MessageContainer : FC=()=> {
 
   useEffect(()=>{
     {message && setMessageArray(message)}
+   
   },[message])
 
 
@@ -90,6 +91,7 @@ const  MessageContainer : FC=()=> {
         setMessageText("")
         setArrayURL([])
         setFile(undefined)
+      
     }
  
 
@@ -99,13 +101,16 @@ const  MessageContainer : FC=()=> {
   useEffect(()=>{ 
     // получаю сообщения
       if(chatid){
-        socket.on("message", (data:any) => {
+        socket.on("message", async(data:any) => {
           data = JSON.parse(data.message)
           console.log( data)
-          setMessageArray((prev)=>[...prev,{content: data.content, from_user_id : data.from_user_id, uuid : data.uuid,timestamp : data.timestamp,media : data.media}]) 
+          await setMessageArray((prev)=>[...prev,{content: data.content, from_user_id : data.from_user_id, uuid : data.uuid,timestamp : data.timestamp,media : data.media}]) 
+          scroll()
         });
        
       }
+
+    
       return ()=>{
         socket.off("message")
       }
@@ -185,6 +190,17 @@ const  MessageContainer : FC=()=> {
   }
   }
 
+  const scroll=()=>{
+   
+    messageContainer.current?.scrollBy(200,messageContainer.current.scrollHeight)
+  }
+
+  useEffect(()=>{
+   
+    scroll()
+  },[messageArray])
+
+
 
 
   return (
@@ -209,6 +225,7 @@ const  MessageContainer : FC=()=> {
           </div>
             <div className="get-message-cantainer" ref={messageContainer}>
               {messageArray.length !==0 ? messageArray.map((ms,index)=><Message key={index} uuid={ms.uuid} classUser={ms.from_user_id} media={ms.media}  time={ms.timestamp}>{ms.content}</Message>): null}
+                  
             </div>
             <div className="file-input">
               {file &&  arrayURL.map(i=>(<img src={i} key={i}/>)) }
