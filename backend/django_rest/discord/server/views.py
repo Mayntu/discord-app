@@ -125,6 +125,8 @@ def api_create_server(request):
 
     if avatar:
         filename : str = handle_upload_file_server(file=avatar, server_id=server_uuid)
+        server.avatar = filename
+        server.save()
 
     
 
