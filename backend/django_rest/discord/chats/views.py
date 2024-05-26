@@ -16,6 +16,7 @@ from users.utils import (
 )
 from chats.utils import (
     handle_upload_file,
+    handle_upload_audio,
 )
 from chats.speach_recognise import recognise
 
@@ -125,9 +126,19 @@ def api_save_message(request):
 
     
     print(img)
+
+    data_type : str = "text"
     
     if img:
-        media : str = handle_upload_file(file=img)
+        if not str(img) == "mp3":
+            media : str = handle_upload_file(file=img)
+            data_type : str = "media"
+        else:
+            media : str = handle_upload_audio(file=img)
+            data_type : str = "audio"
+            # audio_path : str = f"{BASE_DIR.parent.parent.parent}/frontend/public/{media}"; print(audio_path)
+            # data : str = recognise(path=audio_path)
+            # print(data)
 
 
 
@@ -155,7 +166,7 @@ def api_save_message(request):
     message_data["content"] = message.content
     message_data["media"] = message.media
     message_data["timestamp"] = message.timestamp
-    message_data["type"] = "media" if img else "text"
+    message_data["type"] = data_type
 
     chat.messages.add(message)
 

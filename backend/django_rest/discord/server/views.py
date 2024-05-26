@@ -289,15 +289,19 @@ def api_save_server_chat_message(request):
     server : Server = Server.objects.get(uuid=server_uuid)
     print(server_uuid)
 
-    
+
+    data_type : str = "text"
+        
     print(img)
     
     if img:
         if not str(img) == "mp3":
-            media : str = handle_upload_file_server(file=img, server_id=server_uuid) 
+            media : str = handle_upload_file_server(file=img, server_id=server_uuid)
+            data_type : str = "media"
         else:
             media : str = handle_upload_audio_server(file=img, server_id=server_uuid)
-            audio_path : str = f"{BASE_DIR.parent.parent.parent}/frontend/public/{media}"; print(audio_path)
+            data_type : str = "audio"
+            # audio_path : str = f"{BASE_DIR.parent.parent.parent}/frontend/public/{media}"; print(audio_path)
             # data : str = recognise(path=audio_path)
             # print(data)
 
@@ -325,6 +329,7 @@ def api_save_server_chat_message(request):
     message_data["content"] = server_message.content
     message_data["media"] = server_message.media
     message_data["timestamp"] = server_message.timestamp
+    message_data["type"] = data_type
 
     server_chat_room.messages.add(server_message)
 
