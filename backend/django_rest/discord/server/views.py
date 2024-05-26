@@ -90,6 +90,8 @@ def api_get_users_servers(request):
 def api_create_server(request):
     data : dict = request.headers
 
+    print(request.FILES)
+
 
     token : str = data.get("Authorization").replace('"', "")
     token_content : dict = get_token(
@@ -110,15 +112,15 @@ def api_create_server(request):
 
     print(data)
     filename : str = ""
-    if avatar:
-        filename : str = handle_upload_file(file=avatar)
-
-
     server : Server = Server.objects.create(
         title=title,
         owner_id=owner_user_id,
         avatar=filename,
     )
+    server_uuid = server.uuid
+
+    if avatar:
+        filename : str = handle_upload_file_server(file=avatar, server_id=server_uuid)
 
     os.mkdir(f"{BASE_DIR.parent.parent.parent}/frontend/public/media/images/servers/{server.uuid}")
     os.mkdir(f"{BASE_DIR.parent.parent.parent}/frontend/public/media/audios/servers/{server.uuid}")
@@ -506,6 +508,38 @@ def api_change_servers_avatar(request):
 
 
     return JsonResponse(data={"result" : True, "message" : "saved to files", "filename" : filename})
+
+
+
+def api_change_server_message(request):
+    headers : dict = request.headers
+
+    
+    token : str = headers.get("Authorization").replace('"', "")
+    token_content : dict = get_token(token=token)
+
+    
+    if not token_content:
+        return JsonResponse(data={"result" : False, "message" : "not valid token"})
+    
+    try:
+        data : dict = json.loads(request.body)
+
+        message_uuid : str = data.get("message_uuid")
+        new_content : str = data.get("new_content")
+
+        
+        server_message : ServerMessage = ServerMessage.objects.get(uuid=message_uuid)
+        server_message.content = new_content
+        server_message.save()
+
+
+    except Exception as e:
+        return JsonResponse(data={"result" : False, "message" : "failed to change server's message"})
+
+
+
+    return JsonResponse(data={"result" : True, "message" : "saved to files"})
 
 
 

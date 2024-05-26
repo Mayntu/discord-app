@@ -6,6 +6,7 @@ from chats.views import (
     api_find_users,
     api_create_chat,
     api_delete_message,
+    api_change_chat_message,
     api_delete_users_chat,
     api_recognize_audio,
 )
@@ -18,6 +19,7 @@ urlpatterns : list = [
     path("api/v1/findUsers", api_find_users, name="api_find_users"),
     path("api/v1/createChat", api_create_chat, name="api_create_chat"),
     path("api/v1/deleteMessage", api_delete_message, name="api_delete_message"),
+    path("api/v1/changeChatMessage", api_change_chat_message, name="api_change_chat_message"),
     path("api/v1/deleteUsersChat", api_delete_users_chat, name="api_delete_users_chat"),
     path("api/v1/recognizeAudio", api_recognize_audio, name="api_recognize_audio"),
 ]

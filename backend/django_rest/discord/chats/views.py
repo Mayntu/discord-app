@@ -265,6 +265,38 @@ def api_delete_message(request):
 
 
 
+def api_change_chat_message(request):
+    headers : dict = request.headers
+
+    
+    token : str = headers.get("Authorization").replace('"', "")
+    token_content : dict = get_token(token=token)
+
+    
+    if not token_content:
+        return JsonResponse(data={"result" : False, "message" : "not valid token"})
+    
+    try:
+        data : dict = json.loads(request.body)
+
+        message_uuid : str = data.get("message_uuid")
+        new_content : str = data.get("new_content")
+
+        
+        message : Message = Message.objects.get(uuid=message_uuid)
+        message.content = new_content
+        message.save()
+
+
+    except Exception as e:
+        return JsonResponse(data={"result" : False, "message" : "Failed to change chat's message"})
+
+
+
+    return JsonResponse(data={"result" : True, "message" : "saved to files"})
+
+
+
 def api_delete_users_chat(request):
     headers : dict = request.headers
 

@@ -8,7 +8,7 @@ class User(models.Model):
     login = models.CharField(max_length=64, verbose_name="login")
     password = models.CharField(max_length=64, verbose_name="password")
     avatar = models.CharField(max_length=256, verbose_name="avatar")
-    is_online = models.BooleanField(default=True, verbose_name="IS ONLINE")
+    is_online = models.BooleanField(default=False, verbose_name="IS ONLINE")
     chats = models.ManyToManyField("chats.Chat", blank=True)
     servers = models.ManyToManyField("server.Server", blank=True)
 
