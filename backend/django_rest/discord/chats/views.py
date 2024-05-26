@@ -178,12 +178,13 @@ def api_get_chat_messages(request):
         print(request.body)
         data : dict = json.loads(request.body)
 
-        chat_id      : str = data.get("chat_id")
+        chat_id : str = data.get("chat_id")
+        count   : int = data.get("count") or 500
         
         chat : Chat = Chat.objects.get(uuid=chat_id)
 
         
-        messages = chat.messages.all().order_by("timestamp")
+        messages = chat.messages.all().order_by("timestamp")[:count:-1]
 
 
         messages_serializer = MessageSerializer(messages, many=True)
