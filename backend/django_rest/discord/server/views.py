@@ -90,7 +90,7 @@ def api_get_users_servers(request):
 def api_create_server(request):
     data : dict = request.headers
 
-    print(request.FILES)
+    
 
 
     token : str = data.get("Authorization").replace('"', "")
@@ -102,15 +102,15 @@ def api_create_server(request):
         return JsonResponse(data={"result" : False, "error" : "not valid token"})
     
     
-    data : dict = json.loads(request.body)
+    # data : dict = json.loads(request.body)
     files = request.FILES
 
-    title : str = data.get("title")
+    title : str = request.POST.get("title")
     owner_user_id : str = token_content.get("uuid")
     avatar : str = files.get("file")
 
 
-    print(data)
+    # print(data)
     filename : str = ""
     server : Server = Server.objects.create(
         title=title,
@@ -119,11 +119,13 @@ def api_create_server(request):
     )
     server_uuid = server.uuid
 
+    os.mkdir(f"{BASE_DIR.parent.parent.parent}/frontend/public/media/images/servers/{server_uuid}")
+    os.mkdir(f"{BASE_DIR.parent.parent.parent}/frontend/public/media/audios/servers/{server_uuid}")
+
+
     if avatar:
         filename : str = handle_upload_file_server(file=avatar, server_id=server_uuid)
 
-    os.mkdir(f"{BASE_DIR.parent.parent.parent}/frontend/public/media/images/servers/{server.uuid}")
-    os.mkdir(f"{BASE_DIR.parent.parent.parent}/frontend/public/media/audios/servers/{server.uuid}")
     
 
 
@@ -217,7 +219,7 @@ def api_get_server_chat_rooms(request):
     token_content = get_token(token=token)
     if not token_content:
         return JsonResponse(data={"result" : False, "message" : "not valid token"})
-    
+
 
     data : dict = json.loads(request.body)
 
@@ -341,12 +343,13 @@ def api_get_server_room_messages(request):
     if token_content:
         data : dict = json.loads(request.body)
 
-        server_chat_room_id      : str = data.get("chat_id")
+        server_chat_room_id : str = data.get("chat_id")
+        count : int = int(data.get("count")) or 500
         
         server_chat_room : ServerChatRoom = ServerChatRoom.objects.get(uuid=server_chat_room_id)
 
         
-        messages = server_chat_room.messages.all().order_by("timestamp")
+        messages = server_chat_room.messages.all().order_by("timestamp")[:count]
 
 
         server_message_serializer : ServerMessageSerializer = ServerMessageSerializer(messages, many=True)
