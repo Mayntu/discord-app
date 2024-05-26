@@ -311,26 +311,8 @@ input{
   justify-content: flex-start;
   padding: 10px 0px;
   gap: 5px;
-  overflow-y: scroll;
-}
-.block-server-chat{
-  margin-bottom: 10px;
-}
-.block-server-chat,.block-server{
-  color: white;
-  width: 60px;
-  height: 60px;
-  min-width: 60px;
-  min-height: 60px;
-  background-color: #ef2424;
-  border-radius: 10px;
-}
-
-.block-server{
-  border-radius: 100px;
-}
-.server-chat-block{
-  background-color: #38ff10;
+  overflow-y:hidden;
+  overflow-x: hidden
 }
 /* server-container  end*/
 

@@ -1,4 +1,4 @@
-import  { FC, useEffect,  useState } from 'react'
+import  { FC, useEffect,  useRef,  useState } from 'react'
 import { useNavigate, useParams, } from 'react-router-dom'
 import { socket } from '../socket';
 import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock';
@@ -32,6 +32,7 @@ const  MessageContainer : FC=()=> {
   const [usersChat,setUsersChat]= useState<IUserChatT>()
   const navigate = useNavigate()
   const [arrayURL,setArrayURL] = useState<string[]>([])
+  const messageContainer = useRef<HTMLDivElement>(null)
 
   const joinRoom = (room:any) => {
     console.log("room")
@@ -206,7 +207,7 @@ const  MessageContainer : FC=()=> {
                   }}>удалить</button>
                   <img src={callIcon} className='icon-message' onClick={()=>{setIsCallBlock(true)}}/>
           </div>
-            <div className="get-message-cantainer">
+            <div className="get-message-cantainer" ref={messageContainer}>
               {messageArray.length !==0 ? messageArray.map((ms,index)=><Message key={index} uuid={ms.uuid} classUser={ms.from_user_id} media={ms.media}  time={ms.timestamp}>{ms.content}</Message>): null}
             </div>
             <div className="file-input">
