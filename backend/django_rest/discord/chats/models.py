@@ -11,6 +11,7 @@ class Message(models.Model):
     content = models.CharField(max_length=2048, blank=False, verbose_name="content")
     media = models.CharField(max_length=512, null=True, blank=True, verbose_name="media")
     timestamp = models.DateTimeField(auto_now_add=True, verbose_name="date time")
+    has_read : models.BooleanField = models.BooleanField(default=False, verbose_name="has read")
 
 
 class Chat(models.Model):

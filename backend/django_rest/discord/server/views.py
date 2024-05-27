@@ -358,6 +358,9 @@ def api_get_server_room_messages(request):
         
         messages = server_chat_room.messages.all().order_by("-timestamp")[:count:-1]
 
+        # for message in messages:
+        #     message.has_read = True
+
 
         server_message_serializer : ServerMessageSerializer = ServerMessageSerializer(messages, many=True)
 

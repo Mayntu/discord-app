@@ -175,6 +175,33 @@ def api_save_message(request):
 
 
 
+def api_read_message(request):
+    headers : dict = request.headers
+
+    token : str = headers.get("Authorization").replace('"', "")
+    token_content : dict = get_token(token=token)
+    
+
+    if token_content:
+        data : dict = json.loads(request.body)
+
+        try:
+            message_uuid : str = data.get("message_id")
+            message : Message = Message.objects.get(uuid=message_uuid)
+        except Exception as e:
+            return JsonResponse(data={"result" : False, "message" : "message was not found in database server"})
+        
+
+        message.has_read = True
+        message.save()
+        
+
+        return JsonResponse(data={"result" : True, "message" : "chat delete successfully"})
+    
+    return JsonResponse(data={"result" : False, "message" : "not valid token"})
+
+
+
 def api_get_chat_messages(request):
     print(request.headers)
     headers : dict = request.headers
