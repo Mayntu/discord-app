@@ -200,8 +200,9 @@ def api_join_server(request, link_data : str):
         return JsonResponse(data={"result" : False, "message" : "not valid token"})
 
 
+
     try:
-        invitation_link : InvitationLink = InvitationLink.objects.get(data=link_data)
+        invitation_link : InvitationLink = InvitationLink.objects.get(data="invite/" + str(link_data))
     except Exception as e:
         print(e)
         return JsonResponse(data={"result" : False, "message" : "not valid link"})
@@ -217,7 +218,7 @@ def api_join_server(request, link_data : str):
         
         server.users.add(user)
 
-        return HttpResponseRedirect(redirect_to="/server/")
+        return JsonResponse(data={"result" : True, "message" : "successfully joined server"})
     except Exception as e:
         print(e)
-        return JsonResponse(data={"result" : True, "message" : "server not exists"})
+        return JsonResponse(data={"result" : False, "message" : "server not exists"})

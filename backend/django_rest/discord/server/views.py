@@ -563,6 +563,9 @@ def api_get_invitation_link(request):
     invitation_link.data = link
     invitation_link.server_uuid = server_uuid
     invitation_link.save()
+    print(invitation_link)
+    print(link)
+    print(InvitationLink.objects.get(data=invitation_link.data))
 
     return JsonResponse(data={"result" : True, "link" : invitation_link.data})
 
