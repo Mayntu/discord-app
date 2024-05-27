@@ -218,7 +218,7 @@ def api_join_server(request, link_data : str):
         
         server.users.add(user)
 
-        user.servers.add(user)
+        user.servers.add(server)
 
         return JsonResponse(data={"result" : True, "message" : "successfully joined server"})
     except Exception as e:
