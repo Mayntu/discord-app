@@ -9,8 +9,8 @@ export class ChatService {
     }
 
 
-    static async getChatMessage(chat_id: string):Promise<AxiosResponse<any>>{
-        return $api.post<any>("api/v1/getChatMessages",{chat_id,count:10})
+    static async getChatMessage(chat_id: string,count: number):Promise<AxiosResponse<any>>{
+        return $api.post<any>("api/v1/getChatMessages",{chat_id,count})
     }
 
     static async postFindChat(login : string):Promise<AxiosResponse<any>>{

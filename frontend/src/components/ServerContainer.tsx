@@ -31,9 +31,9 @@ const ServerContainer=()=> {
       dispatch(fetchGetServer())
     },[])
    
-    const server=async()=>{
-         dispatch(fetchCreateServer({title: "satana123",avatar:""}))
-      }
+    // const server=async()=>{
+    //      dispatch(fetchCreateServer({title: "satana123",avatar:""}))
+    //   }
       
       const handleImage=()=>{
         if(refImage.current){
@@ -73,13 +73,13 @@ const ServerContainer=()=> {
     {serversUser.length !== 0 && serversUser.map(i=>(<NavLink to={`/server/${i.uuid}`}  key={i.uuid} ><div className="block-server">{i.title}</div></NavLink>))}
   </div>
    {isCreateServerM && 
-   <Module newFile={newFile}>
-      <div>
-        <div className="avatar-setting ">
+   <Module newFile={newFile} isModule={setIsCreateSreverM}>
+      <>
+        <div className="icon-block-module">
           <img src={iconCamera} alt="" className='imput-setting' onClick={handleImage}/>
         </div>
       <input ref={refImage} type="file" accept='image/*,.png,.web,.jpg,.gif' onChange={(e)=>{if(e.target.files) setFile(e.target.files[0])}} className='none'/>
-      </div>
+      </>
     </Module>}
    </>
   )

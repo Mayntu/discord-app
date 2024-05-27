@@ -18,6 +18,7 @@ import { addMessage, addUsersChat } from '../store/ChatsSlice';
 
 const  MessageContainer : FC=()=> {
   const {chatid,chatserverid,serverid} = useParams()
+  const [limit, setLimit] = useState<number>(10)
   const [isCallBlock,setIsCallBlock] = useState<boolean>(false)
   const [messageText,setMessageText] = useState<string>("")
   const [roomId,setRoomId] = useState<string>("")
@@ -33,6 +34,7 @@ const  MessageContainer : FC=()=> {
   const navigate = useNavigate()
   const [arrayURL,setArrayURL] = useState<string[]>([])
   const messageContainer = useRef<HTMLDivElement>(null)
+  const messageRef= useRef<HTMLDivElement>(null)
 
   const joinRoom = (room:any) => {
     console.log("room")
@@ -41,7 +43,7 @@ const  MessageContainer : FC=()=> {
   };
  
   const getMessage = async ()=>{
-    chatid && await dispatch(fetchGetChatMessage(chatid))
+    chatid && await dispatch(fetchGetChatMessage({chat_id:chatid,count:limit}))
   }
 
   useEffect(()=>{
@@ -59,7 +61,7 @@ const  MessageContainer : FC=()=> {
         })
         }
       }
-  },[chatid,socket])
+  },[chatid,socket,limit])
 
  useEffect(()=>{
   if(userMe && Object.keys(userMe).length !== 0 ){
@@ -196,8 +198,10 @@ const  MessageContainer : FC=()=> {
   }
 
   useEffect(()=>{
-   
-    scroll()
+    if(limit ==10){
+      scroll()
+    }
+  
   },[messageArray])
 
 
@@ -223,8 +227,13 @@ const  MessageContainer : FC=()=> {
                   }}>удалить</button>
                   <img src={callIcon} className='icon-message' onClick={()=>{setIsCallBlock(true)}}/>
           </div>
-            <div className="get-message-cantainer" ref={messageContainer}>
-              {messageArray.length !==0 ? messageArray.map((ms,index)=><Message key={index} uuid={ms.uuid} classUser={ms.from_user_id} media={ms.media}  time={ms.timestamp}>{ms.content}</Message>): null}
+            <div className="get-message-cantainer" ref={messageContainer} onScroll={()=>{
+              if(messageContainer.current?.scrollTop == 0){
+                console.log(0)
+                setLimit(limit+10)
+              }
+            }}>
+              {messageArray.length !==0 ? messageArray.map((ms,index)=><Message key={index} uuid={ms.uuid} classUser={ms.from_user_id} media={ms.media}  time={ms.timestamp}>{ms.content}  </Message>): null}
                   
             </div>
             <div className="file-input">
@@ -234,7 +243,7 @@ const  MessageContainer : FC=()=> {
             <div> 
               <button onClick={()=>dispatch(addMessage(""))}>X</button>
               <button onClick={()=>{
-                chatid &&  dispatch(fetchDeleteChatMessage(messageUser.uuid)).then(()=>{dispatch(fetchGetChatMessage(chatid))}).then(()=>dispatch(addMessage("")))
+                chatid &&  dispatch(fetchDeleteChatMessage(messageUser.uuid)).then(()=>{dispatch(fetchGetChatMessage({chat_id:chatid,count:limit}))}).then(()=>dispatch(addMessage("")))
                 }}>удалить
               </button>
               <button>Ответ</button>

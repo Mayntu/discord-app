@@ -34,7 +34,7 @@ const serverSlice = createSlice({
         }).addCase(fetchGetServerChatRoomMessages.fulfilled,((state,{payload}: PayloadAction<IServerChatNessage[]>)=>{
             state.serverChatMessages = payload
         })).addCase(fetchgetServersUsers.fulfilled,(state,{payload}: PayloadAction<any>)=>{
-            state.UserInServer = payload
+            state.UserInServer = payload.users
         })
     }
 })

@@ -8,11 +8,12 @@ import $api from './http'
 import { addUsersConnect } from './store/ChatsSlice'
 import ServerContainer from './components/ServerContainer'
 import ModuleImage from './components/ModuleImage'
+import Module from './components/Module'
 
 
 function App() {
   const {isAuth,error,isLoading} = useAppSelector(state=> state.auth)
-  const {isViewModule} = useAppSelector(state=> state.module)
+  const {isViewModule,isViewModuleSetting} = useAppSelector(state=> state.module)
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const {pathname} = useLocation()
@@ -69,6 +70,7 @@ function App() {
             {isAuth && <Outlet></Outlet>}
           </section>
         {isViewModule && <ModuleImage/>}
+        {/* {isViewModuleSetting && <Module isModule={}/>} */}
       </section>
    
     

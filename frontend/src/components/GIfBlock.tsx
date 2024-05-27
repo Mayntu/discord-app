@@ -107,7 +107,7 @@ import "../css/gif.css"
           }
           setIsclick(false)
           }  } />
-        <div className="block-gif" ref={blockGif} onScroll={e=>{  if(blockGif.current && blockGif.current?.offsetHeight + blockGif.current?.scrollTop == blockGif.current?.scrollHeight){
+        <div className="block-gif" ref={blockGif} onScroll={()=>{  if(blockGif.current && blockGif.current?.offsetHeight + blockGif.current?.scrollTop == blockGif.current?.scrollHeight){
             console.log("Win")
             setLimit(limit+10)
           }}}>

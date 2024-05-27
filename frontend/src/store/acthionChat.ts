@@ -18,9 +18,9 @@ export const fetchGetUserChats = createAsyncThunk(
 
   export const fetchGetChatMessage = createAsyncThunk(
     'chats/fetchGetChatMessage',
-    async (payload:string, thunkAPI) => {
+    async ({chat_id,count}:any, thunkAPI) => {
       try {
-        const response = await ChatService.getChatMessage(payload)
+        const response = await ChatService.getChatMessage(chat_id,count)
         console.log(response.data,"chatMessage")
         return response.data
       } catch (error: any) {
