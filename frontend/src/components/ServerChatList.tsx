@@ -2,7 +2,9 @@ import  { FC, useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock'
 import { NavLink, Outlet, useNavigate, useParams } from 'react-router-dom'
 
-import { fetchCreateServerChat, fetchDeleteServer, fetchGetServer, fetchGetServerChatRooms, fetchpostInvitationLink, fetchpostInvitationLinkUser } from '../store/actionServer'
+import { fetchCreateServerChat, fetchDeleteServer, fetchGetServer, fetchGetServerChatRooms, fetchpostChangeServersTitle, fetchpostInvitationLink, fetchpostInvitationLinkUser } from '../store/actionServer'
+import { isModuleSet } from '../store/ModuleSlice'
+import Module from './Module'
 
 
 
@@ -14,7 +16,7 @@ const ServerChatList:FC=()=> {
     const {serverid}= useParams()
     const [chatName,setChatName] = useState<string>("")
     const navigate = useNavigate()
-
+    const [isModule,setIsModule] = useState<boolean>(false)
 
     useEffect(()=>{
       serverid && dispatch(fetchGetServerChatRooms(serverid))
@@ -30,14 +32,22 @@ const ServerChatList:FC=()=> {
     }
  
 
+    const newTitleServer=()=>{
+      dispatch(fetchpostChangeServersTitle({server_uuid : "277bc986-dfbe-43f6-b6e4-034c460ef58a",title: "sonic"}))
+      console.log("wojdiw")
+    }
+
   return ( 
     <>
      <div className='chat-list-container'>
       <button onClick={deleteServer}>dalete server</button>
       <button onClick={()=>{serverid && dispatch(fetchpostInvitationLink(serverid))}}>пригласить</button>
-      <button onClick={()=>{serverid && dispatch(fetchpostInvitationLinkUser("Pu0TJO36xJtTvMwn9JkybMk5j9yifaYeKSpeY1OLXOBAkh1OvoLSZtPmT1f6H"))}}>пригласить юзера</button>
+      <button onClick={()=>{dispatch(fetchpostInvitationLinkUser("tVurNtAJ0pLi0VChn4m60Q9zioSEOCcOlKNaDpAIs7Qm30iI0HS9luKZA7MaT"))}}>пригласить юзера</button>
       <input type="text" onChange={(e)=>{setChatName(e.target.value)}} value={chatName}/>
-     
+      <button onClick={()=>{
+       
+       dispatch(isModuleSet({isViewModuleSetting:true,isModule:setIsModule, children: (<button onClick={()=>{console.log("ssssss")}}>save</button>)}))
+      }}>изменить имя сервера</button>
       <button onClick={()=>{ 
         if(serverid){
           dispatch(fetchCreateServerChat({title: chatName,uuid_server : serverid}))
@@ -49,7 +59,7 @@ const ServerChatList:FC=()=> {
         </NavLink>
         ))}
      </div>
-       
+       {/* {isModule && <Module newFile={newTitleServer} isModule={setIsModule}/>} */}
    
       <Outlet></Outlet>
   

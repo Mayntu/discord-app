@@ -2,12 +2,12 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { ReactNode } from "react";
 
 type TModuleSlice={
-    isViewModule: boolean
+    isViewModule?: boolean
     isViewModuleSetting: boolean,
     children?: ReactNode,
-    newFile? : ()=>{},
+    newFile? : any,
     isModule?:React.Dispatch<React.SetStateAction<boolean>>,
-    imageSrc : string
+    imageSrc? : string
 }
 
 const initialState:TModuleSlice ={
@@ -21,15 +21,12 @@ const moduleSlice = createSlice({
     name : "module",
     initialState,
     reducers:{
-        isModule(state,{payload}:PayloadAction<TModuleSlice>){
-            state.isViewModule = payload.isViewModule
-            // state.children = payload.children
-            // state.newFile = payload.newFile
-            state.imageSrc = payload.imageSrc
+        isModule(state,{payload}:PayloadAction<boolean>){
+            state.isViewModuleSetting = payload
         },
         isModuleSet(state,{payload}:PayloadAction<TModuleSlice>){
             state.isViewModuleSetting = payload.isViewModuleSetting
-            state.isModule = payload.isModule
+       
             state.children = payload.children
             state.newFile = payload.newFile
         }
@@ -38,6 +35,6 @@ const moduleSlice = createSlice({
 
 
 
-export const {isModule} = moduleSlice.actions
+export const {isModule, isModuleSet} = moduleSlice.actions
 
 export default moduleSlice.reducer

@@ -4,7 +4,7 @@ import { useEffect,  useRef, useState } from 'react'
 import { fetchCreateServer, fetchGetServer, fetchpostChangeServersTitle } from '../store/actionServer'
 import Module from './Module'
 import iconCamera from "../assets/camera.png"
-import { isModule } from '../store/ModuleSlice'
+
 import "../css/server.css"
 
 const ServerContainer=()=> {

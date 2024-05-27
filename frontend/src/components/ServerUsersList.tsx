@@ -17,7 +17,7 @@ const ServerUsersList:FC=()=> {
     <div className="message-container-server-user">
       <p>Server Users</p>
       {usersServer.map((i)=>(
-      <div className='chat-container'>
+      <div className='chat-container' key={i.uuid}>
         <div className="avatar">
             <img src={i?.avatar ? "http://localhost:5173/public/"+ i.avatar : avatar} alt="" title={i?.login} />
         </div>
