@@ -63,6 +63,35 @@ def on_join_room(data):
     print("\nusers: ", _users_in_room, "\n")
 
 
+@socketio.on("leave-room")
+def on_leave_room():
+    try:
+        sid = request.sid
+        room_id = _room_of_sid[sid]
+        display_name = _name_of_sid[sid]
+
+        print("[{}] Member left: {}<{}>".format(room_id, display_name, sid))
+        emit("user-disconnect", {"sid": sid}, broadcast=True, include_self=False, room=room_id)
+
+        _users_in_room[room_id].pop(sid)
+        try:
+            if len(_users_in_room[room_id]) == 0:
+                _users_in_room.pop(room_id)
+        except:
+            print("no users")
+
+        for user_id in _users_in_room:
+            emit(ACTIONS.REMOVE_PEER, {"peerID" : request.sid}, to=user_id)
+            emit(ACTIONS.REMOVE_PEER, {"peerID" : user_id})
+        
+        _room_of_sid.pop(sid)
+        _name_of_sid.pop(sid)
+
+        print("\nusers: ", _users_in_room, "\n")
+    except:
+        ...
+
+
 @socketio.on("disconnect")
 def on_disconnect():
     try:
