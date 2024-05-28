@@ -57,9 +57,7 @@ export class ServerService{
    static async postInvitationLink(server_uuid: string):Promise<AxiosResponse<any>>{
         return $api.post<any>("api/v1/getInvitationLink",{server_uuid})
     }
-    static async postInvitationLinkUser(linkid: string):Promise<AxiosResponse<any>>{
-        return $api.get<any>(`invite/${linkid}`)
-    }
+ 
     static async getServersUsers(server_uuid: string):Promise<AxiosResponse<any>>{
         return $api.post<any>(`api/v1/getServersUsers`,{uuid: server_uuid})
     }

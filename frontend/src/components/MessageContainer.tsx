@@ -233,7 +233,7 @@ const  MessageContainer : FC=()=> {
                 setLimit(limit+10)
               }
             }}>
-              {messageArray.length !==0 ? messageArray.map((ms,index)=><Message key={index} uuid={ms.uuid} classUser={ms.from_user_id} media={ms.media}  time={ms.timestamp}>{ms.content}  </Message>): null}
+              {messageArray.length !==0 ? messageArray.map((ms,index)=><Message key={index} uuid={ms.uuid} classUser={ms.from_user_id} media={ms.media}  time={ms.timestamp} children={ms.content}/>): null}
                   
             </div>
             <div className="file-input">

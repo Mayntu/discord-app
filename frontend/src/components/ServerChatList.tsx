@@ -2,9 +2,9 @@ import  { FC, useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock'
 import { NavLink, Outlet, useNavigate, useParams } from 'react-router-dom'
 
-import { fetchCreateServerChat, fetchDeleteServer, fetchGetServer, fetchGetServerChatRooms, fetchpostChangeServersTitle, fetchpostInvitationLink, fetchpostInvitationLinkUser } from '../store/actionServer'
+import { fetchCreateServerChat, fetchDeleteServer, fetchGetServer, fetchGetServerChatRooms, fetchpostChangeServersTitle, fetchpostInvitationLink } from '../store/actionServer'
 import { isModuleSet } from '../store/ModuleSlice'
-import Module from './Module'
+
 
 
 
@@ -37,12 +37,18 @@ const ServerChatList:FC=()=> {
       console.log("wojdiw")
     }
 
+    const inviteServer=()=>{
+      serverid && dispatch(fetchpostInvitationLink(serverid)).then((res)=>{
+                    console.log(res) 
+                    dispatch(isModuleSet({isViewModuleSetting:true,children:(<><h1>Скопируйте ссылку</h1><p>http://127.0.0.1:8000/{res.payload.link}</p></>)}))})
+
+    }
+
   return ( 
     <>
      <div className='chat-list-container'>
       <button onClick={deleteServer}>dalete server</button>
-      <button onClick={()=>{serverid && dispatch(fetchpostInvitationLink(serverid))}}>пригласить</button>
-      <button onClick={()=>{dispatch(fetchpostInvitationLinkUser("tVurNtAJ0pLi0VChn4m60Q9zioSEOCcOlKNaDpAIs7Qm30iI0HS9luKZA7MaT"))}}>пригласить юзера</button>
+      <button onClick={inviteServer}>пригласить</button>
       <input type="text" onChange={(e)=>{setChatName(e.target.value)}} value={chatName}/>
       <button onClick={()=>{
        

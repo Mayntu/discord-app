@@ -9,7 +9,7 @@ import { fetchFindChat, fetchGetUserChats } from '../store/acthionChat'
 import $api from '../http'
 import { socket } from '../socket'
 import { addUsersConnect } from '../store/ChatsSlice'
-import { fetchpostInvitationLinkUser } from '../store/actionServer'
+
 
 
 
@@ -64,7 +64,6 @@ const ChatList:FC=()=> {
         : null}
         {/* отображение item чатов */}
         { socketChat.map(i=>(<ChatListItem key={i.uuid}  chatId={i.uuid} chatsUser={i.users}/>))}
-        <button onClick={()=>{dispatch(fetchpostInvitationLinkUser("hFXKA8FPoIBfSXpZhYdyuGVQIm0X4vS3nXXpcG8XGnb9CocJun5ItFhk5bjHb"))}}>пригласить юзера</button>
       </div>}
       {!isSettings && <SettingsBlock setIsSettings={setIsSettings}/>}
       <Outlet></Outlet>

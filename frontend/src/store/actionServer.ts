@@ -172,15 +172,3 @@ export const fetchCreateServerChat = createAsyncThunk(
       }
     },
   )
-  export const fetchpostInvitationLinkUser = createAsyncThunk(
-    'server/postInvitationLinkUser',
-    async (payload:string, thunkAPI) => {
-      try {
-        const response = await ServerService.postInvitationLinkUser(payload)
-        console.log(response.data,"fetchInvitationLinkUser")
-        return response.data
-      } catch (error: any) {
-        return thunkAPI.rejectWithValue(error?.message)
-      }
-    },
-  )

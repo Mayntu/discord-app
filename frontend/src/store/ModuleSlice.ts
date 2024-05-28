@@ -21,6 +21,7 @@ const moduleSlice = createSlice({
     name : "module",
     initialState,
     reducers:{
+       
         isModule(state,{payload}:PayloadAction<boolean>){
             state.isViewModuleSetting = payload
         },

@@ -56,14 +56,7 @@ const ServerContainer=()=> {
         изменить имя
       </div>
     <div className="block-server" onClick={()=> {
-      setIsCreateSreverM(true)
-      // dispatch(isModule({isViewModule:true,children: (<div>
-      //   <div className="avatar-setting ">
-      //     <img src={iconCamera} alt="" className='imput-setting' onClick={handleImage}/>
-      //   </div>
-      // <input ref={refImage} type="file" accept='image/*,.png,.web,.jpg,.gif' onChange={(e)=>{if(e.target.files) setFile(e.target.files[0])}} className='none'/>
-      // </div>), newFile}))
-      }}>
+      setIsCreateSreverM(true)}}>
       создать сервер
       
     </div>

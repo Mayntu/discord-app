@@ -30,6 +30,7 @@ const InputMessage:FC<IInputMessage>=({dropImage,sendMessage,setFile,setMessageT
   const {chatid,chatserverid,serverid} = useParams()
   const [isGifBlock, setISGifBlock] = useState<boolean>(false)
   // const [timer, setTimer] = useState("00.00.00");
+  const [gif,setGif] = useState<string>("")
   const mediaRecorder = useRef<MediaRecorder>();
  
 
@@ -106,7 +107,26 @@ const InputMessage:FC<IInputMessage>=({dropImage,sendMessage,setFile,setMessageT
 
 
 
-
+  useEffect(()=>{
+    if(gif !== ""){
+      setGif("")
+      if(chatid){
+        socket.emit("message", {
+          "data" : gif, 
+          "chat_id" : chatid,
+          "token" : localStorage.getItem("token"), 
+          media: ""});
+      }
+      if(chatserverid){
+        socket.emit("server_chat_message", {
+          "data" : gif, 
+          "chat_id" : chatserverid, 
+          "server_id" : serverid,
+          "token" : localStorage.getItem("token"), 
+          media:  ""});
+      }
+    }
+  },[gif])
 
 
 
@@ -221,7 +241,7 @@ useEffect(()=>{
       <button onClick={()=>setISGifBlock(!isGifBlock)}>gif</button>
      
     </div>
-       {isGifBlock && <GIfBlock/>}
+       {isGifBlock && <GIfBlock setGif={setGif} setisGifBlock={setISGifBlock}/>}
     </>
   )
 }

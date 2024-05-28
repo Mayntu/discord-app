@@ -562,13 +562,26 @@ width: 70%;
   border: 1px solid green;
   background-color: white;
   display: flex;
-
-  flex-wrap: wrap;
+  flex-direction: row;
+  align-items: flex-end;
   word-wrap: break-word;
   overflow-x:hidden;
 }
+.chat-message >.row p , .row a{
+  text-align: start;
+  min-width: 70%;
+ 
+}
+.row a{
+  cursor: pointer;
+}
+.row{
+  max-width: 70%;
+
+}
 .my-message{
   align-self: flex-end;
+  align-items: flex-end;
 }
 .column{
   display: flex;

@@ -1,8 +1,13 @@
 import{ FC, useEffect, useRef, useState } from 'react'
 import "../css/gif.css"
 
- const GIfBlock:FC=()=> {
-    const [gif,setGif] = useState<string>()
+interface IGIfBlock{
+  setGif : React.Dispatch<React.SetStateAction<string>>
+  setisGifBlock: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+ const GIfBlock:FC<IGIfBlock>=({setGif,setisGifBlock})=> {
+  
     const [gifs,setGifs] = useState<any[]>([])
     const [serach, setSearch] = useState<string>("excited")
     const [isClick,setIsclick] = useState<boolean>(true)
@@ -46,7 +51,6 @@ import "../css/gif.css"
         top_10_gifs.filter((item:any)=>{
           setGifs((prev)=>[...prev,item])
         })
-        setGif(top_10_gifs[0]["media_formats"]["nanogif"]["url"])
       
     
         return;
@@ -111,7 +115,9 @@ import "../css/gif.css"
             console.log("Win")
             setLimit(limit+10)
           }}}>
-          {gifs?.length  && gifs?.map(((i)=><img src={i["media_formats"]["gif"]["url"]} alt="" key={i.id} onClick={()=>{setGif(i["media_formats"]["gif"]["url"])}}/>))}
+          {gifs?.length  && gifs?.map(((i)=><img src={i["media_formats"]["gif"]["url"]} alt="" key={i.id} onClick={()=>{
+            setisGifBlock(false)
+            setGif(i["media_formats"]["gif"]["url"])}}/>))}
         </div>
         </div>
     </>
