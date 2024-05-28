@@ -17,7 +17,7 @@ const ServerChatList:FC=()=> {
     const [chatName,setChatName] = useState<string>("")
     const navigate = useNavigate()
     const [isModule,setIsModule] = useState<boolean>(false)
-
+    const [serverTitle,setServerTitle] = useState<string>("")
     useEffect(()=>{
       serverid && dispatch(fetchGetServerChatRooms(serverid))
     },[serverid])
@@ -33,7 +33,7 @@ const ServerChatList:FC=()=> {
  
 
     const newTitleServer=()=>{
-      dispatch(fetchpostChangeServersTitle({server_uuid : "277bc986-dfbe-43f6-b6e4-034c460ef58a",title: "sonic"}))
+      dispatch(fetchpostChangeServersTitle({server_uuid : serverid,title: serverTitle}))
       console.log("wojdiw")
     }
 
@@ -51,8 +51,16 @@ const ServerChatList:FC=()=> {
       <button onClick={inviteServer}>пригласить</button>
       <input type="text" onChange={(e)=>{setChatName(e.target.value)}} value={chatName}/>
       <button onClick={()=>{
-       
-       dispatch(isModuleSet({isViewModuleSetting:true,isModule:setIsModule, children: (<button onClick={()=>{console.log("ssssss")}}>save</button>)}))
+       dispatch(isModuleSet({isViewModuleSetting:true,isModule:setIsModule, children:
+         (<>
+          <input type="text" placeholder='new server name' 
+          // onChange={(e)=>{setServerTitle(e.target.value)}} value={serverTitle} 
+          />
+          <button onClick={newTitleServer}>save</button>
+          </>)
+        }
+      )
+    )
       }}>изменить имя сервера</button>
       <button onClick={()=>{ 
         if(serverid){

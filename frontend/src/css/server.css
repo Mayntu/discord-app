@@ -15,6 +15,11 @@
   .block-server{
     border-radius: 100px;
   }
+  .block-server img{
+    width: 60px;
+    height: 60px;
+    border-radius: 100px;
+  }
   .server-chat-block{
     background-color: #38ff10;
   }

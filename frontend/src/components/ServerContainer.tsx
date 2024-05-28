@@ -63,7 +63,13 @@ const ServerContainer=()=> {
  
    {/* invite/4McBNSuX6N1kTX1Rb71Yr6MQq9BQtn7cxTi7qNObqTcWN913K4ZFUVKZP9Tjf */}
    {/* http://127.0.0.1:8000/invite/id */}
-    {serversUser.length !== 0 && serversUser.map(i=>(<NavLink to={`/server/${i.uuid}`}  key={i.uuid} ><div className="block-server">{i.title}</div></NavLink>))}
+    {serversUser.length !== 0 && serversUser.map(i=>(
+    <NavLink to={`/server/${i.uuid}`}  key={i.uuid} >
+      <div className="block-server">
+        {i.avatar && <img src={"http://localhost:5173/public/media/images/servers/1be84322-dc4b-49f7-95f1-c146b250aa6b/d124509a-6c6a-49c3-bd5f-782de7f3466b.jpg"}/>}
+        {i.title}
+      </div>
+    </NavLink>))}
   </div>
    {isCreateServerM && 
    <Module newFile={newFile} isModule={setIsCreateSreverM}>
