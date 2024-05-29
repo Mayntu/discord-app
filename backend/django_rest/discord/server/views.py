@@ -604,3 +604,25 @@ def api_recognize_audio_server(request):
     
     return JsonResponse(data={"result" : False, "message" : "not valid token"})
 
+
+
+def api_check_user(request):
+    headers : dict = request.headers
+
+    token : str = headers.get("Authorization").replace('"', "")
+    token_content : dict = get_token(token=token)
+
+    if token_content:
+        data : dict = json.loads(request.body)
+
+        user_uuid : str = token_content.get("uuid")
+
+        server_uuid : str = data.get("server_uuid")
+
+        server : Server = Server.objects.get(uuid=server_uuid)
+
+        return JsonResponse({"result" : True, "is_owner" : user_uuid == server.owner_id})
+    
+    return JsonResponse({"result" : False, "message" : "not valid token"})
+    
+
