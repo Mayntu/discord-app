@@ -220,7 +220,39 @@ def api_join_server(request, link_data : str):
 
         user.servers.add(server)
 
-        return JsonResponse(data={"result" : True, "message" : "successfully joined server"})
+        return JsonResponse(data={"result" : True, "message" : "successfully joined server", "server_id" : server_uuid})
+    except Exception as e:
+        print(e)
+        return JsonResponse(data={"result" : False, "message" : "server not exists"})
+
+
+
+def api_dejoin_server(request):
+    headers : dict = request.headers
+    token : str = headers.get("Authorization").replace('"', "")
+    token_content : dict = get_token(token=token)
+
+    if not token_content:
+        return JsonResponse(data={"result" : False, "message" : "not valid token"})
+
+
+
+    data : dict = json.loads(request.body)
+    
+    server_uuid : str = data.get("server_uuid")
+
+    try:
+        server : Server = Server.objects.get(uuid=server_uuid)
+        
+        user_uuid : str = token_content.get("uuid")
+
+        user : User = User.objects.get(uuid=user_uuid)
+        
+        server.users.remove(user)
+
+        user.servers.remove(server)
+
+        return JsonResponse(data={"result" : True, "message" : "successfully joined server", "server_id" : server_uuid})
     except Exception as e:
         print(e)
         return JsonResponse(data={"result" : False, "message" : "server not exists"})

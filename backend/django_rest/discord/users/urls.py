@@ -7,6 +7,7 @@ from users.views import (
     api_change_users_login,
     api_make_user_online,
     api_join_server,
+    api_dejoin_server,
 )
 
 
@@ -18,4 +19,5 @@ urlpatterns : list = [
     path("api/v1/changeUsersLogin", api_change_users_login, name="api_change_users_login"),
     path("api/v1/makeUserOnline", api_make_user_online, name="api_make_user_online"),
     path("invite/<str:link_data>", api_join_server, name="api_join_server"),
+    path("api/v1/dejoinServer", api_dejoin_server, name="api_dejoin_server"),
 ]
