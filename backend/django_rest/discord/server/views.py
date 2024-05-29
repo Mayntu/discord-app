@@ -355,8 +355,9 @@ def api_get_server_room_messages(request):
         
         server_chat_room : ServerChatRoom = ServerChatRoom.objects.get(uuid=server_chat_room_id)
 
-        
-        messages = server_chat_room.messages.all().order_by("-timestamp")[:count:-1]
+        temp_messages = server_chat_room.messages.all().order_by("-timestamp")
+        messages = temp_messages[:count:-1]
+        counter : int = len(temp_messages)
 
         # for message in messages:
         #     message.has_read = True
@@ -367,7 +368,7 @@ def api_get_server_room_messages(request):
         server_messages : dict = server_message_serializer.data
 
 
-        return JsonResponse(data={"result" : True, "server_messages" : server_messages, "messages_count" : count}, safe=False)
+        return JsonResponse(data={"result" : True, "server_messages" : server_messages, "messages_count" : counter}, safe=False)
     
     return JsonResponse(data={"result" : False})
 

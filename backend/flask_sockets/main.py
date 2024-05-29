@@ -126,6 +126,7 @@ def save_message(token : str, text : str, from_user_id : str, chat_id : str, med
         "from_user_id" : from_user_id,
         "chat_id" : chat_id,
     }
+    print(media.get("file"))
     file = media["file"] if media else None
     file_name : str = media["name"].split("/")[-1] if media else None
     files : dict = {

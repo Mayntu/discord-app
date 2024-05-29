@@ -121,6 +121,7 @@ def api_save_message(request):
     chat_id : str = data.get("chat_id")
     from_user_id : str = token_content.get("uuid")
     text : str = data.get("text")
+    print(request.FILES)
     file_name : str = list(request.FILES.keys())[0] if request.FILES else None
     img = request.FILES.get(file_name) if file_name else None
 
@@ -222,8 +223,10 @@ def api_get_chat_messages(request):
         
         chat : Chat = Chat.objects.get(uuid=chat_id)
 
-        
-        messages = chat.messages.all().order_by("-timestamp")[:count:-1]
+        temp_messages = chat.messages.all().order_by("-timestamp") 
+        messages = temp_messages[:count:-1]
+
+        counter : int = len(temp_messages)
 
 
         messages_serializer = MessageSerializer(messages, many=True)
@@ -231,7 +234,7 @@ def api_get_chat_messages(request):
         messages_ : list = messages_serializer.data
 
 
-        return JsonResponse(data={"result" : True, "messages" : messages_, "messages_count" : count}, safe=False)
+        return JsonResponse(data={"result" : True, "messages" : messages_, "messages_count" : counter}, safe=False)
     
     return JsonResponse(data={"result" : False})
 
