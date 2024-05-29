@@ -367,7 +367,7 @@ def api_get_server_room_messages(request):
         server_messages : dict = server_message_serializer.data
 
 
-        return JsonResponse(data={"result" : True, "server_messages" : server_messages}, safe=False)
+        return JsonResponse(data={"result" : True, "server_messages" : server_messages, "messages_count" : count}, safe=False)
     
     return JsonResponse(data={"result" : False})
 

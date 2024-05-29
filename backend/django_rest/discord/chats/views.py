@@ -231,7 +231,7 @@ def api_get_chat_messages(request):
         messages_ : list = messages_serializer.data
 
 
-        return JsonResponse(data={"result" : True, "messages" : messages_}, safe=False)
+        return JsonResponse(data={"result" : True, "messages" : messages_, "messages_count" : count}, safe=False)
     
     return JsonResponse(data={"result" : False})
 
