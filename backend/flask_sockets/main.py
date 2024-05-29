@@ -13,16 +13,24 @@ socketio : SocketIO = SocketIO(app, cors_allowed_origins="*")
 ROOMS : list = ["lounge", "news", "games", "coding"]
 
 ONLINE_USERS : list = []
+ALL_USERS : dict = {}
 
 
 @socketio.on("user_connected")
 def user_connected(data):
     token : str = data.get("token")
     # make_user_online(token)
+    sid = request.sid
     
     if not token in ONLINE_USERS:
         ONLINE_USERS.append(token)
         session["token"] = token
+    
+    if not sid in ALL_USERS:
+        ALL_USERS[sid] = token
+    
+    for user in ALL_USERS:
+        emit("user_online", {"user_uuid" : sid}, to=user, include_self=False)
     
     emit("connected", {"data" : ONLINE_USERS})
 
@@ -32,9 +40,14 @@ def user_connected(data):
 def user_disconnected():
     print("disconnected")
     # print(request.sid)
+    sid = request.sid
     try:
         print(ONLINE_USERS)
         ONLINE_USERS.pop(ONLINE_USERS.index(session.get("token")))
+        print(ALL_USERS)
+        ALL_USERS.pop(sid)
+        for user in ALL_USERS:
+            emit("user_offline", {"user_uuid" : sid}, to=user, include_self=False)
     except:
         print("failed to pop")
     # print(ONLINE_USERS)

@@ -33,7 +33,7 @@ def handle_upload_audio_server(file, server_id : str) -> str:
     #     for _chunk in file.chunks():
     #         _file.write(_chunk)
     
- 
+
     data, samplerate = read(file)
     
     write(_path, data, samplerate, format='wav')
