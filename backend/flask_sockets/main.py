@@ -30,7 +30,7 @@ def user_connected(data):
         ALL_USERS[sid] = token
     
     for user in ALL_USERS:
-        emit("user_online", {"user_uuid" : sid}, to=user, include_self=False)
+        emit("user_online", {"user_uuid" : token}, to=user, include_self=False)
     
     emit("connected", {"data" : ONLINE_USERS})
 
@@ -47,7 +47,7 @@ def user_disconnected():
         print(ALL_USERS)
         ALL_USERS.pop(sid)
         for user in ALL_USERS:
-            emit("user_offline", {"user_uuid" : sid}, to=user, include_self=False)
+            emit("user_offline", {"user_uuid" : ALL_USERS[sid]}, to=user, include_self=False)
     except:
         print("failed to pop")
     # print(ONLINE_USERS)
