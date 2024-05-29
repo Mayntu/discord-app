@@ -25,13 +25,14 @@ const VideoCallBlock:FC<IVideoCallBlock>=({user,setIsCallBlock})=> {
     const {chatid} = useParams()
     let streamData = useRef<MediaStream>()
     const peerMediaElements = useRef<any>({})
-    const peerConnecthions = useRef<any>({})
+    const peerConnecthions = useRef<{[key: string] : RTCPeerConnection}>({})
+   
     const [audioMuted,setAudioMuted ] = useState<boolean>(false)
     const [videoMuted,setVideoMuted] = useState<boolean>(false)
 
     const addNewClients = useCallback((newClient:string,cb:()=>void)=>{
         if(!clients.includes(newClient)){
-          setClients(list=>[...list,newClient],cb)
+          setClients((list:any)=>[...list,newClient],cb)
           console.log("client",clients,newClient)
         }
       },[clients,setClients])
@@ -101,9 +102,7 @@ const VideoCallBlock:FC<IVideoCallBlock>=({user,setIsCallBlock})=> {
               })
             }
           }
-          peerConnecthions.current[peerId].Icecandidateerror = (event)=>{
-            console.log(event,"ERROR")
-          }
+      
     
     
           let tracksNumber = 0
@@ -120,7 +119,7 @@ const VideoCallBlock:FC<IVideoCallBlock>=({user,setIsCallBlock})=> {
           console.log(streamData.current,"stream")
           streamData.current?.getTracks().forEach(track=>{
             console.log("addtrack")
-            peerConnecthions.current[peerId].addTrack(track,streamData.current)
+            streamData.current && peerConnecthions.current[peerId].addTrack(track,streamData.current)
           })
     
           if(createOffer){

@@ -25,3 +25,7 @@
     width: 100px;
     height: 100px;
 }
+
+#modals{
+    position: absolute;
+}

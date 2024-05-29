@@ -15,12 +15,6 @@ export class ServerService{
         return $api.post<any>("api/v1/deleteServer",{server_id})
     }
 
-    // / здесь нужно пересмтореть 
-    // static async  createServer(server_uuid: string,title: string):Promise<AxiosResponse<any>>{
-    //     return $api.post<any>("api/v1/createServer",{title:"ujhuhuhuhuh",file: 'dceec'})
-    // }
-
-
     static async postChangeServersTitle(uuid:string,title:string):Promise<AxiosResponse<any>>{
         return $api.post<any>("api/v1/changeServersTitle",{server_uuid : uuid,title})
     }
@@ -63,8 +57,22 @@ export class ServerService{
     }
 
 
-    //api/v1/changeServerMessage
+ 
     static async getchangeServerMessage(message_uuid: string,new_content: string):Promise<AxiosResponse<any>>{
         return $api.post<any>(`api/v1/changeServerMessage`,{message_uuid,new_content})
+    }
+
+    static async postCheckServerUser(server_uuid: string):Promise<AxiosResponse<any>>{
+        return $api.post<any>(`api/v1/checkServerUser`,{server_uuid})
+    }
+
+   
+    static async postDejoinServer(server_uuid: string):Promise<AxiosResponse<any>>{
+        return $api.post<any>(`api/v1/dejoinServer`,{server_uuid})
+    }
+
+
+    static async postСhangeServersAvatar(n:any):Promise<AxiosResponse<any>>{
+        return $api.post<any>(`api/v1/changeServersAvatar`,n,{headers: {'Content-Type': 'multipart/form-data'}})
     }
 }

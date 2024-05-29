@@ -1,32 +1,30 @@
-import "../css/module.css"
-import { FC, ReactNode } from 'react'
-import { useAppSelector } from "../hooks/redux-hoock"
+import  { FC, ReactNode } from 'react'
+import { createPortal } from 'react-dom'
+
 
 interface ModuleProps{
-    newFile? : ()=>{}
+   
     children?: ReactNode,
     isModule: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 
-const Module:FC<ModuleProps>=({newFile,children,isModule})=> {
-  // const {children,newFile} = useAppSelector(state=>state.module)
-
-
-  return (
+const ModuleTest:FC<ModuleProps>=({children,isModule})=> {
+  
+    
+  const modal= (
     <div className="module" onClick={(e)=>{
-      e.stopPropagation()
-      isModule(false)
-      }}>
-        <div className="module-block" onClick={e=>e.stopPropagation()}>
-
-            {children}
-            <button onClick={newFile}>Сохранить</button>
-        </div>
-       
-    </div>
+        e.stopPropagation()
+        isModule(false)
+        }}>
+          <div className="module-block" onClick={e=>e.stopPropagation()}>
+              {children}
+          </div>
+         
+      </div>
   )
+  return  createPortal(modal,document.getElementById("modals"))
 }
 
 
-export default Module
+export default ModuleTest

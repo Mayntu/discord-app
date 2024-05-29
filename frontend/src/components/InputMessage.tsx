@@ -78,11 +78,13 @@ const InputMessage:FC<IInputMessage>=({dropImage,sendMessage,setFile,setMessageT
       
          const audioBlob = new Blob(audioChunks, { type:  'audio/mp3' });
          setAudioBlob(audioBlob)
-        //creates a playable URL from the blob file.
+      
          setAudioChunks([]);
          if(audioBlob){
+        
           setAudioBlob(audioBlob)
             if(chatid){
+
               socket.emit("message", {
                 "data" : "что писать?", 
                 "chat_id" : chatid,
@@ -90,6 +92,7 @@ const InputMessage:FC<IInputMessage>=({dropImage,sendMessage,setFile,setMessageT
                 media:{file : audioBlob, name : "audio/mp3"} });
             }
             if(chatserverid){
+              console.log("streamУТ")
               socket.emit("server_chat_message", {
                 "data" : "что писать?", 
                 "chat_id" : chatserverid, 

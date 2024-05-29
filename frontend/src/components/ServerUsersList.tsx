@@ -1,7 +1,7 @@
 
 import  { FC, useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock'
-import { fetchgetServersUsers } from '../store/actionServer'
+import { fetchGetServersUsers } from '../store/actionServer'
 import { useParams } from 'react-router-dom'
 
 import avatar from "../assets/sonic.jpg"
@@ -9,8 +9,9 @@ const ServerUsersList:FC=()=> {
   const dispatch = useAppDispatch()
   const {serverid} = useParams()
   const usersServer = useAppSelector(state=>state.server.UserInServer)
+ 
   useEffect(()=>{
-   serverid &&  dispatch(fetchgetServersUsers(serverid))
+   serverid &&  dispatch(fetchGetServersUsers(serverid))
   },[])
 
   return (

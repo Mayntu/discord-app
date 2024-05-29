@@ -57,11 +57,25 @@ export const fetchGetUserChats = createAsyncThunk(
   )
 
   export const fetchDeleteChatMessage = createAsyncThunk(
-    'chats/etchDeleteChatMessage',
+    'chats/fetchDeleteChatMessage',
     async (payload:string, thunkAPI) => {
       try {
         const response = await ChatService.postDeleteChatMessage(payload)
         console.log(response.data,"delete")
+        return response.data
+      } catch (error: any) {
+        return thunkAPI.rejectWithValue(error?.message)
+      }
+    },
+  )
+
+
+  export const fetchRecognizeAudio = createAsyncThunk(
+    'chats/fetchRecognizeAudio ',
+    async (payload:string, thunkAPI) => {
+      try {
+        const response = await ChatService.postRecognizeAudio(payload)
+        console.log(response.data,"RecognizeAudio")
         return response.data
       } catch (error: any) {
         return thunkAPI.rejectWithValue(error?.message)

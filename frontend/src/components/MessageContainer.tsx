@@ -34,7 +34,7 @@ const  MessageContainer : FC=()=> {
   const navigate = useNavigate()
   const [arrayURL,setArrayURL] = useState<string[]>([])
   const messageContainer = useRef<HTMLDivElement>(null)
-  // const messageRef= useRef<HTMLDivElement>(null)
+  const [doMs,setDoMs]= useState<number>(0)
 
   const joinRoom = (room:any) => {
     console.log("room")
@@ -194,7 +194,8 @@ const  MessageContainer : FC=()=> {
 
   const scroll=()=>{
    
-    messageContainer.current?.scrollBy(200,messageContainer.current.scrollHeight)
+    messageContainer.current?.scrollBy(0,messageContainer.current.scrollHeight)
+    messageContainer.current && setDoMs(messageContainer.current?.scrollHeight)
   }
 
   useEffect(()=>{
@@ -228,9 +229,19 @@ const  MessageContainer : FC=()=> {
                   <img src={callIcon} className='icon-message' onClick={()=>{setIsCallBlock(true)}}/>
           </div>
             <div className="get-message-cantainer" ref={messageContainer} onScroll={()=>{
+              // console.log(messageContainer.current?.scrollTop)
+              // console.log(messageContainer.current?.scrollHeight)
               if(messageContainer.current?.scrollTop == 0){
                 console.log(0)
                 setLimit(limit+10)
+               
+                if(doMs !==messageContainer.current?.scrollHeight ){
+                  messageContainer.current?.scrollBy(0,messageContainer.current.scrollHeight - doMs)
+                }
+                
+                
+                
+
               }
             }}>
               {messageArray.length !==0 ? messageArray.map((ms,index)=><Message key={index} uuid={ms.uuid} classUser={ms.from_user_id} media={ms.media}  time={ms.timestamp} children={ms.content}/>): null}

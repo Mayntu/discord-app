@@ -25,6 +25,21 @@ const ChatList:FC=()=> {
         dispatch(addUsersConnect(data.data))
       }) 
     })
+
+  
+  },[])
+
+
+  useEffect(()=>{
+    socket.on("user_online",(data)=>{
+      console.log(data,"user_online")
+    })
+  },[])
+  
+  useEffect(()=>{
+    socket.on("user_offline",(data)=>{
+      console.log(data,"user_offline")
+    })
   },[])
 
   const [isSettings,setIsSettings] = useState<boolean>(true)

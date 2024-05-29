@@ -6,8 +6,8 @@ import iconCamera from "../assets/camera.png"
 import { useNavigate } from 'react-router-dom'
 import { setIsAuth } from '../store/AuthSlice'
 import {fetchUser,fetchMedia, fetchChangeUsersLogin } from '../store/acthion'
-import Module from './Module'
 import avatar from "../assets/sonic.jpg"
+import ModuleTest from './Module'
 
 interface SettingsBlockProps{
     setIsSettings:  React.Dispatch<React.SetStateAction<boolean>>
@@ -27,7 +27,7 @@ const  SettingsBlock:FC<SettingsBlockProps>=({setIsSettings})=> {
   const newFile=async()=>{
     console.log(file)
     if(!file){
-      alert("please")
+      setIsModule(false)
       return
     }
     const formData = new FormData()
@@ -99,7 +99,12 @@ const  SettingsBlock:FC<SettingsBlockProps>=({setIsSettings})=> {
         </div>
       </>}
         
-        {isModule && <Module newFile={newFile} isModule={setIsModule}/>}
+        {isModule && 
+        <ModuleTest isModule={setIsModule}>
+          <button onClick={newFile}>Сохранить</button>
+        </ModuleTest>
+        // <Module newFile={newFile} isModule={setIsModule}/>
+        }
     </div>
     
   )

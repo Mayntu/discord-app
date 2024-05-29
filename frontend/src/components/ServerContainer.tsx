@@ -1,46 +1,36 @@
 import { NavLink } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock'
 import { useEffect,  useRef, useState } from 'react'
-import { fetchCreateServer, fetchGetServer, fetchpostChangeServersTitle } from '../store/actionServer'
-import Module from './Module'
+import { fetchCreateServer, fetchGetServer} from '../store/actionServer'
 import iconCamera from "../assets/camera.png"
 
 import "../css/server.css"
+import ModuleTest from './Module'
 
 const ServerContainer=()=> {
     const dispatch = useAppDispatch()
     const [isCreateServerM, setIsCreateSreverM] = useState<boolean>(false)
     const {serversUser} = useAppSelector(state=>state.server)
-    const [file,setFile] = useState<File>()
+    const [file,setFile] = useState<File | undefined>(undefined)
     const refImage = useRef<HTMLInputElement>(null) 
-    
-    const newFile=async()=>{
+    const [newServerTitle, setNewServerTitle] = useState<string>("")
+
+    const newServer=async()=>{
       console.log(file)
-      if(!file){
-        alert("please")
-        return
-      }
       const formData = new FormData()
       formData.append("file",file)
-      formData.append("title","somicHerous")
-      console.log(formData,"formdata")
+      formData.append("title",newServerTitle)
       await dispatch(fetchCreateServer(formData)).then(()=>{dispatch(fetchGetServer())})
       setIsCreateSreverM(false)
     }
     useEffect(()=>{
       dispatch(fetchGetServer())
     },[])
-   
-    // const server=async()=>{
-    //      dispatch(fetchCreateServer({title: "satana123",avatar:""}))
-    //   }
-      
       const handleImage=()=>{
         if(refImage.current){
           refImage.current.click()
         }
         setIsCreateSreverM(true)
-    
       }
   return (
     <>
@@ -50,36 +40,27 @@ const ServerContainer=()=> {
         просто чаты
       </div>
     </NavLink>
-    <div className="block-server" 
-    onClick={()=>{dispatch(fetchpostChangeServersTitle({server_uuid : "277bc986-dfbe-43f6-b6e4-034c460ef58a",title: "sonic"}))}}
-    >
-        изменить имя
-      </div>
-    <div className="block-server" onClick={()=> {
-      setIsCreateSreverM(true)}}>
+    <div className="block-server" onClick={()=>{setIsCreateSreverM(true)}}>
       создать сервер
-      
     </div>
- 
-   {/* invite/4McBNSuX6N1kTX1Rb71Yr6MQq9BQtn7cxTi7qNObqTcWN913K4ZFUVKZP9Tjf */}
-   {/* http://127.0.0.1:8000/invite/id */}
     {serversUser.length !== 0 && serversUser.map(i=>(
     <NavLink to={`/server/${i.uuid}`}  key={i.uuid} >
       <div className="block-server">
-        {i.avatar && <img src={"http://localhost:5173/public/media/images/servers/1be84322-dc4b-49f7-95f1-c146b250aa6b/d124509a-6c6a-49c3-bd5f-782de7f3466b.jpg"}/>}
-        {i.title}
+        {i.avatar ? <img src={"http://localhost:5173/public/"+i.avatar}/> : <p>{i.title}</p> }
       </div>
     </NavLink>))}
   </div>
    {isCreateServerM && 
-   <Module newFile={newFile} isModule={setIsCreateSreverM}>
+   <ModuleTest isModule={setIsCreateSreverM}>
       <>
         <div className="icon-block-module">
           <img src={iconCamera} alt="" className='imput-setting' onClick={handleImage}/>
         </div>
       <input ref={refImage} type="file" accept='image/*,.png,.web,.jpg,.gif' onChange={(e)=>{if(e.target.files) setFile(e.target.files[0])}} className='none'/>
+      <input type="text" placeholder='title server' onChange={(e)=>setNewServerTitle(e.target.value)} value={newServerTitle} />
+      <button onClick={newServer}>Сохранить</button>
       </>
-    </Module>}
+    </ModuleTest>}
    </>
   )
 }

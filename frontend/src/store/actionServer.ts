@@ -70,18 +70,6 @@ export const fetchCreateServerChat = createAsyncThunk(
   )
 
 
-  // export const fetchgetUsersServerChat = createAsyncThunk(
-  //   'server/fetchgetUsersServerChat',
-  //   async (payload: string, thunkAPI) => {
-  //     try {
-  //       const response = await ServerService.getUsersServerChat(payload)
-  //       console.log(response.data,"fetchgetUsersServerChat")
-  //       return response.data
-  //     } catch (error: any) {
-  //       return thunkAPI.rejectWithValue(error?.message)
-  //     }
-  //   },
-  // )
   export const fetchDeleteServer = createAsyncThunk(
     'server/fetchDeleteServer',
     async (payload:string, thunkAPI) => {
@@ -160,12 +148,52 @@ export const fetchCreateServerChat = createAsyncThunk(
       }
     },
   )
-  export const fetchgetServersUsers = createAsyncThunk(
-    'server/getServersUsers',
+  export const fetchGetServersUsers = createAsyncThunk(
+    'server/fetchGetServersUsers',
     async (payload:string, thunkAPI) => {
       try {
         const response = await ServerService.getServersUsers(payload)
         console.log(response.data,"fetchgetServersUsers")
+        return response.data
+      } catch (error: any) {
+        return thunkAPI.rejectWithValue(error?.message)
+      }
+    },
+  )
+
+  export const fetchCheckServerUser = createAsyncThunk(
+    'server/fetchCheckServerUser',
+    async (payload:string, thunkAPI) => {
+      try {
+        const response = await ServerService.postCheckServerUser(payload)
+        console.log(response.data,"fetchCheckServerUser")
+        return response.data
+      } catch (error: any) {
+        return thunkAPI.rejectWithValue(error?.message)
+      }
+    },
+  )
+
+
+  export const fetchDejoinServer = createAsyncThunk(
+    'server/fetchDejoinServer',
+    async (payload:string, thunkAPI) => {
+      try {
+        const response = await ServerService.postDejoinServer(payload)
+        console.log(response.data,"fetchDejoinServer")
+        return response.data
+      } catch (error: any) {
+        return thunkAPI.rejectWithValue(error?.message)
+      }
+    },
+  )
+
+  export const fetchСhangeServersAvatar = createAsyncThunk(
+    'server/fetchСhangeServersAvatar',
+    async (payload:any, thunkAPI) => {
+      try {
+        const response = await ServerService.postСhangeServersAvatar(payload)
+        console.log(response.data,"fetchpostСhangeServersAvata")
         return response.data
       } catch (error: any) {
         return thunkAPI.rejectWithValue(error?.message)
