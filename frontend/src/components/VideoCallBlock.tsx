@@ -1,4 +1,4 @@
-import React, { Dispatch, FC, SetStateAction, useCallback, useEffect, useRef, useState } from 'react'
+import  { Dispatch, FC, SetStateAction, useCallback, useEffect, useRef, useState } from 'react'
 import { useStateWithCallback } from '../hooks/useStateWithCallback'
 import { useParams } from 'react-router-dom'
 import { socketWebRTC } from '../socket'
@@ -27,8 +27,8 @@ const VideoCallBlock:FC<IVideoCallBlock>=({user,setIsCallBlock})=> {
     const peerMediaElements = useRef<any>({})
     const peerConnecthions = useRef<{[key: string] : RTCPeerConnection}>({})
    
-    const [audioMuted,setAudioMuted ] = useState<boolean>(false)
-    const [videoMuted,setVideoMuted] = useState<boolean>(false)
+    const [audioMuted,setAudioMuted ] = useState<boolean>(true)
+    const [videoMuted,setVideoMuted] = useState<boolean>(true)
 
     const addNewClients = useCallback((newClient:string,cb:()=>void)=>{
         if(!clients.includes(newClient)){
@@ -141,7 +141,6 @@ const VideoCallBlock:FC<IVideoCallBlock>=({user,setIsCallBlock})=> {
         return () => {
           socketWebRTC.off("add-peer");
         }
-    
         // socketWebRTC.on("user-connect",data=>{
         //   handleNewPeer({peerId:data.sid,createOffer:true})
         //   console.log(data,"user-connect")
@@ -198,7 +197,7 @@ const VideoCallBlock:FC<IVideoCallBlock>=({user,setIsCallBlock})=> {
           delete peerConnecthions.current[peerID];
           delete peerMediaElements.current[peerID];
     
-         setClients(list => list.filter(c => c !== peerID),()=>{});
+         setClients((list:any) => list.filter((c:any) => c !== peerID),()=>{});
         };
     
         socketWebRTC.on("remove-peer", handleRemovePeer);

@@ -14,7 +14,12 @@
 
   .block-server{
     border-radius: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
+
   .block-server img{
     width: 60px;
     height: 60px;

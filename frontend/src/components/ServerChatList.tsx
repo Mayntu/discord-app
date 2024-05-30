@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock'
 import { NavLink, Outlet, useNavigate, useParams } from 'react-router-dom'
 import { fetchCheckServerUser, fetchCreateServerChat, fetchDejoinServer, fetchDeleteServer, fetchGetServer, fetchGetServerChatRooms, fetchpostChangeServersTitle, fetchpostInvitationLink,fetchСhangeServersAvatar } from '../store/actionServer'
 import ModuleTest from './Module'
-
+import avatar from "../assets/sonic.jpg"
 
 
 
@@ -91,10 +91,14 @@ const ServerChatList:FC=()=> {
         </ModuleTest>}
       {isModuleInvite && <ModuleTest isModule={setIsModuleInvite}>
         <h1>Скопируйте ссылку</h1>
+        <button onClick={()=>{
+          navigator.clipboard.writeText("http://127.0.0.1:8000/"+link).then(()=>{console.log(true)})
+        }}>copy</button>
         <p>http://127.0.0.1:8000/{link}</p>
         </ModuleTest>}
         {isModuleAvatar && <ModuleTest isModule={setIsModuleAvatar}>
         <input ref={refImage} type="file" accept='image/*,.png,.web,.jpg,.gif' onChange={(e)=>{if(e.target.files) setFile(e.target.files[0])}} className='none'/>
+           {file ? <img src={window.URL.createObjectURL(file)} alt="" className='server-setting-avatar'/> : <img src={"http://localhost:5173/"+avatar} alt="" className='server-setting-avatar'/>}
            <button onClick={()=>{
                if(refImage.current){
                 refImage.current.click()

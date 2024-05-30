@@ -29,3 +29,14 @@
 #modals{
     position: absolute;
 }
+
+.setting-image-avatar{
+    border-radius: 100%;
+    max-width: 600px;
+}
+
+
+.server-setting-avatar{
+    width: 100px;
+    border-radius: 100px;
+}

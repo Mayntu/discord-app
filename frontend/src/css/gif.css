@@ -2,9 +2,12 @@
     position: absolute;
     display: flex;
     flex-direction: column;
-    border: 1px solid red;
+    background-color: black;
+    border-radius: 10px;
     align-items: center;
     padding: 7px;
+    right: 0px;
+    bottom: 80px;
 }
 .block-gif-search input{
     padding: 4px;
@@ -17,9 +20,15 @@
     flex-direction: row;
     flex-wrap: wrap;
     max-height: 300px;
-      overflow: auto;
+    overflow: hidden;
+    overflow-y: scroll;
 }
-
+.block-gif-search::-webkit-scrollbar-track{
+    width: 0px;
+   }
+.block-gif-search ::-webkit-scrollbar{
+    width: 0px;
+   }
 .block-gif > img{
     width: 200px;
     padding: 2px;

@@ -16,7 +16,8 @@ type TChats = {
     isLoading : boolean,
     usersConnect : any[]
     newChatid: string,
-    message : IMessage
+    message : IMessage,
+    message_count: number
 }
 
 const initialState: TChats= {
@@ -28,7 +29,8 @@ const initialState: TChats= {
     isLoading : false,
     usersConnect:[],
     newChatid: "",
-    message: {} as IMessage
+    message: {} as IMessage,
+    message_count : 0
 }
 
 
@@ -75,7 +77,8 @@ const chatsSlice = createSlice({
         .addCase(fetchGetChatMessage.fulfilled,(state :TChats,{payload}: PayloadAction<any>)=>{
             // console.log(payload,"payMessage")
             state.getMessage = payload.messages
-           
+            state.message_count = payload.messages_count
+
         }) // поиск чатов
         .addCase(fetchFindChat.fulfilled,(state,{payload}:PayloadAction<any>)=>{
             state.searcChat = payload.users_results

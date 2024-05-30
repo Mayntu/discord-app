@@ -101,6 +101,7 @@ const  SettingsBlock:FC<SettingsBlockProps>=({setIsSettings})=> {
         
         {isModule && 
         <ModuleTest isModule={setIsModule}>
+          {file ? <img src={window.URL.createObjectURL(file)} alt="" className='setting-image-avatar'/> : <img src={"http://localhost:5173/"+avatar} alt="" className='setting-image-avatar'/>}
           <button onClick={newFile}>Сохранить</button>
         </ModuleTest>
         // <Module newFile={newFile} isModule={setIsModule}/>

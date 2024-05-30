@@ -13,7 +13,7 @@ import InputMessage from './InputMessage';
 import ServerUsersList from './ServerUsersList';
 import VideoCallBlock from './VideoCallBlock';
 import { addMessage, addUsersChat } from '../store/ChatsSlice';
-
+import "../css/message_container.css"
 
 
 const  MessageContainer : FC=()=> {
@@ -27,6 +27,7 @@ const  MessageContainer : FC=()=> {
   const message = useAppSelector(state=>state.chats.getMessage)
   const messageUser = useAppSelector(state=>state.chats.message)
   const serverMessages = useAppSelector(state=>state.server.serverChatMessages)
+  const message_count = useAppSelector(state=>state.chats.message_count)
   const userMe = useAppSelector(state=>state.auth.user)
   const [file,setFile] = useState<File>()
   const [files,setFiles] = useState<File[] | undefined>()
@@ -43,6 +44,7 @@ const  MessageContainer : FC=()=> {
   };
  
   const getMessage = async ()=>{
+    console.log(limit)
     chatid && await dispatch(fetchGetChatMessage({chat_id:chatid,count:limit}))
   }
 
@@ -61,13 +63,13 @@ const  MessageContainer : FC=()=> {
         })
         }
       }
-  },[chatid,socket,limit])
+  },[chatid,socket])
 
  useEffect(()=>{
   if(userMe && Object.keys(userMe).length !== 0 ){
-    socket.on("join",(data)=>{
+    socket.on("join",(data:any)=>{
       console.log(data.users_data.users_data,"user")
-      const user  = data.users_data.users_data.find(usern=>usern.uuid !== userMe.uuid)
+      const user  = data.users_data.users_data.find((usern:any)=>usern.uuid !== userMe.uuid)
       setUsersChat(user)
       dispatch(addUsersChat(user))
     })
@@ -195,12 +197,24 @@ const  MessageContainer : FC=()=> {
   const scroll=()=>{
    
     messageContainer.current?.scrollBy(0,messageContainer.current.scrollHeight)
+    console.log(messageContainer.current.scrollHeight,"scroll")
     messageContainer.current && setDoMs(messageContainer.current?.scrollHeight)
   }
 
+  const scrollView=()=>{
+      if(doMs !==messageContainer.current?.scrollHeight && messageContainer.current ){
+          console.log(doMs,"do")
+          console.log(messageContainer.current.scrollHeight,"posle")
+          messageContainer.current?.scrollBy(0,messageContainer.current.scrollHeight - (doMs))
+          setDoMs(messageContainer.current.scrollHeight)
+      }
+  }
   useEffect(()=>{
     if(limit ==10){
       scroll()
+      console.log(messageContainer.current.scrollHeight,"scroll2")
+    }else{
+      scrollView()
     }
   
   },[messageArray])
@@ -229,19 +243,12 @@ const  MessageContainer : FC=()=> {
                   <img src={callIcon} className='icon-message' onClick={()=>{setIsCallBlock(true)}}/>
           </div>
             <div className="get-message-cantainer" ref={messageContainer} onScroll={()=>{
-              // console.log(messageContainer.current?.scrollTop)
-              // console.log(messageContainer.current?.scrollHeight)
               if(messageContainer.current?.scrollTop == 0){
-                console.log(0)
-                setLimit(limit+10)
-               
-                if(doMs !==messageContainer.current?.scrollHeight ){
-                  messageContainer.current?.scrollBy(0,messageContainer.current.scrollHeight - doMs)
+                if(limit >= message_count+10){
+                }else{
+                  setLimit((prev)=>prev+10)
+                  getMessage()
                 }
-                
-                
-                
-
               }
             }}>
               {messageArray.length !==0 ? messageArray.map((ms,index)=><Message key={index} uuid={ms.uuid} classUser={ms.from_user_id} media={ms.media}  time={ms.timestamp} children={ms.content}/>): null}
@@ -293,11 +300,11 @@ const  MessageContainer : FC=()=> {
 
                       <img/>
               </div>
-                <div className="get-message-cantainer" ref={messageContainer}>
+                <div className="get-message-cantainer" ref={messageContainer} >
                   {messageArray.length !==0 ? messageArray.map((ms,index)=><Message key={index} classUser={ms.from_user_id} media={ms.media} uuid={ms.uuid}  time={ms.timestamp}>{ms.content}</Message>): null}
                 </div>
                 <div className="file-input">
-                  {file && (<p>pltcm afqk</p>)}
+                {file &&  arrayURL.map(i=>(<img src={i} key={i}/>)) }
                 </div>
                 {messageUser.uuid &&   
                   <div> 

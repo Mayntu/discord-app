@@ -18,6 +18,7 @@ const ServerContainer=()=> {
     const newServer=async()=>{
       console.log(file)
       const formData = new FormData()
+      if(file)
       formData.append("file",file)
       formData.append("title",newServerTitle)
       await dispatch(fetchCreateServer(formData)).then(()=>{dispatch(fetchGetServer())})
@@ -46,7 +47,7 @@ const ServerContainer=()=> {
     {serversUser.length !== 0 && serversUser.map(i=>(
     <NavLink to={`/server/${i.uuid}`}  key={i.uuid} >
       <div className="block-server">
-        {i.avatar ? <img src={"http://localhost:5173/public/"+i.avatar}/> : <p>{i.title}</p> }
+        {i.avatar ? <img src={"http://localhost:5173/public/"+i.avatar}/> : <p>{i.title.length>6 ? i.title.substring(0,7) : i.title}</p> }
       </div>
     </NavLink>))}
   </div>

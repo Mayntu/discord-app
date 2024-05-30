@@ -67,7 +67,7 @@ const  Message: FC<MessageProps>=({classUser,children,time,media,uuid})=> {
     if(media.split(".").splice(-1,1)[0] == "mp3"){
       // console.log(media.split(".").splice(-1,1)[0])
       // console.log(uuid)
-      dispatch(fetchRecognizeAudio(uuid))
+      // dispatch(fetchRecognizeAudio(uuid))
       setAudio(true)
     }
   },[])
@@ -99,7 +99,7 @@ const  Message: FC<MessageProps>=({classUser,children,time,media,uuid})=> {
       <>
       <div className='image-message' onClick={()=>setIsModule(true)}>
         {gif && (<img src={gif} alt="" />)}
-        <img src={"http://localhost:5173/public/"+media} alt="" />
+        {media && <img src={"http://localhost:5173/public/"+media} alt="" />}
       </div>
      </>
      <p>{` ${new Date(time).getHours()>10 ? new Date(time).getHours() : "0"+new Date(time).getHours()}
