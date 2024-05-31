@@ -74,6 +74,14 @@ const  MessageContainer : FC=()=> {
       dispatch(addUsersChat(user))
     })
   }
+  if(userMe && Object.keys(userMe).length !== 0 ){
+    socket.on("join_server_chat",(data:any)=>{
+      console.log(data.users_data.users_data,"userццацаца")
+      const user  = data.users_data.users_data.find((usern:any)=>usern.uuid !== userMe.uuid)
+      setUsersChat(user)
+      dispatch(addUsersChat(user))
+    })
+  }
   },[userMe])
 
   useEffect(()=>{
@@ -134,9 +142,10 @@ const  MessageContainer : FC=()=> {
   useEffect(()=>{
     if(chatserverid){
       socket.emit("join_server_chat",{chat_id:chatserverid})
-      socket.on("join_server_chat",(data:any)=>{
-        console.log(data,"dataServerJoin")
-      })
+    
+      // socket.on("join_server_chat",(data:any)=>{
+      //   console.log(data,"dataServerJoin")
+      // })
       dispatch(fetchGetServerChatRoomMessages(chatserverid))
     }
   },[chatserverid])
@@ -168,6 +177,7 @@ const  MessageContainer : FC=()=> {
         socket.on("server_chat_message", (data:any) => {
           console.log( data,"dataServerMessage")
           data = JSON.parse(data.message)
+          console.log(data)
           setMessageArray((prev)=>[...prev,{content: data.content, from_user_id : data.from_user_id, uuid : data.uuid,timestamp : data.timestamp,media : data.media}]) 
         });
       }

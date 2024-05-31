@@ -17,19 +17,27 @@ import { addUsersConnect } from '../store/ChatsSlice'
 
 const ChatList:FC=()=> {
   const findUsers = useAppSelector(state=>state.chats.searcChat)
+
+
+  //    сокетты
   useEffect(()=>{
     dispatch(fetchGetUserChats()).then(()=>{
       connect()
       socket.on("connected", async (data:any)=>{
-        console.log(data,"connect")
+        console.log(data,"connected")
         dispatch(addUsersConnect(data.data))
       }) 
-    })
-
+    }
+  )
+    
+   
   
   },[])
 
-
+  const connect=async()=>{
+    const userM = await $api.get<any>("api/v1/getUsersInfo")
+    socket.emit("user_connected",{token:userM.data.user_data.uuid})
+  }
   useEffect(()=>{
     socket.on("user_online",(data)=>{
       console.log(data,"user_online")
@@ -42,15 +50,14 @@ const ChatList:FC=()=> {
     })
   },[])
 
+  //    сокетты
+
   const [isSettings,setIsSettings] = useState<boolean>(true)
   const dispatch = useAppDispatch()
   const {socketChat} = useAppSelector(state=>state.chats)
 
 
-  const connect=async()=>{
-    const userM = await $api.get<any>("api/v1/getUsersInfo")
-    socket.emit("user_connected",{token:userM.data.user_data.uuid})
-  }
+
   
   const seacrhChat = (e:string)=>{
       dispatch(fetchFindChat(e))
