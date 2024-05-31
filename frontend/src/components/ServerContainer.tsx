@@ -3,8 +3,8 @@ import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock'
 import { useEffect,  useRef, useState } from 'react'
 import { fetchCreateServer, fetchGetServer} from '../store/actionServer'
 import iconCamera from "../assets/camera.png"
-
 import "../css/server.css"
+
 import ModuleTest from './Module'
 
 const ServerContainer=()=> {
@@ -45,7 +45,11 @@ const ServerContainer=()=> {
       создать сервер
     </div>
     {serversUser.length !== 0 && serversUser.map(i=>(
-    <NavLink to={`/server/${i.uuid}`}  key={i.uuid} >
+    <NavLink to={`/server/${i.uuid}`}  key={i.uuid} 
+      className={({ isActive, isPending }) =>
+        isPending ? "pending-link block-server-link" : isActive ? "active block-server-link" : "active-link block-server-link"
+    }
+    >
       <div className="block-server">
         {i.avatar ? <img src={"http://localhost:5173/public/"+i.avatar}/> : <p>{i.title.length>6 ? i.title.substring(0,7) : i.title}</p> }
       </div>

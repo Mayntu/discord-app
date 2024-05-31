@@ -49,7 +49,6 @@ const ChatList:FC=()=> {
 
   const connect=async()=>{
     const userM = await $api.get<any>("api/v1/getUsersInfo")
-    // console.log("con")
     socket.emit("user_connected",{token:userM.data.user_data.uuid})
   }
   
@@ -66,7 +65,6 @@ const ChatList:FC=()=> {
       <div className='chat-list-container'>
         <div className="search">
           <img src={icon} alt=""  className='icon' onClick={()=>{
-            // блок для настроик не доделан
             setIsSettings(false)
             }}/>
           <input type="search" placeholder='serch' onChange={(e)=>{seacrhChat(e.target.value)}}/>
@@ -78,6 +76,7 @@ const ChatList:FC=()=> {
           </div>
         : null}
         {/* отображение item чатов */}
+        <p>ЛИЧНЫЕ СООБЩЕНИЯ</p>
         { socketChat.map(i=>(<ChatListItem key={i.uuid}  chatId={i.uuid} chatsUser={i.users}/>))}
       </div>}
       {!isSettings && <SettingsBlock setIsSettings={setIsSettings}/>}

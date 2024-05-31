@@ -40,7 +40,7 @@ const InputMessage:FC<IInputMessage>=({dropImage,sendMessage,setFile,setMessageT
       const streamData = await navigator.mediaDevices.getUserMedia({
         audio: true,
         video: false,
-    });
+    })
     setPermission(true);
     setStream(streamData)
    
@@ -132,11 +132,18 @@ const InputMessage:FC<IInputMessage>=({dropImage,sendMessage,setFile,setMessageT
   },[gif])
 
 
+  useEffect(()=>{
+    if(!permission){
+    getMicrophonePermission()
+  }
+  },[])
 
   const micClick= async()=>{
+    
     if(!permission){
        getMicrophonePermission()
     }
+  
     if(permission && recordingStatus === "inactive"){
       startRecording()
     }

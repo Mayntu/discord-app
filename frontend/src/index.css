@@ -17,6 +17,9 @@
   padding: 0px;
   box-sizing: border-box;
 }
+.active{
+  position: relative;
+}
 .form{
   display: flex;
   flex-direction: column;
@@ -167,136 +170,10 @@ input{
   padding-left: 4px;
 }
   /* chat container */
-.chat-container{
-  display: flex;
-  flex-direction: row;
-  max-width:250px;
-  align-items: center;
-  justify-content: space-between;
-  border-radius: 10px;
-  padding: 5px 2px;
-}
-.chat-container:hover{
-  background-color: #eee3e3;
-}
-
-.chat-container:active{
-  background-color: #a39d9d;
-}
-.avatar{
-  border-radius: 100px;
-}
-.avatar img{
-  width: 50px;
-  height: 50px;
-  border-radius: 100px;
-}
-
-.content-chat{
-  display: flex;
-  flex-grow: 2;
-  flex-direction: column;
-  position: relative;
-}
-
-.status,.status-red {
-  width: 10px;
-  height: 10px;
-  background-color: #38ff10;
-  position: absolute;
-  right: 10px;
-  top: 0px;
-  border-radius: 100%;
-}
-
-.status-red{
-  background-color: #f21515;
-}
-.chat-list-container,.settings-container{
-  background-color: #242424;
-  padding: 5px;
-  width: 300px;
-  /* animation-duration: 10s;
-  transition: 10s; */
-  display: flex;
-  flex-direction: column;
-  
- 
-
-}
-
-.chat-list-container button{
-  margin-bottom: 10px;
-}
-.chat-list-container input{
-  margin-bottom: 10px;
-}
-.chat-list-container{
-  /* overflow-x: hidden; */
-  /* overflow-y: scroll; */
-  /* overflow: hidden; */
- overflow-y: auto;
-  /* overflow-x: visible; */
-}
-
-
-
-
-
-.alert-enter {
-  position: absolute;
-  height: 100vh;
-  opacity: 0;
-  transform: translateX(-200);
-}
-.alert-enter-active {
-  opacity: 0;
-  transform: translateX(0);
-  transform: translateX(200);
-  transition: opacity 300ms, transform 3000ms;
-}
-.alert-exit {
-  opacity: 1;
-}
-.alert-exit-active {
-  opacity: 0;
-  transform: scale(0.9);
-  transition: opacity 300ms, transform 300ms;
-}
-
-
-
-
-.icon{
-  width: 20px;
-  height: 20px;
- }
-
- .search{
-  margin-left: 10px;
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
-  margin-bottom: 10px;
-  max-width: 100%;
- }
- .search input{
-  min-width: 5%;
-  flex-shrink: 1;
- }
-.container-chat,.container-chat-message{
-  display: flex;
-  flex-direction: row;
-  height: 100vh;
-  width: 100vw;
-}
-
-.active-link{
-  color: red;
-}
-.pending-link{
-  color: #a11059;
-}
+  .icon{
+    width: 20px;
+    height: 20px;
+   }
 /* chat container end */
 
 /* server-container  start*/
@@ -413,9 +290,6 @@ input{
 
 /* setting constainer end */
 
-/* message container */
-
-/* message-container end */
 
 
 

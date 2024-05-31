@@ -1,14 +1,12 @@
-.block-server-chat{
-    margin-bottom: 10px;
-  }
+
   .block-server-chat,.block-server{
     color: white;
     width: 60px;
     height: 60px;
     min-width: 60px;
     min-height: 60px;
-    background-color: #ef2424;
-    border-radius: 10px;
+    background-color: #313338;
+    border-radius: 100px;
   }
 
 
@@ -25,6 +23,92 @@
     height: 60px;
     border-radius: 100px;
   }
+  .server-chat-block:hover{
+    background-color: #404249;
+    
+  }
   .server-chat-block{
-    background-color: #38ff10;
+    color: #949BA4
+  }
+  .add-server-room{
+    cursor: pointer;
+    padding: 1px 4px;
+    
+  }
+  .server-chat-block p{
+    display: flex;
+    flex-direction: row;
+    padding: 8px;
+    padding-left: 10px;
+  }
+  .container-server{
+    outline: none;
+  }
+  .container-server >  .block-server-link:hover{
+    outline: none;
+    /* border-left: 2px solid gray; */
+  }
+  .block-server-link{
+    position: relative;
+  }
+
+  .container-server> .active > .block-server, .block-server-chat{
+    border-radius: 10px;
+    background-color: rgb(255, 21, 0);
+    transition-duration: 0.1s;
+  }
+  .container-server> .active{
+    /* border-left: 1px solid gray; */
+    padding-left: 5px;
+  }
+  .container-server> .active::before{
+    content: " ";
+    position: absolute;
+    width: 1px;
+    height: 100%;
+    background-color: aquamarine;
+    left: -1px;
+    animation-name: pre-width;
+    animation-duration: 0.3s;
+  }
+  .container-server>  .active-link:hover::before{
+    content: " ";
+    position: absolute;
+    width: 10px;
+    height: 20%;
+    background-color: aquamarine;
+    left: -10px;
+    top: 40%;
+    /* animation-name: pre-width;
+    animation-duration: 1s; */
+  }
+ 
+
+
+
+
+
+  @keyframes pre-width {
+   from{
+    transform: translateY(10px) scaleY(0);
+    height: 10%;
+   
+   }
+
+   to{
+    height: 100%;
+    transform: translateY(0px) scaleY(1);
+   }
+  }
+
+  .chat-list-container > .active-link{
+    color: #949BA4;
+  }
+  .chat-list-container > .pending-link{
+    color: #a11059;
+  }
+
+  .chat-list-container > .active>.server-chat-block{
+    background-color: #404249;
+    color: white;
   }

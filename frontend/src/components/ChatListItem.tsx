@@ -3,6 +3,9 @@ import { IUserChatT } from '../models/IUserChat'
 import avatar from "../assets/sonic.jpg"
 import {  NavLink, useParams } from 'react-router-dom'
 import { socket } from '../socket'
+import "../css/chat_meassage.css"
+
+
 interface ChatListItemProps{
     chatId : string,
     chatsUser :  IUserChatT[]
@@ -28,15 +31,15 @@ const ChatListItem: FC<ChatListItemProps>=({chatId,chatsUser})=> {
   return (
     <>
      <NavLink to={`/chat/${chatId}`}
-     className='chat-container'
+    //  className='chat-container'
      onClick={()=>{
       if(chatId){
         socket.emit("leave",{"chat_id" : chatid})
       }
      }}
-      // className={({ isActive, isPending }) =>
-      //   isPending ? "pending-link" : isActive ? "active" : "active-link"
-      // }
+      className={({ isActive, isPending }) =>
+        isPending ? "pending-link chat-container" : isActive ? "active chat-container" : "active-link chat-container"
+      }
      >
         <div className="avatar">
             <img src={noMe?.avatar ? "http://localhost:5173/public/"+ noMe.avatar : avatar} alt="" title={noMe?.login} />

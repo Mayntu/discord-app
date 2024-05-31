@@ -197,7 +197,9 @@ const  MessageContainer : FC=()=> {
   const scroll=()=>{
    
     messageContainer.current?.scrollBy(0,messageContainer.current.scrollHeight)
+    if(messageContainer.current)
     console.log(messageContainer.current.scrollHeight,"scroll")
+    console.log(doMs,"scroll")
     messageContainer.current && setDoMs(messageContainer.current?.scrollHeight)
   }
 
@@ -212,7 +214,7 @@ const  MessageContainer : FC=()=> {
   useEffect(()=>{
     if(limit ==10){
       scroll()
-      console.log(messageContainer.current.scrollHeight,"scroll2")
+      // console.log(messageContainer.current.scrollHeight,"scroll2")
     }else{
       scrollView()
     }

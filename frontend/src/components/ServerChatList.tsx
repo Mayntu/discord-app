@@ -4,7 +4,7 @@ import { NavLink, Outlet, useNavigate, useParams } from 'react-router-dom'
 import { fetchCheckServerUser, fetchCreateServerChat, fetchDejoinServer, fetchDeleteServer, fetchGetServer, fetchGetServerChatRooms, fetchpostChangeServersTitle, fetchpostInvitationLink,fetchСhangeServersAvatar } from '../store/actionServer'
 import ModuleTest from './Module'
 import avatar from "../assets/sonic.jpg"
-
+import "../css/chat_meassage.css"
 
 
 
@@ -24,7 +24,7 @@ const ServerChatList:FC=()=> {
     const serverRooms = useAppSelector(state=>state.server.serverChatSRooms)
     const refImage = useRef<HTMLInputElement>(null) 
     const [file,setFile] = useState<File | undefined>(undefined)
-
+    const [isCreateServerRoom, setIsCreateServerRoom] = useState<boolean>(false)
     useEffect(()=>{
       if(serverid){
         dispatch(fetchGetServerChatRooms(serverid)) 
@@ -72,15 +72,17 @@ const ServerChatList:FC=()=> {
       <button onClick={()=>{serverid && dispatch(fetchDejoinServer(serverid)).then(()=>navigate("/chat")).then(()=>{dispatch(fetchGetServer())})}}>exit server</button>}
      
       <button onClick={inviteServer}>пригласить</button>
-      <input type="text" onChange={(e)=>{setChatName(e.target.value)}} value={chatName}/>
-      <button onClick={()=>{ 
-        if(serverid){
-          dispatch(fetchCreateServerChat({title: chatName,uuid_server : serverid}))
-          .then(()=>{dispatch(fetchGetServerChatRooms(serverid))})
-        }}}>создать чат</button>
+        <p>ТЕКСТОВЫЕ КАНАЛЫ 
+          {isAdmin && <span onClick={()=>{setIsCreateServerRoom(true)}} className='add-server-room'>+</span>}
+        </p>
+        
         {serverRooms.map(room=>(
-        <NavLink to={`/server/${serverid}/${room.uuid}`} key={room.uuid}>
-          <div className='server-chat-block'>{room.title}</div>
+        <NavLink to={`/server/${serverid}/${room.uuid}`} key={room.uuid}
+        className={({ isActive, isPending }) =>
+          isPending ? "pending-link" : isActive ? "active " : "active-link"
+        }
+        >
+          <div className='server-chat-block'><p>{room.title}</p></div>
         </NavLink>
         ))}
      </div>
@@ -93,6 +95,7 @@ const ServerChatList:FC=()=> {
         <h1>Скопируйте ссылку</h1>
         <button onClick={()=>{
           navigator.clipboard.writeText("http://127.0.0.1:8000/"+link).then(()=>{console.log(true)})
+          setIsModuleInvite(false)
         }}>copy</button>
         <p>http://127.0.0.1:8000/{link}</p>
         </ModuleTest>}
@@ -106,6 +109,17 @@ const ServerChatList:FC=()=> {
            }}>иыбрать</button>
             <button onClick={newAvatar}>Сохранить</button>
         </ModuleTest>}
+        {isCreateServerRoom && 
+        <ModuleTest isModule={setIsCreateServerRoom}>
+          <input type="text" onChange={(e)=>{setChatName(e.target.value)}} value={chatName}/>
+          <button onClick={()=>{ 
+             if(serverid && chatName){
+            dispatch(fetchCreateServerChat({title: chatName,uuid_server : serverid}))
+            .then(()=>{dispatch(fetchGetServerChatRooms(serverid))})
+            setIsCreateServerRoom(false)
+        }}}>создать чат</button>
+        </ModuleTest>
+        }
       <Outlet></Outlet>
   
     </>
