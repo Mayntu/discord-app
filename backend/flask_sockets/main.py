@@ -89,7 +89,7 @@ def handle_server_chat_message(message):
         if result["result"] == True:
             message : str = dumps(result["message_data"])
             print(message)
-            emit("server_chat_message", {"message" : message})
+            emit("server_chat_message", {"message" : message}, room=chat_id)
 
 
 @socketio.on("join")
