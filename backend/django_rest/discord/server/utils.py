@@ -38,6 +38,8 @@ def handle_upload_audio_server(file, server_id : str) -> str:
     
     write(_path, data, samplerate, format='wav')
     
+    print(f"media/audios/servers/{server_id}/{filename}.wav")
+    
 
     return f"media/audios/servers/{server_id}/{filename}.wav"
 

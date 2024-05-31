@@ -19,6 +19,7 @@ ALL_USERS : dict = {}
 @socketio.on("user_connected")
 def user_connected(data):
     token : str = data.get("token")
+    print(token)
     # make_user_online(token)
     sid = request.sid
     
@@ -43,7 +44,8 @@ def user_disconnected():
     sid = request.sid
     try:
         print(ONLINE_USERS)
-        ONLINE_USERS.pop(ONLINE_USERS.index(session.get("token")))
+        print(session.get("token"))
+        ONLINE_USERS.remove(session.get("token"))
         print(ALL_USERS)
         ALL_USERS.pop(sid)
         for user in ALL_USERS:
