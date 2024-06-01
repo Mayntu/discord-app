@@ -84,7 +84,7 @@ const InputMessage:FC<IInputMessage>=({dropImage,sendMessage,setFile,setMessageT
         
           setAudioBlob(audioBlob)
             if(chatid){
-
+              console.log("chat")
               socket.emit("message", {
                 "data" : "что писать?", 
                 "chat_id" : chatid,
@@ -92,7 +92,8 @@ const InputMessage:FC<IInputMessage>=({dropImage,sendMessage,setFile,setMessageT
                 media:{file : audioBlob, name : "audio/mp3"} });
             }
             if(chatserverid){
-              console.log("streamУТ")
+         
+              console.log("server")
               socket.emit("server_chat_message", {
                 "data" : "что писать?", 
                 "chat_id" : chatserverid, 
@@ -114,6 +115,7 @@ const InputMessage:FC<IInputMessage>=({dropImage,sendMessage,setFile,setMessageT
     if(gif !== ""){
       setGif("")
       if(chatid){
+      
         socket.emit("message", {
           "data" : gif, 
           "chat_id" : chatid,
@@ -121,6 +123,7 @@ const InputMessage:FC<IInputMessage>=({dropImage,sendMessage,setFile,setMessageT
           media: ""});
       }
       if(chatserverid){
+      
         socket.emit("server_chat_message", {
           "data" : gif, 
           "chat_id" : chatserverid, 

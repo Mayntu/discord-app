@@ -82,3 +82,17 @@ export const fetchGetUserChats = createAsyncThunk(
       }
     },
   )
+
+
+  export const fetchChangeChatMessage = createAsyncThunk(
+    'chats/fetchChangeChatMessage',
+    async (payload:any, thunkAPI) => {
+      try {
+        const response = await ChatService.postChangeChatMessage(payload.message_uuid,payload.new_content)
+        console.log(response.data,"fetchChangeChatMessage")
+        return response.data
+      } catch (error: any) {
+        return thunkAPI.rejectWithValue(error?.message)
+      }
+    },
+  )

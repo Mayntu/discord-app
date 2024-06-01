@@ -33,7 +33,7 @@ const ChatList:FC=()=> {
 
 useEffect(()=>{
   
-    console.log(connectUsers,"adadadada") 
+    // console.log(connectUsers,"adadadada") 
     dispatch(addUsersConnect(connectUsers))
   
 },[connectUsers])

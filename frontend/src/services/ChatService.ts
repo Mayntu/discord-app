@@ -40,4 +40,7 @@ export class ChatService {
         return $api.post<any>("api/v1/recognizeAudio",{message_id})
     }
 
+    static async postChangeChatMessage(message_uuid: string,new_content: string):Promise<AxiosResponse<any>>{
+        return $api.post<any>("api/v1/changeChatMessage",{message_uuid,new_content})
+    }
 }

@@ -1,6 +1,6 @@
 import { ActionReducerMapBuilder, PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { IMessage, IUserChat, IUserChatT, IUserChatTSearch } from "../models/IUserChat";
-import {  fetchMedia, fetchTest } from "./acthion";
+import {   fetchTest } from "./acthion";
 import { fetchCreateChat, fetchFindChat, fetchGetChatMessage, fetchGetUserChats } from "./acthionChat";
 
 
@@ -42,10 +42,7 @@ const chatsSlice = createSlice({
             state.users = payload
         },
         addUsersConnect(state,{payload}:PayloadAction<string[]>){
-            const n = state.socketChat.map(user=>user.users)
-            // n = [[users],[users]]
-            for(let i=0;i<n.length;i++){
-            
+            for(let i=0;i<state.socketChat.length;i++){
                     state.socketChat[i].users.map(user=>{
                         if(payload.includes(user.uuid)){
                             console.log(true)
@@ -53,30 +50,8 @@ const chatsSlice = createSlice({
                         }else{
                             user.status = false
                         }
-                        // if(user.uuid == payload[s]){
-                        //     user.status = true
-                        //     console.log(user.uuid,"true")
-                        //     return user
-                        // }else{
-                        //     console.log(user.uuid,"false")
-                        //     // user.status = false
-                        //     return user
-                        // }
                         
              })
-                    // const r = n[i].findIndex(user=>{
-                    //     return user.uuid == payload[s]
-                    // })
-
-                    // if(r !== -1){
-                    //     state.socketChat[i].users[r].status =  true
-                    //     console.log(true,payload[s])
-                    // }else{
-                    //     console.log(false,r,payload[s])
-                    //     // n[i] = n[i].filter(user=>user.status = false)
-                    //     // console.log(state.socketChat[i].users[r].status)
-                    //     // state.socketChat[i].users.map(user=>user.status = false)
-                    // }
                 
             }
         },
@@ -102,7 +77,7 @@ const chatsSlice = createSlice({
     extraReducers: (builder:  ActionReducerMapBuilder<TChats>)=>{
         // получение чатов 
         builder.addCase(fetchGetUserChats.fulfilled,(state :TChats,{payload} : PayloadAction<any>)=>{
-            console.log("socketChat",payload.data)
+            // console.log("socketChat",payload.data)
             state.socketChat = payload.data
             state.isLoading = true
         })
