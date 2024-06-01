@@ -46,6 +46,7 @@ const ChatList:FC=()=> {
   
   useEffect(()=>{
     socket.on("user_offline",(data)=>{
+      console.log("awkgnaknga");
       console.log(data,"user_offline")
     })
   },[])

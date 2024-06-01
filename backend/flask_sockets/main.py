@@ -2,7 +2,9 @@ from flask import Flask, render_template, request, session
 from flask_socketio import SocketIO, emit, send, join_room, leave_room
 # from flask_cors import CORS
 from json import dumps, loads
+import time
 import requests
+import threading
 
 
 app : Flask = Flask(__name__)
@@ -42,14 +44,19 @@ def user_disconnected():
     print("disconnected")
     # print(request.sid)
     sid = request.sid
+    token : str = session.get("token")
     try:
-        print(ONLINE_USERS)
-        print(session.get("token"))
-        ONLINE_USERS.remove(session.get("token"))
-        print(ALL_USERS)
-        ALL_USERS.pop(sid)
-        for user in ALL_USERS:
-            emit("user_offline", {"user_uuid" : ALL_USERS[sid]}, to=user, include_self=False)
+        if token in ONLINE_USERS:
+            print(ONLINE_USERS)
+            print(session.get("token"))
+            ONLINE_USERS.remove(session.get("token"))
+        if sid in ALL_USERS:
+            print(ALL_USERS)
+            del ALL_USERS[sid]
+            print(ALL_USERS)
+            for user in ALL_USERS:
+                print(user)
+                emit("user_offline", {"user_uuid" : token}, to=user, include_self=False)
     except:
         print("failed to pop")
     # print(ONLINE_USERS)
@@ -180,5 +187,14 @@ def get_server_chat_info(token : str, chat_id : str) -> dict:
     return response.json()
 
 
+def monitor_online(delay : float) -> None:
+    while True:
+        time.sleep(delay)
+        print(ALL_USERS)
+
+
+thread : threading.Thread = threading.Thread(target=monitor_online, args=(0.2,), daemon=True)
+
+# thread.start()
 if __name__ == "__main__":
-    socketio.run(app, host="127.0.0.1", port=5000, debug=True)
+    socketio.run(app, host="127.0.0.1", port=5000)
