@@ -14,7 +14,7 @@ type TChats = {
     searcChat : IUserChatTSearch[],
     test : any,
     isLoading : boolean,
-    usersConnect : any[]
+    usersConnect : string[]
     newChatid: string,
     message : IMessage,
     message_count: number
@@ -39,37 +39,70 @@ const chatsSlice = createSlice({
     initialState,
     reducers:{
         addUsersChat(state,{payload}: PayloadAction<any>){
-            // console.log(payload,"pay")
             state.users = payload
-            // state.getMessage =  state.getMessage.map(mes=>{
-            //     return ({...mes, avatar: payload.find(userm=>userm.uuid == mes.from_user_id).avatar})
-            //    }
-            // )
         },
-        addUsersConnect(state,{payload}:PayloadAction<any[]>){
+        addUsersConnect(state,{payload}:PayloadAction<string[]>){
             const n = state.socketChat.map(user=>user.users)
-            for(let i=0;i<n.length+1;i++){
-                for(let s=0;i<payload.length;i++){
-                    const r = n[i].findIndex(user=>{
-                        return user.uuid == payload[s]
-                    })
-                    if(r !== -1){
-                        state.socketChat[i].users[r].status =  false
-                    }
-                }
+            // n = [[users],[users]]
+            for(let i=0;i<n.length;i++){
+            
+                    state.socketChat[i].users.map(user=>{
+                        if(payload.includes(user.uuid)){
+                            console.log(true)
+                            user.status = true
+                        }else{
+                            user.status = false
+                        }
+                        // if(user.uuid == payload[s]){
+                        //     user.status = true
+                        //     console.log(user.uuid,"true")
+                        //     return user
+                        // }else{
+                        //     console.log(user.uuid,"false")
+                        //     // user.status = false
+                        //     return user
+                        // }
+                        
+             })
+                    // const r = n[i].findIndex(user=>{
+                    //     return user.uuid == payload[s]
+                    // })
+
+                    // if(r !== -1){
+                    //     state.socketChat[i].users[r].status =  true
+                    //     console.log(true,payload[s])
+                    // }else{
+                    //     console.log(false,r,payload[s])
+                    //     // n[i] = n[i].filter(user=>user.status = false)
+                    //     // console.log(state.socketChat[i].users[r].status)
+                    //     // state.socketChat[i].users.map(user=>user.status = false)
+                    // }
+                
             }
-            // console.log(state.usersConnect)
         },
         stateNull(state,{payload}:PayloadAction<any[]>){
             state.searcChat = payload
         },
         addMessage(state,{payload}:PayloadAction<string>){
             state.message.uuid = payload
+        },
+        addUsersConnectState(state,{payload}:PayloadAction<string | string[]>){
+            if( !Array.isArray(payload)  && !state.usersConnect.includes(payload)){
+                state.usersConnect.push(payload)
+            }else if(state.usersConnect.length == 0){
+                state.usersConnect.push(...payload)
+            }else if(!Array.isArray(payload) && state.usersConnect.includes(payload)){
+                console.log("offline")
+                state.usersConnect.splice(state.usersConnect.indexOf(payload),1)
+            }
+           
+           
         }
     },
     extraReducers: (builder:  ActionReducerMapBuilder<TChats>)=>{
         // получение чатов 
         builder.addCase(fetchGetUserChats.fulfilled,(state :TChats,{payload} : PayloadAction<any>)=>{
+            console.log("socketChat",payload.data)
             state.socketChat = payload.data
             state.isLoading = true
         })
@@ -94,6 +127,6 @@ const chatsSlice = createSlice({
     }
 })
 
-export const {addUsersChat, addUsersConnect,stateNull, addMessage} = chatsSlice.actions
+export const {addUsersChat, addUsersConnect,stateNull, addMessage,addUsersConnectState} = chatsSlice.actions
 
 export default chatsSlice.reducer
