@@ -8,7 +8,7 @@ import { Outlet } from 'react-router-dom'
 import { fetchFindChat, fetchGetUserChats } from '../store/acthionChat'
 import $api from '../http'
 import { socket } from '../socket'
-import { addUsersConnect } from '../store/ChatsSlice'
+import { addUsersConnect, addUsersConnectState } from '../store/ChatsSlice'
 
 
 
@@ -17,16 +17,13 @@ import { addUsersConnect } from '../store/ChatsSlice'
 
 const ChatList:FC=()=> {
   const findUsers = useAppSelector(state=>state.chats.searcChat)
-
+  const connectUsers = useAppSelector(state=>state.chats.usersConnect)
 
   //    сокетты
   useEffect(()=>{
     dispatch(fetchGetUserChats()).then(()=>{
       connect()
-      socket.on("connected", async (data:any)=>{
-        console.log(data,"connected")
-        dispatch(addUsersConnect(data.data))
-      }) 
+   
     }
   )
     
@@ -34,20 +31,39 @@ const ChatList:FC=()=> {
   
   },[])
 
+useEffect(()=>{
+  
+    console.log(connectUsers,"adadadada") 
+    dispatch(addUsersConnect(connectUsers))
+  
+},[connectUsers])
+
   const connect=async()=>{
     const userM = await $api.get<any>("api/v1/getUsersInfo")
     socket.emit("user_connected",{token:userM.data.user_data.uuid})
+    socket.on("connected", async (data:any)=>{
+      if(data.data.includes(userM.data.user_data.uuid)){
+        data.data.splice(data.data.indexOf(userM.data.user_data.uuid),1)
+      }
+      if(data.data.length){
+        console.log(data,"connected")
+        dispatch(addUsersConnectState(data.data))
+      }
+     
+     
+    }) 
   }
   useEffect(()=>{
     socket.on("user_online",(data)=>{
-      console.log(data,"user_online")
+      console.log(data.user_uuid,"user_online")
+      dispatch(addUsersConnectState(data.user_uuid))
     })
   },[])
   
   useEffect(()=>{
     socket.on("user_offline",(data)=>{
-      console.log("awkgnaknga");
       console.log(data,"user_offline")
+      dispatch(addUsersConnectState(data.user_uuid))
     })
   },[])
 
