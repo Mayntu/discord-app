@@ -223,7 +223,7 @@ def api_get_chat_messages(request):
         
         chat : Chat = Chat.objects.get(uuid=chat_id)
 
-        temp_messages = chat.messages.all().order_by("-timestamp") 
+        temp_messages = chat.messages.all().order_by("-timestamp").update(has_read=True)
         messages = temp_messages[:count:-1]
 
         counter : int = len(temp_messages)
