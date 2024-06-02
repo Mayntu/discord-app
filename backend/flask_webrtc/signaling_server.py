@@ -8,8 +8,7 @@ Payload.max_decode_packets = 200
 from events import ACTIONS
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = "thisismys3cr3tk3y"
-
+app.config["SECRET"] = "awlkmngkalmgkma"
 socketio : SocketIO = SocketIO(app, cors_allowed_origins="*")
 
 
@@ -152,7 +151,6 @@ def relay_ice(data):
 if __name__ == "__main__":
     socketio.run(
         app, 
-        debug=True,
-        host="0.0.0.0",
+        host="127.0.0.1",
         port=5555
     )
