@@ -494,7 +494,8 @@ def api_change_servers_avatar(request):
     headers : dict = request.headers
 
     
-    token : str = headers.get("Authorization").replace('"', "")   token_content : dict = get_token(token=token)
+    token : str = headers.get("Authorization").replace('"', "")   
+    token_content : dict = get_token(token=token)
 
     
     if not token_content:
