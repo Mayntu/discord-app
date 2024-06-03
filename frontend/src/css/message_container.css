@@ -100,9 +100,59 @@
   .message-input-container>.react-emoji{
     max-width: 80%;
   }
-  .message-input-container >.btn-image{
+  .message-input-container >.img-block >.btn-image{
     max-width: 50px;
     max-height: 50px;
+  }
+  
+  .img-block,.btn-image{
+    z-index: 100;
+    position: relative;
+  }
+  .message-input-container > .inactive::after{
+    content: "";
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: #38ff10;
+    left: 20px;
+    top: 20px;
+    border-radius: 100px;
+    z-index: 0px;
+  }
+  .message-input-container > .recording::after{
+    content: "";
+    position: absolute;
+    width: 70px;
+    height: 70px;
+    background-color: #38ff10;
+    left: -10px;
+    top: -10px;
+    border-radius: 100px;
+    z-index: 0px;
+    animation-name: circle-large-small;
+    animation-duration: 2s;
+    opacity: 0.9;
+    animation-timing-function:linear;
+    animation-iteration-count: infinite;
+  }
+
+
+
+  @keyframes circle-large-small {
+    0%{
+      opacity: 0.9;
+      transform: scale(1);
+    }
+    50%{
+      opacity: 0.3;
+      transform: scale(1.2);
+    }
+    100%{
+         opacity: 0.9;
+        transform: scale(1);
+    }
+    
   }
   .btn-image{
     border-radius: 100px;

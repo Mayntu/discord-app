@@ -37,8 +37,9 @@ const ServerChatList:FC=()=> {
       const formData = new FormData()
       if(file && serverid){
         formData.append("file",file)
-        formData.append("uuid",serverid)
-        dispatch(fetchСhangeServersAvatar(formData))
+        formData.append("title",serverid)
+        dispatch(fetchСhangeServersAvatar(formData)).then(()=>{dispatch(fetchGetServer())})
+        setIsModuleAvatar(false)
       }
       
     }

@@ -8,7 +8,7 @@ import avatar from "../assets/sonic.jpg"
 import callIcon from "../assets/call.png"
 import { IUserChatT } from '../models/IUserChat';
 import { fetchDeleteServerChatRoom, fetchDeleteServersMessage, fetchGetServerChatRoomMessages, fetchGetServerChatRooms, fetchGetchangeServerMessage } from '../store/actionServer';
-import { fetchDeleteChatMessage, fetchGetChatMessage, fetchGetUserChats } from '../store/acthionChat';
+import { fetchDeleteChatMessage, fetchGetChatMessage, fetchGetUserChats, fetchReadMessage } from '../store/acthionChat';
 import InputMessage from './InputMessage';
 import ServerUsersList from './ServerUsersList';
 import VideoCallBlock from './VideoCallBlock';
@@ -28,6 +28,7 @@ const  MessageContainer : FC=()=> {
   const messageUser = useAppSelector(state=>state.chats.message)
   const serverMessages = useAppSelector(state=>state.server.serverChatMessages)
   const message_count = useAppSelector(state=>state.chats.message_count)
+  const usersConnect = useAppSelector(state=>state.chats.usersConnect)
   const userMe = useAppSelector(state=>state.auth.user)
   const [file,setFile] = useState<File>()
   const [files,setFiles] = useState<File[] | undefined>()
@@ -38,13 +39,11 @@ const  MessageContainer : FC=()=> {
   const [doMs,setDoMs]= useState<number>(0)
 
   const joinRoom = (room:any) => {
-    console.log("room")
     socket.emit("join", {"username" : userMe.login, "chat_id" : room});
     setRoomId(room)
   };
  
   const getMessage = async ()=>{
-    console.log(limit)
     chatid && await dispatch(fetchGetChatMessage({chat_id:chatid,count:limit}))
   }
 
@@ -99,7 +98,7 @@ const  MessageContainer : FC=()=> {
         "chat_id" : chatid, 
         "token" : localStorage.getItem("token"), 
         // media: file ? {file, name : file?.type} : ""});
-        media: files ? {file:files, name : files[0]?.type} : ""});
+        media: file ? {file:file, name : file?.type} : ""});
         setMessageText("")
         setArrayURL([])
         setFile(undefined)
@@ -109,14 +108,39 @@ const  MessageContainer : FC=()=> {
 
   }; 
 
+  const s=(data:any)=>{
+   
+    if(data.from_user_id !== userMe.uuid){
+      console.log(userMe)
+      console.log(usersConnect)
+      if(usersConnect.includes(data.from_user_id)){
+          console.log("neua")
+          dispatch(fetchReadMessage(data.uuid))
+          data.has_read = true
+          return data
+      }
+      // console.log(data.from_user_id)
+     
+      
+    }else{
+      //usersChat
+      if(usersConnect.includes(data.from_user_id))
+      console.log("ya")
+
+      return data
+    }
+
+    return data
+  }
     
   useEffect(()=>{ 
     // получаю сообщения
-      if(chatid){
+      if(chatid && Object.keys(userMe).length !== 0 && usersChat && usersConnect ){
         socket.on("message", async(data:any) => {
           data = JSON.parse(data.message)
           console.log( data)
-          await setMessageArray((prev)=>[...prev,{content: data.content, from_user_id : data.from_user_id, uuid : data.uuid,timestamp : data.timestamp,media : data.media}]) 
+           data =  s(data)
+          await setMessageArray((prev)=>[...prev,{content: data.content, from_user_id : data.from_user_id, uuid : data.uuid,timestamp : data.timestamp,media : data.media,has_read:data.has_read}]) 
           scroll()
         });
        
@@ -127,8 +151,7 @@ const  MessageContainer : FC=()=> {
         socket.off("message")
       }
         
-    // из-за зависимости с params socket накладываеться на предыдущий и просходит отправка кучи сообщений  решение?
-  },[socket,chatid])
+  },[socket,chatid,userMe,usersChat,usersConnect])
 
 
 
@@ -196,9 +219,9 @@ const  MessageContainer : FC=()=> {
     if(files && files.length){
       setFile(files[0])
       console.log(files)
-      setFiles(files)
-      files.filter((i)=>setArrayURL((prev)=>[...prev,window.URL.createObjectURL(i)]) )
-      // setArrayURL([window.URL.createObjectURL(files[0])]) 
+      // setFiles(files)
+      // files.filter((i)=>setArrayURL((prev)=>[...prev,window.URL.createObjectURL(i)]) )
+      setArrayURL([window.URL.createObjectURL(files[0])]) 
   }else{
       
   }
@@ -208,15 +231,15 @@ const  MessageContainer : FC=()=> {
    
     messageContainer.current?.scrollBy(0,messageContainer.current.scrollHeight)
     if(messageContainer.current)
-    console.log(messageContainer.current.scrollHeight,"scroll")
-    console.log(doMs,"scroll")
+    // console.log(messageContainer.current.scrollHeight,"scroll")
+    // console.log(doMs,"scroll")
     messageContainer.current && setDoMs(messageContainer.current?.scrollHeight)
   }
 
   const scrollView=()=>{
       if(doMs !==messageContainer.current?.scrollHeight && messageContainer.current ){
-          console.log(doMs,"do")
-          console.log(messageContainer.current.scrollHeight,"posle")
+          // console.log(doMs,"do")
+          // console.log(messageContainer.current.scrollHeight,"posle")
           messageContainer.current?.scrollBy(0,messageContainer.current.scrollHeight - (doMs))
           setDoMs(messageContainer.current.scrollHeight)
       }
@@ -263,7 +286,7 @@ const  MessageContainer : FC=()=> {
                 }
               }
             }}>
-              {messageArray.length !==0 ? messageArray.map((ms,index)=><Message key={index} uuid={ms.uuid} classUser={ms.from_user_id} media={ms.media}  time={ms.timestamp} children={ms.content}/>): null}
+              {messageArray.length !==0 ? messageArray.map((ms,index)=><Message key={index} uuid={ms.uuid} classUser={ms.from_user_id} media={ms.media}  time={ms.timestamp} children={ms.content} hasRead={ms.has_read}/>): null}
                   
             </div>
             <div className="file-input">
@@ -313,7 +336,7 @@ const  MessageContainer : FC=()=> {
                       <img/>
               </div>
                 <div className="get-message-cantainer" ref={messageContainer} >
-                  {messageArray.length !==0 ? messageArray.map((ms,index)=><Message key={index} classUser={ms.from_user_id} media={ms.media} uuid={ms.uuid}  time={ms.timestamp}>{ms.content}</Message>): null}
+                  {messageArray.length !==0 ? messageArray.map((ms,index)=><Message key={index} classUser={ms.from_user_id} media={ms.media} uuid={ms.uuid}  time={ms.timestamp} >{ms.content}</Message>): null}
                 </div>
                 <div className="file-input">
                 {file &&  arrayURL.map(i=>(<img src={i} key={i}/>)) }

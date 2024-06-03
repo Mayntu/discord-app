@@ -96,3 +96,16 @@ export const fetchGetUserChats = createAsyncThunk(
       }
     },
   )
+
+  export const fetchReadMessage = createAsyncThunk(
+    'chats/fetchReadMessage',
+    async (payload:string, thunkAPI) => {
+      try {
+        const response = await ChatService.postReadMessage(payload)
+        console.log(response.data,"fetchChangeChatMessage")
+        return response.data
+      } catch (error: any) {
+        return thunkAPI.rejectWithValue(error?.message)
+      }
+    },
+  )

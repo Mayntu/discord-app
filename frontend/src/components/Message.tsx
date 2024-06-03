@@ -6,7 +6,7 @@ import $api from '../http'
 import { fetchGetServer } from '../store/actionServer'
 import { useNavigate } from 'react-router-dom'
 import ModuleTest from './Module'
-import { fetchRecognizeAudio } from '../store/acthionChat'
+import { fetchReadMessage, fetchRecognizeAudio } from '../store/acthionChat'
 
 
 interface MessageProps{
@@ -15,11 +15,12 @@ interface MessageProps{
     time: string,
     media : string 
     uuid: string
+    hasRead?: boolean
 }
 
 
 
-const  Message: FC<MessageProps>=({classUser,children,time,media,uuid})=> {
+const  Message: FC<MessageProps>=({classUser,children,time,media,uuid,hasRead})=> {
   const me = useAppSelector(state=>state.auth.user)
   const NoMe = useAppSelector(state=>state.chats.users)
   const [isModule,setIsModule] = useState<boolean>(false)
@@ -55,6 +56,9 @@ const  Message: FC<MessageProps>=({classUser,children,time,media,uuid})=> {
 
   useEffect(()=>{
     isURL(children)
+    if(!hasRead && classUser !== me.uuid){
+      // dispatch(fetchReadMessage(uuid))
+    }
   },[])
   const fetchMessage=async(str:string)=>{
     const res = await $api.get(str)
@@ -65,7 +69,7 @@ const  Message: FC<MessageProps>=({classUser,children,time,media,uuid})=> {
 
   useEffect(()=>{
     if(media.split(".").splice(-1,1)[0] == "mp3"){
-      // dispatch(fetchRecognizeAudio(uuid))
+      dispatch(fetchRecognizeAudio(uuid))
       setAudio(true)
     }
   },[])
@@ -89,6 +93,7 @@ const  Message: FC<MessageProps>=({classUser,children,time,media,uuid})=> {
                                     gif ? null: (<a href={children}>{children}</a>) 
           : 
           ( <p>{children}</p>)}
+         
         </div>
         </>
         }
@@ -103,6 +108,7 @@ const  Message: FC<MessageProps>=({classUser,children,time,media,uuid})=> {
      <p>{` ${new Date(time).getHours()>10 ? new Date(time).getHours() : "0"+new Date(time).getHours()}
           : ${new Date(time).getMinutes()>10 ? new Date(time).getMinutes() : "0"+new Date(time).getMinutes()}
           : ${new Date(time).getSeconds()>10 ? new Date(time).getSeconds() : "0"+new Date(time).getSeconds() }`}</p>
+           {hasRead ? <p>true</p> : classUser == me.uuid ? <p>false</p> : <button onClick={()=>{dispatch(fetchReadMessage(uuid))}}>обновить статус </button>}
     </div>
         {isModule && <ModuleTest isModule={setIsModule}>
         {gif && (<img src={gif} alt="" />)}

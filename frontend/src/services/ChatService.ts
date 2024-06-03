@@ -43,4 +43,9 @@ export class ChatService {
     static async postChangeChatMessage(message_uuid: string,new_content: string):Promise<AxiosResponse<any>>{
         return $api.post<any>("api/v1/changeChatMessage",{message_uuid,new_content})
     }
+
+
+    static async postReadMessage(message_id:string):Promise<AxiosResponse<any>>{
+        return $api.post<any>("api/v1/readMessage",{message_id})
+    }
 }

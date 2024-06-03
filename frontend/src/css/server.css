@@ -52,7 +52,7 @@
     position: relative;
   }
 
-  .container-server> .active > .block-server, .block-server-chat{
+  .container-server> .active > .block-server, .block-server-chat,  .block-server img{
     border-radius: 10px;
     background-color: rgb(255, 21, 0);
     transition-duration: 0.1s;
@@ -60,6 +60,10 @@
   .container-server> .active{
     /* border-left: 1px solid gray; */
     padding-left: 5px;
+  }
+  .container-server>  .active-link > .block-server img{
+    border-radius: 100px;
+    transition-duration: 1s;
   }
   .container-server> .active::before{
     content: " ";
