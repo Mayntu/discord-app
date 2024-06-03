@@ -324,7 +324,19 @@ const  MessageContainer : FC=()=> {
                       chatserverid && dispatch(fetchDeleteServersMessage(messageUser.uuid)).then(()=>{dispatch(fetchGetServerChatRoomMessages(chatserverid))}).then(()=>dispatch(addMessage("")))
                       }}>удалить
                     </button>
-                    <button onClick={()=>{dispatch(fetchGetchangeServerMessage({message_uuid: messageUser.uuid,new_content:"iuwhduwhdu"}))}}>Изменить</button>
+                    <button onClick={()=>{dispatch(fetchGetchangeServerMessage({message_uuid: messageUser.uuid,new_content:"iuwhduwhdu"}))
+                                          .then((res)=>{        
+                                           if(res.payload.result){
+                                            const str = messageArray.map((item)=>{
+                                              if(item.uuid == messageUser.uuid){
+                                                // item.content = "iuwhduwhdu"
+                                                return {...item,content : "iuwhduwhdu"}
+                                              }
+                                              return item
+                                              } )          
+                                              setMessageArray(str)
+                                           }
+                                        })}}>Изменить</button>
                   </div>
                 }
                 <InputMessage 
