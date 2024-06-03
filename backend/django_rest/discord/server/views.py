@@ -494,7 +494,7 @@ def api_change_servers_avatar(request):
     headers : dict = request.headers
 
     
-    token : str = headers.get("Authorization").replace('"', "")   
+    token : str = headers.get("Authorization").replace('"', "")
     token_content : dict = get_token(token=token)
 
     
@@ -502,26 +502,32 @@ def api_change_servers_avatar(request):
         return JsonResponse(data={"result" : False, "message" : "not valid token"})
     
 
-    data : dict = json.loads(request.body)
-    files : dict = request.FILES
 
-    file = files.get("file")
+    files = request.FILES
+
+    owner_user_id : str = token_content.get("uuid")
+
+    server_uuid : str = request.POST.get("title")
+
+    avatar : str = files.get("file")
 
 
-    server_uuid : str = str(data.get("uuid"))
+    filename : str = ""
+    server : Server = Server.objects.get(uuid=server_uuid)
 
+    user : User = User.objects.get(uuid=owner_user_id)
 
-    if file:
-        filename : str = handle_upload_file(file=file)
-        server : Server = Server.objects.get(uuid=server_uuid)
+    if not str(user.uuid) == str(server.owner_id):
+        return JsonResponse({"result" : False, "message" : "user must be server owner to change"})
+    
+    
+    if avatar:
+        filename : str = handle_upload_file_server(file=avatar, server_id=server_uuid)
         server.avatar = filename
         server.save()
-    else:
-        return JsonResponse(data={"result" : False, "message" : "file not found"})
 
 
-
-    return JsonResponse(data={"result" : True, "message" : "saved to files", "filename" : filename})
+    return JsonResponse(data={"result" : True, "server_id" : server.uuid})
 
 
 
