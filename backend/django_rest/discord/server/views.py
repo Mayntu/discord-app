@@ -522,6 +522,33 @@ def api_delete_server_chat_room(request):
 
 
 
+def api_delete_server_audio_room(request):
+    headers : dict = request.headers
+
+    token : str = headers.get("Authorization").replace('"', "")
+    token_content : dict = get_token(token=token)
+    
+
+    if token_content:
+        data : dict = json.loads(request.body)
+
+        user_id : str = token_content.get("uuid")
+        server_id : str = data.get("server_id")
+        server_audio_chat_room_id : str = data.get("server_audio_chat_room_id")
+        
+
+        user : User = User.objects.get(uuid=user_id)
+        server : Server = Server.objects.get(uuid=server_id)
+        server_audio_chat_room : ServerAudioRoom = ServerAudioRoom.objects.get(uuid=server_audio_chat_room_id)
+
+        server_audio_chat_room.delete()
+            
+        return JsonResponse(data={"result" : True, "message" : "chat delete successfully"})
+        
+    return JsonResponse(data={"result" : False, "message" : "not valid token"})
+
+
+
 def api_change_servers_title(request):
     headers : dict = request.headers
 
