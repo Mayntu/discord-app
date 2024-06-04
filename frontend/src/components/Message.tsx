@@ -69,7 +69,7 @@ const  Message: FC<MessageProps>=({classUser,children,time,media,uuid,hasRead})=
 
   useEffect(()=>{
     console.log(media.split(".").splice(-1,1)[0])
-    if(media.split(".").splice(-1,1)[0] == "mp3"){
+    if(media.split(".").splice(-1,1)[0] == "mp3" || media.split(".").splice(-1,1)[0] == "wav" ){
       dispatch(fetchRecognizeAudio(uuid))
       setAudio(true)
     }
@@ -117,7 +117,6 @@ const  Message: FC<MessageProps>=({classUser,children,time,media,uuid,hasRead})=
         <img src={"http://localhost:5173/public/"+media} alt="" />
           </ModuleTest>}
 
-          { media && ( <audio src={"http://localhost:5173/public/"+media} controls></audio>) }
     </>
   )
 }
