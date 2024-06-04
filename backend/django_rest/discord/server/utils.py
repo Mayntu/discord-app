@@ -29,6 +29,8 @@ def handle_upload_audio_server(file, server_id : str) -> str:
 
     _path : str = f"{BASE_DIR.parent.parent.parent}/frontend/public/media/audios/servers/{server_id}/{filename}.wav"
 
+    print(file)
+
     # with open(file=_path, mode="wb") as _file:
     #     for _chunk in file.chunks():
     #         _file.write(_chunk)
