@@ -267,7 +267,7 @@ def api_get_users_server_chat(request):
 
 
 
-def api_create_server_chat_audio(request):
+def api_create_server_audio_chat(request):
     data : dict = request.headers
 
 
@@ -303,7 +303,7 @@ def api_create_server_chat_audio(request):
 
 
 
-def api_get_server_chat_audio_rooms(request):
+def api_get_server_audio_chat_rooms(request):
     data  : dict = request.headers
     token : str  = data.get("Authorization").replace('"', "")
 
