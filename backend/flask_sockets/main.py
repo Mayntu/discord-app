@@ -127,7 +127,7 @@ def join_server_chat(data):
 def leave(data):
     chat_id : str = data.get("chat_id")
     leave_room(chat_id)
-    emit("leave", {"users_data" : "user-left"})
+    emit("user-left", {"user_status" : "user-left"}, room=data.get("chat_id"))
     send(message="new user left the room", room=data["chat_id"])
 
 
