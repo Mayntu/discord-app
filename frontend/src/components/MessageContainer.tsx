@@ -209,9 +209,10 @@ const  MessageContainer : FC=()=> {
     // получаю сообщения
       if(chatserverid){
         socket.on("server_chat_message", (data:any) => {
-          console.log( data,"dataServerMessage")
+      
           data = JSON.parse(data.message)
-          console.log(data)
+          console.log( data,"dataServerMessage")
+          // console.log(data)
           setMessageArray((prev)=>[...prev,{content: data.content, from_user_id : data.from_user_id, uuid : data.uuid,timestamp : data.timestamp,media : data.media}]) 
         });
       }

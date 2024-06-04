@@ -68,6 +68,7 @@ const  Message: FC<MessageProps>=({classUser,children,time,media,uuid,hasRead})=
   }
 
   useEffect(()=>{
+    console.log(media.split(".").splice(-1,1)[0])
     if(media.split(".").splice(-1,1)[0] == "mp3"){
       dispatch(fetchRecognizeAudio(uuid))
       setAudio(true)
