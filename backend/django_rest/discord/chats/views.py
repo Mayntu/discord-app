@@ -20,6 +20,8 @@ from chats.utils import (
 )
 from chats.speach_recognise import recognise
 
+from discord.settings import BASE_DIR
+
 import json
 
 
@@ -380,7 +382,8 @@ def api_recognize_audio(request):
         message : Message = Message.objects.get(uuid=message_uuid)
 
         if not message.content:
-            message.content = recognise(path=open(file=message.media, mode="rb"))
+            audio_path : str = f"{BASE_DIR.parent.parent.parent}/frontend/public/{message.media}"
+            message.content = recognise(path=audio_path)
             message.save()
         
 
