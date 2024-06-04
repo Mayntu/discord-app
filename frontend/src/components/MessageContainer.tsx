@@ -7,13 +7,16 @@ import Message from './Message';
 import avatar from "../assets/sonic.jpg"
 import callIcon from "../assets/call.png"
 import { IUserChatT } from '../models/IUserChat';
-import { fetchDeleteServerChatRoom, fetchDeleteServersMessage, fetchGetServerChatRoomMessages, fetchGetServerChatRooms, fetchGetchangeServerMessage } from '../store/actionServer';
-import { fetchDeleteChatMessage, fetchGetChatMessage, fetchGetUserChats, fetchReadMessage } from '../store/acthionChat';
+import { fetchDeleteServerChatRoom, fetchDeleteServersMessage, fetchGetServerChatRoomMessages, fetchGetServerChatRooms, } from '../store/actionServer';
+import {  fetchDeleteChatMessage, fetchGetChatMessage, fetchGetUserChats, fetchReadMessage } from '../store/acthionChat';
 import InputMessage from './InputMessage';
 import ServerUsersList from './ServerUsersList';
 import VideoCallBlock from './VideoCallBlock';
 import { addMessage, addUsersChat } from '../store/ChatsSlice';
 import "../css/message_container.css"
+import { changeMessage } from '../hooks/changeMessage';
+import ModuleTest from './Module';
+
 
 
 const  MessageContainer : FC=()=> {
@@ -30,13 +33,14 @@ const  MessageContainer : FC=()=> {
   const message_count = useAppSelector(state=>state.chats.message_count)
   const usersConnect = useAppSelector(state=>state.chats.usersConnect)
   const userMe = useAppSelector(state=>state.auth.user)
+  const [isModule,setIsModule] = useState<boolean>(false)
   const [file,setFile] = useState<File>()
-  const [files,setFiles] = useState<File[] | undefined>()
   const [usersChat,setUsersChat]= useState<IUserChatT>()
   const navigate = useNavigate()
   const [arrayURL,setArrayURL] = useState<string[]>([])
   const messageContainer = useRef<HTMLDivElement>(null)
   const [doMs,setDoMs]= useState<number>(0)
+  const [newContent,setNewContent] = useState<string>("")
 
   const joinRoom = (room:any) => {
     socket.emit("join", {"username" : userMe.login, "chat_id" : room});
@@ -88,7 +92,14 @@ const  MessageContainer : FC=()=> {
    
   },[message])
 
-
+  useEffect(()=>{
+    socket.on("join",(data:any)=>{
+      console.log(data.users_data.users_data,"user")
+      // const user  = data.users_data.users_data.find((usern:any)=>usern.uuid !== userMe.uuid)
+      // setUsersChat(user)
+      // dispatch(addUsersChat(user))
+    })
+  },[socket])
   const sendMessage = () => {
     // отправляю сообщение 
     
@@ -256,6 +267,24 @@ const  MessageContainer : FC=()=> {
 
 
 
+const isChangemessage=()=>{
+  return(
+    <>
+    <ModuleTest isModule={setIsModule}>
+                <>
+                  <input type="text" onChange={(e)=>{setNewContent(e.target.value)}} value={newContent}/>
+                  <button onClick={()=>{
+                    chatid && changeMessage(messageArray,setMessageArray,messageUser,dispatch,{chatid},newContent)
+                    chatserverid && changeMessage(messageArray,setMessageArray,messageUser,dispatch,{chatserverid},newContent)
+                    setIsModule(false)
+                    setNewContent("")
+                    }}>сохранить</button>
+                </>
+    </ModuleTest>
+    </>
+  )
+}
+
 
   return (
     <>
@@ -299,6 +328,8 @@ const  MessageContainer : FC=()=> {
                 chatid &&  dispatch(fetchDeleteChatMessage(messageUser.uuid)).then(()=>{dispatch(fetchGetChatMessage({chat_id:chatid,count:limit}))}).then(()=>dispatch(addMessage("")))
                 }}>удалить
               </button>
+              {messageUser.content &&  <button onClick={()=>setIsModule(true)}>изменить</button>}
+             {isModule && isChangemessage()}
               <button>Ответ</button>
               
             </div>
@@ -347,19 +378,8 @@ const  MessageContainer : FC=()=> {
                       chatserverid && dispatch(fetchDeleteServersMessage(messageUser.uuid)).then(()=>{dispatch(fetchGetServerChatRoomMessages(chatserverid))}).then(()=>dispatch(addMessage("")))
                       }}>удалить
                     </button>
-                    <button onClick={()=>{dispatch(fetchGetchangeServerMessage({message_uuid: messageUser.uuid,new_content:"iuwhduwhdu"}))
-                                          .then((res)=>{        
-                                           if(res.payload.result){
-                                            const str = messageArray.map((item)=>{
-                                              if(item.uuid == messageUser.uuid){
-                                                // item.content = "iuwhduwhdu"
-                                                return {...item,content : "iuwhduwhdu"}
-                                              }
-                                              return item
-                                              } )          
-                                              setMessageArray(str)
-                                           }
-                                        })}}>Изменить</button>
+                    <button onClick={()=>setIsModule(true)}>Изменить</button>
+                    {isModule && isChangemessage()}
                   </div>
                 }
                 <InputMessage 

@@ -36,7 +36,7 @@ const  Message: FC<MessageProps>=({classUser,children,time,media,uuid,hasRead})=
     if(messageUser.uuid){
       dispatch(addMessage(""))
     }else{
-      dispatch(addMessage(uuid))
+      dispatch(addMessage({uuid,content:children}))
     }
   }
 
@@ -88,9 +88,10 @@ const  Message: FC<MessageProps>=({classUser,children,time,media,uuid,hasRead})=
         }
       </div>
         <div className="row">
-          {isUrl ? 
-          URLdomen ? <a onClick={()=>{fetchMessage(URLdomen)}}>{children}</a> : 
-                                    gif ? null: (<a href={children}>{children}</a>) 
+          {isUrl ? URLdomen ? 
+          <a onClick={()=>{fetchMessage(URLdomen)}}>{children}</a> 
+          : 
+          gif ? null: (<a href={children}>{children}</a>) 
           : 
           ( <p>{children}</p>)}
          
@@ -114,6 +115,8 @@ const  Message: FC<MessageProps>=({classUser,children,time,media,uuid,hasRead})=
         {gif && (<img src={gif} alt="" />)}
         <img src={"http://localhost:5173/public/"+media} alt="" />
           </ModuleTest>}
+
+          { media && ( <audio src={"http://localhost:5173/public/"+media} controls></audio>) }
     </>
   )
 }

@@ -58,8 +58,9 @@ const chatsSlice = createSlice({
         stateNull(state,{payload}:PayloadAction<any[]>){
             state.searcChat = payload
         },
-        addMessage(state,{payload}:PayloadAction<string>){
-            state.message.uuid = payload
+        addMessage(state,{payload}:PayloadAction<any>){
+            state.message.uuid = payload.uuid
+            state.message.content = payload.content
         },
         addUsersConnectState(state,{payload}:PayloadAction<string | string[]>){
             if( !Array.isArray(payload)  && !state.usersConnect.includes(payload)){

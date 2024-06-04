@@ -86,16 +86,16 @@ const InputMessage:FC<IInputMessage>=({dropImage,sendMessage,setFile,setMessageT
             if(chatid){
               console.log("chat")
               socket.emit("message", {
-                "data" : "что писать?", 
+                "data" : "", 
                 "chat_id" : chatid,
                 "token" : localStorage.getItem("token"), 
                 media:{file : audioBlob, name : "audio/mp3"} });
             }
             if(chatserverid){
-         
-              console.log("server")
+              
+              console.log("server",audioBlob.type)
               socket.emit("server_chat_message", {
-                "data" : "что писать?", 
+                "data" : "", 
                 "chat_id" : chatserverid, 
                 "server_id" : serverid,
                 "token" : localStorage.getItem("token"), 
