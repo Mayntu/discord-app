@@ -387,7 +387,7 @@ def api_recognize_audio(request):
             message.save()
         
 
-        return JsonResponse(data={"result" : True, "message" : "chat delete successfully"})
+        return JsonResponse(data={"result" : True, "message" : message.content})
     
     return JsonResponse(data={"result" : False, "message" : "not valid token"})
 
