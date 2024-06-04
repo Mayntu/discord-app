@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from server.models import Server, ServerMessage, ServerChatRoom
+from server.models import Server, ServerMessage, ServerChatRoom, ServerAudioRoom
 
 
 class ServerSerializer(serializers.ModelSerializer):
@@ -20,3 +20,9 @@ class ServerRoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = ServerChatRoom
         fields = ("uuid", "title", "messages")
+
+
+class ServerAudioRoomSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ServerAudioRoom
+        fields = ("uuid", "title")

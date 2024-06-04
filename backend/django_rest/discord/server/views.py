@@ -15,6 +15,7 @@ from chats.models import (
 from server.models import (
     Server,
     ServerChatRoom,
+    ServerAudioRoom,
     ServerMessage,
     InvitationLink,
 )
@@ -22,6 +23,7 @@ from server.serializers import (
     ServerSerializer,
     ServerMessageSerializer,
     ServerRoomSerializer,
+    ServerAudioRoomSerializer,
 )
 from users.utils import (
     get_token,
@@ -262,6 +264,70 @@ def api_get_users_server_chat(request):
     # users_data["password"] = "secret"
 
     return JsonResponse(data={"result" : True, "users_data" : users_data})
+
+
+
+def api_create_server_chat_audio(request):
+    data : dict = request.headers
+
+
+    token : str = data.get("Authorization").replace('"', "")
+    token_content : dict = get_token(
+        token=token
+    )
+
+    if not token_content:
+        return JsonResponse(data={"result" : False, "error" : "not valid token"})
+    
+    
+    data : dict = json.loads(request.body)
+
+    user_uuid : str = token_content.get("uuid")
+    server_uuid : str = data.get("uuid")
+    chat_room_title : str = data.get("title")
+
+    user : User = User.objects.get(pk=user_uuid)
+
+    server : Server = Server.objects.get(pk=server_uuid)
+    print(str(user.uuid), str(server.owner_id))
+
+    if not str(user.uuid) == server.owner_id:
+        return JsonResponse(data={"result" : False, "message" : "you must be server owner"})
+    
+
+    server_audio_room : ServerAudioRoom = ServerAudioRoom.objects.create(title=chat_room_title, server_object=server)
+    server.audio_rooms.add(server_audio_room)
+
+
+    return JsonResponse(data={"result" : True, "server_audio_room_id" : server_audio_room.uuid})
+
+
+
+def api_get_server_chat_audio_rooms(request):
+    data  : dict = request.headers
+    token : str  = data.get("Authorization").replace('"', "")
+
+    token_content = get_token(token=token)
+    if not token_content:
+        return JsonResponse(data={"result" : False, "message" : "not valid token"})
+
+
+    data : dict = json.loads(request.body)
+
+
+    server_uuid : str = data.get("server_uuid")
+
+
+    try:
+        server : Server = Server.objects.get(uuid=server_uuid)
+        server_audio_rooms = server.audio_rooms.all()
+        serializer : ServerAudioRoomSerializer = ServerAudioRoomSerializer(server_audio_rooms, many=True)
+        data : dict = serializer.data
+        
+
+        return JsonResponse(data={"result" : True, "data" : data}, safe=False)
+    except Exception as e:
+        return JsonResponse(data={"result" : False, "error" : f"user not found {e}"})
 
 
 

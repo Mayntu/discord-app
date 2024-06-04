@@ -5,6 +5,13 @@ from users.models import User
 
 
 
+class ServerAudioRoom(models.Model):
+    uuid = models.UUIDField(default=uuid4, primary_key=True, verbose_name="UUID")
+    server_object = models.ForeignKey("Server", on_delete=models.CASCADE)
+    title = models.CharField(max_length=256, verbose_name="title")
+
+
+
 class ServerChatRoom(models.Model):
     uuid = models.UUIDField(default=uuid4, primary_key=True, verbose_name="UUID")
     server_object = models.ForeignKey("Server", on_delete=models.CASCADE)
@@ -18,6 +25,7 @@ class Server(models.Model):
     owner_id = models.CharField(max_length=256, blank=False, verbose_name="owner")
     users = models.ManyToManyField(User, blank=True, verbose_name="users")
     chat_rooms = models.ManyToManyField(ServerChatRoom, blank=True, verbose_name="chat_rooms")
+    audio_rooms = models.ManyToManyField(ServerAudioRoom, blank=True, verbose_name="audio_rooms")
     avatar = models.CharField(max_length=256, verbose_name="avatar")
 
 
