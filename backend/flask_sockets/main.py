@@ -108,6 +108,7 @@ def handle_server_chat_message(message):
 
 @socketio.on("join")
 def join(data):
+    user_uuid : str = data.get("uuid")
     chat_id : str = data.get("chat_id")
     join_room(data.get("chat_id"))
     users_data = get_chat_info(
@@ -116,10 +117,10 @@ def join(data):
     )
     if users_data.get("result"):
         if chat_id in USERS_AND_ROOMS:
-            USERS_AND_ROOMS[chat_id].append(users_data.get("users_data").get("uuid"))
+            USERS_AND_ROOMS[chat_id].append(user_uuid)
         else:
             USERS_AND_ROOMS[chat_id] = []
-            USERS_AND_ROOMS[chat_id].append(users_data.get("users_data").get("uuid"))
+            USERS_AND_ROOMS[chat_id].append(user_uuid)
     
     emit("join", {"users_data" : users_data})
     emit("user-joined", {"user_status" : True, "users_in_room" : USERS_AND_ROOMS[chat_id]}, room=data.get("chat_id"), include_self=True)
