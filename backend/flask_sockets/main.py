@@ -141,9 +141,10 @@ def join_server_chat(data):
 
 @socketio.on("leave")
 def leave(data):
+    user_uuid : str = data.get("uuid")
     chat_id : str = data.get("chat_id")
     if chat_id in USERS_AND_ROOMS:
-        USERS_AND_ROOMS[chat_id].remove(session.get("token"))
+        USERS_AND_ROOMS[chat_id].remove(user_uuid)
     leave_room(chat_id)
     emit("user-left", {"user_status" : False}, room=chat_id, include_self=True)
     send(message="new user left the room", room=chat_id)
