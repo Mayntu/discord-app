@@ -25,7 +25,7 @@ function App() {
     socket.emit("user_connected",{token:userM.data.user_data.uuid})
     socket.on("connected", async (data:any)=>{
       if(data.data.includes(userM.data.user_data.uuid)){
-        console.log(data,"connected111111111")
+        // console.log(data,"connected111111111")
         data.data.splice(data.data.indexOf(userM.data.user_data.uuid),1)
       }
       if(data.data.length){
@@ -52,9 +52,9 @@ function App() {
  
   useEffect(()=>{
     socket.on("user_online",(data)=>{
-      console.log(data.user_uuid,"user_online")
+      // console.log(data.user_uuid,"user_online")
       if(!connectUsers.includes(data.user_uuid)){
-        console.log(data.user_uuid,"user_onlinePPPPP")
+        // console.log(data.user_uuid,"user_onlinePPPPP")
         dispatch(userOnline(data.user_uuid))
       }
     })
@@ -62,7 +62,7 @@ function App() {
   
   useEffect(()=>{
     socket.on("user_offline",(data)=>{
-      console.log(data.user_uuid,"user_offline")
+      // console.log(data.user_uuid,"user_offline")
         dispatch(userOffline(data.user_uuid))
       
      
