@@ -64,16 +64,31 @@ const chatsSlice = createSlice({
         },
         addUsersConnectState(state,{payload}:PayloadAction<string | string[]>){
             if( !Array.isArray(payload)  && !state.usersConnect.includes(payload)){
+                console.log("online")
                 state.usersConnect.push(payload)
-            }else if(state.usersConnect.length == 0){
+            }else if(state.usersConnect.length === 0){
                 state.usersConnect.push(...payload)
             }else if(!Array.isArray(payload) && state.usersConnect.includes(payload)){
                 console.log("offline")
+                console.log( state.usersConnect.splice(state.usersConnect.indexOf(payload),1))
                 state.usersConnect.splice(state.usersConnect.indexOf(payload),1)
             }
            
            
-        }
+        },
+        userOnline(state,{payload}:PayloadAction<string>){
+            if( !Array.isArray(payload)  && !state.usersConnect.includes(payload)){
+                console.log("online")
+                state.usersConnect.push(payload)
+            }
+        },
+        userOffline(state,{payload}:PayloadAction<string>){
+            if(!Array.isArray(payload) && state.usersConnect.includes(payload)){
+                console.log("offline")
+                console.log( state.usersConnect.splice(state.usersConnect.indexOf(payload),1))
+                state.usersConnect.splice(state.usersConnect.indexOf(payload),1)
+            }
+        },
     },
     extraReducers: (builder:  ActionReducerMapBuilder<TChats>)=>{
         // получение чатов 
@@ -103,6 +118,6 @@ const chatsSlice = createSlice({
     }
 })
 
-export const {addUsersChat, addUsersConnect,stateNull, addMessage,addUsersConnectState} = chatsSlice.actions
+export const {addUsersChat, addUsersConnect,stateNull, addMessage,addUsersConnectState,userOnline, userOffline} = chatsSlice.actions
 
 export default chatsSlice.reducer

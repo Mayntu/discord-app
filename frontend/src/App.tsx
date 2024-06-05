@@ -7,7 +7,7 @@ import ServerContainer from './components/ServerContainer'
 import "./css/module.css"
 import { socket } from './socket'
 import $api from './http'
-import { addUsersConnect, addUsersConnectState } from './store/ChatsSlice'
+import { addUsersConnect, addUsersConnectState, userOffline, userOnline } from './store/ChatsSlice'
 
 function App() {
   const {isAuth,error,isLoading} = useAppSelector(state=> state.auth)
@@ -25,11 +25,12 @@ function App() {
     socket.emit("user_connected",{token:userM.data.user_data.uuid})
     socket.on("connected", async (data:any)=>{
       if(data.data.includes(userM.data.user_data.uuid)){
+        console.log(data,"connected111111111")
         data.data.splice(data.data.indexOf(userM.data.user_data.uuid),1)
       }
       if(data.data.length){
         console.log(data,"connected")
-        dispatch(addUsersConnectState(data.data))
+       await dispatch(addUsersConnectState(data.data))
       }
      
      
@@ -38,12 +39,10 @@ function App() {
 
 
   useEffect(()=>{
-  
-    if(socketChat.length !==0 && connectUsers.length ==0){
-            connect()
-        }
-    
-    
+    if(socketChat.length !==0){
+      connect()
+    }
+     
   },[socketChat])
 
   useEffect(()=>{
@@ -54,16 +53,23 @@ function App() {
   useEffect(()=>{
     socket.on("user_online",(data)=>{
       console.log(data.user_uuid,"user_online")
-      dispatch(addUsersConnectState(data.user_uuid))
+      if(!connectUsers.includes(data.user_uuid)){
+        console.log(data.user_uuid,"user_onlinePPPPP")
+        dispatch(userOnline(data.user_uuid))
+      }
     })
-  },[])
+  },[socket])
   
   useEffect(()=>{
     socket.on("user_offline",(data)=>{
-      console.log(data,"user_offline")
-      dispatch(addUsersConnectState(data.user_uuid))
+      console.log(data.user_uuid,"user_offline")
+      if(connectUsers.includes(data.user_uuid)){
+        console.log(data.user_uuid,"user_offlinePPPPPPPPPPPP")
+        dispatch(userOffline(data.user_uuid))
+      }
+     
     })
-  },[])
+  },[socket])
 
   
 
