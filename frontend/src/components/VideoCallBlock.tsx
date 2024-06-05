@@ -73,7 +73,7 @@ const VideoCallBlock:FC<IVideoCallBlock>=({user,setIsCallBlock})=> {
           return () => {
             streamData.current?.getTracks().forEach(track=>track.stop())
       
-            socketWebRTC.emit("leave");
+            socketWebRTC.emit("leave-room");
           };
         
       },[chatid])
@@ -140,6 +140,7 @@ const VideoCallBlock:FC<IVideoCallBlock>=({user,setIsCallBlock})=> {
     
         return () => {
           socketWebRTC.off("add-peer");
+          socketWebRTC.emit("leave-room");
         }
         // socketWebRTC.on("user-connect",data=>{
         //   handleNewPeer({peerId:data.sid,createOffer:true})
@@ -184,6 +185,7 @@ const VideoCallBlock:FC<IVideoCallBlock>=({user,setIsCallBlock})=> {
     
         return () => {
           socketWebRTC.off("ice-candidate");
+          socketWebRTC.emit("leave-room");
         }
       }, []);
 
@@ -204,6 +206,7 @@ const VideoCallBlock:FC<IVideoCallBlock>=({user,setIsCallBlock})=> {
     
         return () => {
           socketWebRTC.off("remove-peer");
+          socketWebRTC.emit("leave-room");
         }
       }, []);
 

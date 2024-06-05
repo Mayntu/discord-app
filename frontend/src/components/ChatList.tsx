@@ -6,6 +6,7 @@ import SettingsBlock from './SettingsBlock'
 import SaerchBlockUser from './SaerchBlock'
 import { Outlet } from 'react-router-dom'
 import { fetchFindChat, fetchGetUserChats } from '../store/acthionChat'
+import { addUsersConnect } from '../store/ChatsSlice'
 
 
 
@@ -18,10 +19,13 @@ const ChatList:FC=()=> {
   const [isSettings,setIsSettings] = useState<boolean>(true)
   const dispatch = useAppDispatch()
   const {socketChat} = useAppSelector(state=>state.chats)
+  const connectUsers = useAppSelector(state=>state.chats.usersConnect)
 
   //    сокетты
   useEffect(()=>{
-    dispatch(fetchGetUserChats())
+    dispatch(fetchGetUserChats()).then(()=>{
+      dispatch( dispatch(addUsersConnect(connectUsers)))
+    })
   },[])
 
 

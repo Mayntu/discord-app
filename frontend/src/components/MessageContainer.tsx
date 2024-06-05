@@ -43,7 +43,7 @@ const  MessageContainer : FC=()=> {
   const [newContent,setNewContent] = useState<string>("")
 
   const joinRoom = (room:any) => {
-    socket.emit("join", {"username" : userMe.login, "chat_id" : room});
+    socket.emit("join", {"username" : userMe.login, "chat_id" : room,uuid:userMe.uuid});
     setRoomId(room)
   };
  
@@ -143,6 +143,15 @@ const  MessageContainer : FC=()=> {
 
     return data
   }
+
+  useEffect(()=>{
+    socket.on("user-joined",(data:any)=>{
+      console.log(data,"user-joined")
+    })
+    socket.on("user-left",(data:any)=>{
+      console.log(data,"user-left")
+    })
+  },[])
     
   useEffect(()=>{ 
     // получаю сообщения
