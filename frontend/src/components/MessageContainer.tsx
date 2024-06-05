@@ -44,6 +44,14 @@ const  MessageContainer : FC=()=> {
 
   const joinRoom = (room:any) => {
     socket.emit("join", {"username" : userMe.login, "chat_id" : room,uuid:userMe.uuid});
+     console.log(userMe.uuid,"uuid")
+    socket.emit("user-joined",{uuid:userMe.uuid})
+    socket.on("user-joined",(data:any)=>{
+      console.log(data,"user-joined")
+    })
+    socket.on("user-left",(data:any)=>{
+      console.log(data,"user-left")
+    })
     setRoomId(room)
   };
  
@@ -53,7 +61,7 @@ const  MessageContainer : FC=()=> {
 
   useEffect(()=>{
     //вход в комнату
-    if(chatid){
+    if(chatid && Object.keys(userMe).length !== 0){
       joinRoom(chatid)
       getMessage()
       }
@@ -66,7 +74,7 @@ const  MessageContainer : FC=()=> {
         })
         }
       }
-  },[chatid,socket])
+  },[chatid,socket,userMe])
 
  useEffect(()=>{
   if(userMe && Object.keys(userMe).length !== 0 ){
@@ -145,13 +153,9 @@ const  MessageContainer : FC=()=> {
   }
 
   useEffect(()=>{
-    socket.on("user-joined",(data:any)=>{
-      console.log(data,"user-joined")
-    })
-    socket.on("user-left",(data:any)=>{
-      console.log(data,"user-left")
-    })
-  },[])
+  
+ 
+  },[socket])
     
   useEffect(()=>{ 
     // получаю сообщения
