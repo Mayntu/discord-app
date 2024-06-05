@@ -110,7 +110,6 @@ def handle_server_chat_message(message):
 def join(data):
     user_uuid : str = data.get("uuid")
     chat_id : str = data.get("chat_id")
-    sid : str = request.sid
     print(data)
     join_room(data.get("chat_id"))
     users_data = get_chat_info(
@@ -119,10 +118,10 @@ def join(data):
     )
     if users_data.get("result"):
         if chat_id in USERS_AND_ROOMS:
-            USERS_AND_ROOMS[chat_id].append(sid)
+            USERS_AND_ROOMS[chat_id].append(user_uuid)
         else:
             USERS_AND_ROOMS[chat_id] = []
-            USERS_AND_ROOMS[chat_id].append(sid)
+            USERS_AND_ROOMS[chat_id].append(user_uuid)
     
     emit("join", {"users_data" : users_data})
     emit("user-joined", {"user_status" : True, "users_in_room" : USERS_AND_ROOMS[chat_id]}, room=data.get("chat_id"), include_self=True)
@@ -144,9 +143,8 @@ def join_server_chat(data):
 def leave(data):
     user_uuid : str = data.get("uuid")
     chat_id : str = data.get("chat_id")
-    sid : str = request.sid
     if chat_id in USERS_AND_ROOMS:
-        USERS_AND_ROOMS[chat_id].remove(sid)
+        USERS_AND_ROOMS[chat_id].remove(user_uuid)
     leave_room(chat_id)
     emit("user-left", {"user_status" : False}, room=chat_id, include_self=True)
     send(message="new user left the room", room=chat_id)
