@@ -122,7 +122,10 @@ def join(data):
     )
     if users_data.get("result"):
         if chat_id in USERS_AND_ROOMS:
-            USERS_AND_ROOMS[chat_id].append(user_uuid)
+            if user_uuid in USERS_AND_ROOMS[chat_id]:
+                ...
+            else:
+                USERS_AND_ROOMS[chat_id].append(user_uuid)
         else:
             USERS_AND_ROOMS[chat_id] = []
             USERS_AND_ROOMS[chat_id].append(user_uuid)
