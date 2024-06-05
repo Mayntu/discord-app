@@ -16,6 +16,7 @@ ROOMS : list = ["lounge", "news", "games", "coding"]
 
 ONLINE_USERS : list = []
 ALL_USERS : dict = {}
+USERS_AND_ROOMS : dict = {}
 
 
 @socketio.on("user_connected")
@@ -107,13 +108,20 @@ def handle_server_chat_message(message):
 
 @socketio.on("join")
 def join(data):
+    chat_id : str = data.get("chat_id")
     join_room(data.get("chat_id"))
     users_data = get_chat_info(
         token=None,
         chat_id=data.get("chat_id")
     )
+    if chat_id in USERS_AND_ROOMS:
+        USERS_AND_ROOMS[chat_id].append(users_data.get("uuid"))
+    else:
+        USERS_AND_ROOMS[chat_id] = []
+        USERS_AND_ROOMS[chat_id].append(users_data.get("uuid"))
+    
     emit("join", {"users_data" : users_data})
-    emit("user-joined", {"user_status" : True}, room=data.get("chat_id"), include_self=False)
+    emit("user-joined", {"user_status" : True, "users_in_room" : USERS_AND_ROOMS[chat_id]}, room=data.get("chat_id"), include_self=False)
     send(message=users_data, room=data.get("chat_id"))
 
 
@@ -131,6 +139,8 @@ def join_server_chat(data):
 @socketio.on("leave")
 def leave(data):
     chat_id : str = data.get("chat_id")
+    if chat_id in USERS_AND_ROOMS:
+        USERS_AND_ROOMS[chat_id].remove(session.get("token"))
     leave_room(chat_id)
     emit("user-left", {"user_status" : False}, room=chat_id, include_self=False)
     send(message="new user left the room", room=chat_id)
