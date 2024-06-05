@@ -39,7 +39,7 @@ function App() {
 
 
   useEffect(()=>{
-    if(socketChat.length !==0){
+    if(socketChat.length !==0 && connectUsers.length ===0){
       connect()
     }
      
@@ -63,10 +63,8 @@ function App() {
   useEffect(()=>{
     socket.on("user_offline",(data)=>{
       console.log(data.user_uuid,"user_offline")
-      if(connectUsers.includes(data.user_uuid)){
-        console.log(data.user_uuid,"user_offlinePPPPPPPPPPPP")
         dispatch(userOffline(data.user_uuid))
-      }
+      
      
     })
   },[socket])
