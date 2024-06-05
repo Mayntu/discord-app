@@ -28,11 +28,11 @@ def user_connected(data):
     
     if not token in ONLINE_USERS:
         ONLINE_USERS.append(token)
+        session["token"] = token
     
     if not sid in ALL_USERS:
         ALL_USERS[sid] = token
-    
-    session["token"] = token
+        session["token"] = token
     
     for user in ALL_USERS:
         emit("user_online", {"user_uuid" : token}, to=user, include_self=False)
@@ -56,7 +56,7 @@ def user_disconnected():
             print(ALL_USERS)
             del ALL_USERS[sid]
             print(ALL_USERS)
-            print("token=\>")
+            print("token=/>")
             print(token)
             print("=====")
             for user in ALL_USERS:
@@ -111,7 +111,6 @@ def join(data):
     user_uuid : str = data.get("uuid")
     chat_id : str = data.get("chat_id")
     print(data)
-    print(session.get("token"))
     join_room(data.get("chat_id"))
     users_data = get_chat_info(
         token=None,
@@ -119,10 +118,10 @@ def join(data):
     )
     if users_data.get("result"):
         if chat_id in USERS_AND_ROOMS:
-            USERS_AND_ROOMS[chat_id].append(session.get("token"))
+            USERS_AND_ROOMS[chat_id].append(user_uuid)
         else:
             USERS_AND_ROOMS[chat_id] = []
-            USERS_AND_ROOMS[chat_id].append(session.get("token"))
+            USERS_AND_ROOMS[chat_id].append(user_uuid)
     
     emit("join", {"users_data" : users_data})
     emit("user-joined", {"user_status" : True, "users_in_room" : USERS_AND_ROOMS[chat_id]}, room=data.get("chat_id"), include_self=True)
@@ -145,7 +144,7 @@ def leave(data):
     user_uuid : str = data.get("uuid")
     chat_id : str = data.get("chat_id")
     if chat_id in USERS_AND_ROOMS:
-        USERS_AND_ROOMS[chat_id].remove(session.get("token"))
+        USERS_AND_ROOMS[chat_id].remove(user_uuid)
     leave_room(chat_id)
     emit("user-left", {"user_status" : False}, room=chat_id, include_self=True)
     send(message="new user left the room", room=chat_id)
