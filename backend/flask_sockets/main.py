@@ -110,6 +110,7 @@ def handle_server_chat_message(message):
 def join(data):
     user_uuid : str = data.get("uuid")
     chat_id : str = data.get("chat_id")
+    print(data)
     join_room(data.get("chat_id"))
     users_data = get_chat_info(
         token=None,
