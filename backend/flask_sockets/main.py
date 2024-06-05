@@ -121,7 +121,7 @@ def join(data):
         USERS_AND_ROOMS[chat_id].append(users_data.get("uuid"))
     
     emit("join", {"users_data" : users_data})
-    emit("user-joined", {"user_status" : True, "users_in_room" : USERS_AND_ROOMS[chat_id]}, room=data.get("chat_id"), include_self=False)
+    emit("user-joined", {"user_status" : True, "users_in_room" : USERS_AND_ROOMS[chat_id]}, room=data.get("chat_id"), include_self=True)
     send(message=users_data, room=data.get("chat_id"))
 
 
@@ -142,7 +142,7 @@ def leave(data):
     if chat_id in USERS_AND_ROOMS:
         USERS_AND_ROOMS[chat_id].remove(session.get("token"))
     leave_room(chat_id)
-    emit("user-left", {"user_status" : False}, room=chat_id, include_self=False)
+    emit("user-left", {"user_status" : False}, room=chat_id, include_self=True)
     send(message="new user left the room", room=chat_id)
 
 
