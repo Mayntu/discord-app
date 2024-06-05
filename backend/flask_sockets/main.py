@@ -114,11 +114,12 @@ def join(data):
         token=None,
         chat_id=data.get("chat_id")
     )
-    if chat_id in USERS_AND_ROOMS:
-        USERS_AND_ROOMS[chat_id].append(users_data.get("uuid"))
-    else:
-        USERS_AND_ROOMS[chat_id] = []
-        USERS_AND_ROOMS[chat_id].append(users_data.get("uuid"))
+    if users_data.get("result"):
+        if chat_id in USERS_AND_ROOMS:
+            USERS_AND_ROOMS[chat_id].append(users_data.get("users_data").get("uuid"))
+        else:
+            USERS_AND_ROOMS[chat_id] = []
+            USERS_AND_ROOMS[chat_id].append(users_data.get("users_data").get("uuid"))
     
     emit("join", {"users_data" : users_data})
     emit("user-joined", {"user_status" : True, "users_in_room" : USERS_AND_ROOMS[chat_id]}, room=data.get("chat_id"), include_self=True)
