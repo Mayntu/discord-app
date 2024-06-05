@@ -62,6 +62,10 @@ def user_disconnected():
             for user in ALL_USERS:
                 print(user)
                 emit("user_offline", {"user_uuid" : token}, to=user, include_self=False)
+        for chat_id in USERS_AND_ROOMS:
+            if token in USERS_AND_ROOMS[chat_id]:
+                USERS_AND_ROOMS[chat_id].remove(token)
+                emit("user-left", {"user_status" : False, "users_in_room" : USERS_AND_ROOMS}, room=chat_id, include_self=False)
     except:
         print("failed to pop")
     # print(ONLINE_USERS)
@@ -143,11 +147,14 @@ def join_server_chat(data):
 def leave(data):
     user_uuid : str = data.get("uuid")
     chat_id : str = data.get("chat_id")
+    print(chat_id)
     if chat_id in USERS_AND_ROOMS:
-        USERS_AND_ROOMS[chat_id].remove(user_uuid)
-    leave_room(chat_id)
-    emit("user-left", {"user_status" : False, "users_in_room" : USERS_AND_ROOMS[chat_id]}, room=chat_id, include_self=False)
-    send(message="new user left the room", room=chat_id)
+        print(user_uuid in USERS_AND_ROOMS[chat_id])
+        if user_uuid in USERS_AND_ROOMS[chat_id]:
+            USERS_AND_ROOMS[chat_id].remove(user_uuid)
+        leave_room(chat_id)
+        emit("user-left", {"user_status" : False, "users_in_room" : USERS_AND_ROOMS[chat_id]}, room=chat_id, include_self=False)
+        send(message="new user left the room", room=chat_id)
 
 
 @app.route("/", methods=["GET", "POST"])
