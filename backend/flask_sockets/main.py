@@ -31,6 +31,7 @@ def user_connected(data):
     
     if not sid in ALL_USERS:
         ALL_USERS[sid] = token
+        session["token"] = token
     
     for user in ALL_USERS:
         emit("user_online", {"user_uuid" : token}, to=user, include_self=False)
@@ -49,11 +50,14 @@ def user_disconnected():
         if token in ONLINE_USERS:
             print(ONLINE_USERS)
             print(session.get("token"))
-            ONLINE_USERS.remove(session.get("token"))
+            ONLINE_USERS.remove(token)
         if sid in ALL_USERS:
             print(ALL_USERS)
             del ALL_USERS[sid]
             print(ALL_USERS)
+            print("token=\>")
+            print(token)
+            print("=====")
             for user in ALL_USERS:
                 print(user)
                 emit("user_offline", {"user_uuid" : token}, to=user, include_self=False)
@@ -128,8 +132,8 @@ def join_server_chat(data):
 def leave(data):
     chat_id : str = data.get("chat_id")
     leave_room(chat_id)
-    emit("user-left", {"user_status" : False}, room=data.get("chat_id"), include_self=False)
-    send(message="new user left the room", room=data["chat_id"])
+    emit("user-left", {"user_status" : False}, room=chat_id, include_self=False)
+    send(message="new user left the room", room=chat_id)
 
 
 @app.route("/", methods=["GET", "POST"])
