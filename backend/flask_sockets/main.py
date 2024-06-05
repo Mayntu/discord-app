@@ -28,11 +28,11 @@ def user_connected(data):
     
     if not token in ONLINE_USERS:
         ONLINE_USERS.append(token)
-        session["token"] = token
     
     if not sid in ALL_USERS:
         ALL_USERS[sid] = token
-        session["token"] = token
+    
+    session["token"] = token
     
     for user in ALL_USERS:
         emit("user_online", {"user_uuid" : token}, to=user, include_self=False)
@@ -111,6 +111,7 @@ def join(data):
     user_uuid : str = data.get("uuid")
     chat_id : str = data.get("chat_id")
     print(data)
+    print(session.get("token"))
     join_room(data.get("chat_id"))
     users_data = get_chat_info(
         token=None,
