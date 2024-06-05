@@ -157,7 +157,7 @@ def leave(data):
         if user_uuid in USERS_AND_ROOMS[chat_id]:
             USERS_AND_ROOMS[chat_id].remove(user_uuid)
         leave_room(chat_id)
-        emit("user-left", {"user_status" : False, "users_in_room" : USERS_AND_ROOMS[chat_id]}, room=chat_id, include_self=False)
+        emit("user-left", {"user_status" : False, "user_uuid" : user_uuid}, room=chat_id, include_self=False)
         send(message="new user left the room", room=chat_id)
 
 
