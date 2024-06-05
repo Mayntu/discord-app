@@ -46,12 +46,9 @@ const  MessageContainer : FC=()=> {
     socket.emit("join", {"username" : userMe.login, "chat_id" : room,uuid:userMe.uuid});
      console.log(userMe.uuid,"uuid")
     socket.emit("user-joined",{uuid:userMe.uuid})
-    socket.on("user-joined",(data:any)=>{
-      console.log(data,"user-joined")
-    })
-    socket.on("user-left",(data:any)=>{
-      console.log(data,"user-left")
-    })
+    socket.emit("leave",{"chat_id" : roomId,uuid:userMe.uuid})
+    socket.on("leave",(data)=>{
+    console.log(data)})
     setRoomId(room)
   };
  
@@ -68,7 +65,7 @@ const  MessageContainer : FC=()=> {
       return ()=>{
         if(roomId !== chatid && chatid !== undefined && roomId !== ""){
           console.log("ok",roomId,chatid,"выход")
-          socket.emit("leave",{"chat_id" : roomId})
+          socket.emit("leave",{"chat_id" : roomId,uuid:userMe.uuid})
           socket.on("leave",(data)=>{
           console.log(data)
         })
@@ -153,8 +150,13 @@ const  MessageContainer : FC=()=> {
   }
 
   useEffect(()=>{
-  
- 
+    socket.on("user-joined",(data:any)=>{
+      console.log(data,"user-joined")
+    })
+    socket.on("user-left",(data:any)=>{
+      console.log(data,"user-left")
+    })
+   
   },[socket])
     
   useEffect(()=>{ 
