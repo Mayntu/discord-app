@@ -66,6 +66,7 @@ def user_disconnected():
             if token in USERS_AND_ROOMS[chat_id]:
                 USERS_AND_ROOMS[chat_id].remove(token)
                 emit("user-left", {"user_status" : False, "users_in_room" : USERS_AND_ROOMS[chat_id]}, room=chat_id, include_self=False)
+                break
     except:
         print("failed to pop")
     # print(ONLINE_USERS)
