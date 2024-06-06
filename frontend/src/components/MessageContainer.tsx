@@ -57,22 +57,31 @@ const  MessageContainer : FC=()=> {
     chatid && await dispatch(fetchGetChatMessage({chat_id:chatid,count:limit}))
   }
 
+   
   useEffect(()=>{
     //вход в комнату
     if(chatid && Object.keys(userMe).length !== 0){
-      joinRoom(chatid)
+      // joinRoom(chatid)
+    console.log("join","username",userMe.login,"chat_id",chatid,"uuid",userMe.uuid)
+    socket.emit("join", {"username" : userMe.login, "chat_id" :chatid,uuid:userMe.uuid});
+    console.log(userMe.uuid,"uuid")
+    socket.emit("user-joined",{uuid:userMe.uuid})
+    // socket.emit("leave",{"chat_id" : roomId,uuid:userMe.uuid})
+    // socket.on("leave",(data)=>{
+    // console.log(data)})
+    setRoomId(chatid)
       getMessage()
       }
       
-      return ()=>{
-        if(roomId !== chatid && chatid !== undefined && roomId !== "" && chatid){
-          console.log("ok",roomId,chatid,"выход")
-          socket.emit("leave",{"chat_id" : roomId,uuid:userMe.uuid})
-          socket.on("leave",(data)=>{
-          console.log(data)
-        })
-        }
-      }
+      // return ()=>{
+      //   if(roomId !== chatid && chatid !== undefined && roomId !== "" && chatid){
+      //     console.log("ok",roomId,chatid,"выход")
+      //     socket.emit("leave",{"chat_id" : roomId,uuid:userMe.uuid})
+      //     socket.on("leave",(data)=>{
+      //     console.log(data)
+      //   })
+      //   }
+      // }
   },[chatid,userMe])
 
  useEffect(()=>{
