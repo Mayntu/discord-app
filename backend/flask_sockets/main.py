@@ -122,8 +122,6 @@ def join(data):
         token=None,
         chat_id=data.get("chat_id")
     )
-    token_info : dict = get_token_info(token=token)
-    user_uuid : str = token_info.get("result").get("uuid")
     
     if users_data.get("result"):
         if chat_id in USERS_AND_ROOMS:
@@ -158,8 +156,6 @@ def leave(data):
     token : str = data.get("token")
     print(chat_id)
     print(user_uuid in USERS_AND_ROOMS[chat_id])
-    token_info : dict = get_token_info(token=token)
-    user_uuid : str = token_info.get("result").get("uuid")
     if user_uuid in USERS_AND_ROOMS[chat_id]:
         print("delete")
         USERS_AND_ROOMS[chat_id].remove(user_uuid)
