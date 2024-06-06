@@ -64,20 +64,22 @@ const  MessageContainer : FC=()=> {
       }
     
       return ()=>{
-       if(chatid ){
-        console.log("ok  c",  roomId,"na",chatid,"выход","uuid",userMe.uuid)
-        socket.emit("leave",{"chat_id" : roomId, uuid:userMe.uuid})
-        socket.on("leave",(data)=>{
-        console.log(data)
-       
-      })
-       }
-       
+        if(chatid ){
+         console.log("ok  c",  roomId,"na",chatid,"выход","uuid",userMe.uuid)
+         socket.emit("leave",{"chat_id" : roomId, uuid:userMe.uuid})
+         socket.on("leave",(data)=>{
+         console.log(data)
         
-      }
+       })
+        }
+        
+         
+       }
   },[chatid,userMe])
 
+useEffect(()=>{
 
+},[])
 
  useEffect(()=>{
  
@@ -98,7 +100,7 @@ const  MessageContainer : FC=()=> {
     })
   }
   return ()=>{
-    socket.off("join")
+    // socket.off("join")
   
   }
   },[userMe,chatid])
@@ -167,11 +169,14 @@ const  MessageContainer : FC=()=> {
 
   useEffect(()=>{
     if(chatid){
-      socket.on("user-joined",(data:any)=>{
-        console.log(data,"user-joined")
-      })
+      // socket.on("user-joined",(data:any)=>{
+      //   console.log(data,"user-joined")
+      // })
       socket.on("user-left",(data:any)=>{
         console.log(data,"user-left")
+      })
+      socket.on("user-changed",(data:any)=>{
+        console.log(data,"user-changed")
       })
     }
 
