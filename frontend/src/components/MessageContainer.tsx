@@ -46,9 +46,9 @@ const  MessageContainer : FC=()=> {
     socket.emit("join", {"username" : userMe.login, "chat_id" : room,uuid:userMe.uuid});
      console.log(userMe.uuid,"uuid")
     socket.emit("user-joined",{uuid:userMe.uuid})
-    socket.emit("leave",{"chat_id" : roomId,uuid:userMe.uuid})
-    socket.on("leave",(data)=>{
-    console.log(data)})
+    // socket.emit("leave",{"chat_id" : roomId,uuid:userMe.uuid})
+    // socket.on("leave",(data)=>{
+    // console.log(data)})
     setRoomId(room)
   };
  
@@ -62,6 +62,7 @@ const  MessageContainer : FC=()=> {
       joinRoom(chatid)
       getMessage()
       }
+      
       return ()=>{
         if(roomId !== chatid && chatid !== undefined && roomId !== ""){
           console.log("ok",roomId,chatid,"выход")
@@ -71,7 +72,7 @@ const  MessageContainer : FC=()=> {
         })
         }
       }
-  },[chatid,socket,userMe])
+  },[chatid,socket,userMe,chatserverid,serverid])
 
  useEffect(()=>{
   if(userMe && Object.keys(userMe).length !== 0 ){
