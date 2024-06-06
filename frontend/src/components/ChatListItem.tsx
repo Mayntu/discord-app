@@ -2,7 +2,6 @@ import  { FC, useEffect, useState} from 'react'
 import { IUserChatT } from '../models/IUserChat'
 import avatar from "../assets/sonic.jpg"
 import {  NavLink, useParams } from 'react-router-dom'
-import { socket } from '../socket'
 import "../css/chat_meassage.css"
 
 
@@ -17,7 +16,7 @@ interface ChatListItemProps{
 
 const ChatListItem: FC<ChatListItemProps>=({chatId,chatsUser})=> {
   const [noMe,setNoME] = useState<IUserChatT>()
-  const {chatid} = useParams()
+
 
 
   const findNoMe=()=>{
@@ -28,14 +27,13 @@ const ChatListItem: FC<ChatListItemProps>=({chatId,chatsUser})=> {
     findNoMe()
   },[chatsUser])
 
+
+
   return (
     <>
      <NavLink to={`/chat/${chatId}`}
     //  className='chat-container'
      onClick={()=>{
-      if(chatId){
-        socket.emit("leave",{"chat_id" : chatid})
-      }
      }}
       className={({ isActive, isPending }) =>
         isPending ? "pending-link chat-container" : isActive ? "active chat-container" : "active-link chat-container"
