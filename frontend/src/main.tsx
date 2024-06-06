@@ -10,7 +10,6 @@ import LoginForm from './components/LoginForm.tsx'
 import Test from './components/Test.tsx'
 import ChatList from './components/ChatList.tsx'
 import ServerChatList from './components/ServerChatList.tsx'
-import MainContainer from './components/MainContainer.tsx'
 
 
 
@@ -21,7 +20,7 @@ const router = createBrowserRouter([
     children:[
       {path: "/test", element: <Test/>},
       {path: "/chat",element: <ChatList/>,children:[
-        {index: true,element: <MainContainer/>},
+        {index: true,element: <MessageContainer/>},
         {path: ":chatid",element: <MessageContainer/>}
        
       ]},

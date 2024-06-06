@@ -1,7 +1,7 @@
 import  { FC, useEffect, useRef, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock'
 import { NavLink, Outlet, useNavigate, useParams } from 'react-router-dom'
-import { fetchCheckServerUser, fetchCreateServerChat, fetchDejoinServer, fetchDeleteServer, fetchGetServer, fetchGetServerChatRooms, fetchpostChangeServersTitle, fetchpostInvitationLink,fetchСhangeServersAvatar } from '../store/actionServer'
+import { fetchCheckServerUser, fetchCreateServerAudioChatRoom, fetchCreateServerChat, fetchDejoinServer, fetchDeleteServer, fetchGetServer, fetchGetServerChatRooms, fetchgetServerAudioChatRooms, fetchpostChangeServersTitle, fetchpostInvitationLink,fetchСhangeServersAvatar } from '../store/actionServer'
 import ModuleTest from './Module'
 import avatar from "../assets/sonic.jpg"
 import "../css/chat_meassage.css"
@@ -22,12 +22,16 @@ const ServerChatList:FC=()=> {
     const [link,setLink] = useState<string>("")
     const [isAdmin,setIsAdmin] = useState<boolean>(false)
     const serverRooms = useAppSelector(state=>state.server.serverChatSRooms)
+    const serverRoomsVoice = useAppSelector(state=>state.server.serverChatSRoomsVoice)
     const refImage = useRef<HTMLInputElement>(null) 
     const [file,setFile] = useState<File | undefined>(undefined)
     const [isCreateServerRoom, setIsCreateServerRoom] = useState<boolean>(false)
+    const [isCreateServerRoomVoice, setIsCreateServerRoomVOice] = useState<boolean>(false)
+
     useEffect(()=>{
       if(serverid){
         dispatch(fetchGetServerChatRooms(serverid)) 
+        dispatch(fetchgetServerAudioChatRooms(serverid))
         dispatch(fetchCheckServerUser(serverid)).then(res=>{setIsAdmin(res.payload.is_owner)})
       }
     },[serverid])
@@ -76,7 +80,7 @@ const ServerChatList:FC=()=> {
         <p>ТЕКСТОВЫЕ КАНАЛЫ 
           {isAdmin && <span onClick={()=>{setIsCreateServerRoom(true)}} className='add-server-room'>+</span>}
         </p>
-        
+       
         {serverRooms.map(room=>(
         <NavLink to={`/server/${serverid}/${room.uuid}`} key={room.uuid}
         className={({ isActive, isPending }) =>
@@ -86,6 +90,22 @@ const ServerChatList:FC=()=> {
           <div className='server-chat-block'><p>{room.title}</p></div>
         </NavLink>
         ))}
+
+
+        <p>ГОЛОСОВЫЕ КАНАЛЫ 
+          {isAdmin && <span onClick={()=>{setIsCreateServerRoomVOice(true)}} className='add-server-room'>+</span>}
+        </p>
+        {serverRoomsVoice.map(room=>(
+        <NavLink to={`/server/${serverid}/${room.uuid}`} key={room.uuid}
+        className={({ isActive, isPending }) =>
+          isPending ? "pending-link" : isActive ? "active " : "active-link"
+        }
+        >
+          <div className='server-chat-block'><p>{room.title}</p></div>
+        </NavLink>
+        ))}
+        
+
      </div>
       {isModule && 
         <ModuleTest isModule={setIsModule}>
@@ -117,10 +137,22 @@ const ServerChatList:FC=()=> {
              if(serverid && chatName){
             dispatch(fetchCreateServerChat({title: chatName,uuid_server : serverid}))
             .then(()=>{dispatch(fetchGetServerChatRooms(serverid))})
+            setChatName("")
             setIsCreateServerRoom(false)
         }}}>создать чат</button>
         </ModuleTest>
         }
+        {isCreateServerRoomVoice &&  
+        <ModuleTest isModule={setIsCreateServerRoomVOice}>
+          <input type="text" onChange={(e)=>{setChatName(e.target.value)}} value={chatName}/>
+          <button onClick={()=>{ 
+             if(serverid){
+            dispatch(fetchCreateServerAudioChatRoom({title: chatName,uuid : serverid}))
+            .then(()=>{dispatch(fetchgetServerAudioChatRooms(serverid))})
+            setChatName("")
+            setIsCreateServerRoomVOice(false)
+        }}}>создать чат</button>
+        </ModuleTest>}
       <Outlet></Outlet>
   
     </>

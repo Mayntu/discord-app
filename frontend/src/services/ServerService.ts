@@ -75,10 +75,14 @@ export class ServerService{
     static async postСhangeServersAvatar(n:any):Promise<AxiosResponse<any>>{
         return $api.post<any>(`api/v1/changeServersAvatar`,n,{headers: {'Content-Type': 'multipart/form-data'}})
     }
-    //api/v1/createServerAudioChatRoom
+  
 
     
     static async postCreateServerAudioChatRoom(uuid:string,title:string):Promise<AxiosResponse<any>>{
         return $api.post<any>(`api/v1/createServerAudioChatRoom`,{uuid,title})
+    }
+
+    static async getServerAudioChatRooms(server_uuid:string):Promise<AxiosResponse<any>>{
+        return $api.post<any>(`api/v1/getServerAudioChatRooms`,{server_uuid})
     }
 }

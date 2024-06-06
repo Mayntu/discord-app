@@ -201,16 +201,30 @@ export const fetchCreateServerChat = createAsyncThunk(
     },
   )
 
-  // postCreateServerAudioChatRoom
+ 
 
 
   export const fetchCreateServerAudioChatRoom = createAsyncThunk(
     'server/fetchCreateServerAudioChatRoom',
     async (payload:any, thunkAPI) => {
       try {
-        // const response = await ServerService.postCreateServerAudioChatRoom(payload)
-        // console.log(response.data,"fetchCreateServerAudioChatRoom")
-        // return response.data
+        const response = await ServerService.postCreateServerAudioChatRoom(payload.uuid,payload.title)
+        console.log(response.data,"fetchCreateServerAudioChatRoom")
+        return response.data
+      } catch (error: any) {
+        return thunkAPI.rejectWithValue(error?.message)
+      }
+    },
+  )
+
+
+  export const fetchgetServerAudioChatRooms = createAsyncThunk(
+    'server/fetchgetServerAudioChatRooms',
+    async (payload:string, thunkAPI) => {
+      try {
+        const response = await ServerService.getServerAudioChatRooms(payload)
+        console.log(response.data.data,"fetchgetServerAudioChatRooms")
+        return response.data.data
       } catch (error: any) {
         return thunkAPI.rejectWithValue(error?.message)
       }

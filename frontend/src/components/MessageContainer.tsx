@@ -12,11 +12,11 @@ import {  fetchDeleteChatMessage, fetchGetChatMessage, fetchGetUserChats, fetchR
 import InputMessage from './InputMessage';
 import ServerUsersList from './ServerUsersList';
 import VideoCallBlock from './VideoCallBlock';
-import { addMessage, addUsersChat } from '../store/ChatsSlice';
+import { addMessage, addUsersChat} from '../store/ChatsSlice';
 import "../css/message_container.css"
 import { changeMessage } from '../hooks/changeMessage';
 import ModuleTest from './Module';
-import $api from '../http';
+
 
 
 
@@ -25,7 +25,6 @@ const  MessageContainer : FC=()=> {
   const [limit, setLimit] = useState<number>(10)
   const [isCallBlock,setIsCallBlock] = useState<boolean>(false)
   const [messageText,setMessageText] = useState<string>("")
-  const [roomId,setRoomId] = useState<string>("")
   const [messageArray,setMessageArray] = useState<any[]>([])
   const dispatch = useAppDispatch()
   const message = useAppSelector(state=>state.chats.getMessage)
@@ -42,13 +41,12 @@ const  MessageContainer : FC=()=> {
   const messageContainer = useRef<HTMLDivElement>(null)
   const [doMs,setDoMs]= useState<number>(0)
   const [newContent,setNewContent] = useState<string>("")
-
+  const [usersInChate,setusersInChate] = useState<string[]>([])
   const joinRoom = (room:any) => {
     console.log("join","username",userMe.login,"chat_id",room,"uuid",userMe.uuid)
     socket.emit("join", {"username" : userMe.login, "chat_id" : room,uuid:userMe.uuid});
-    // console.log(userMe.uuid,"uuid")
     socket.emit("user-joined",{uuid:userMe.uuid})
-    setRoomId(room)
+  
   };
  
   const getMessage = async ()=>{
@@ -62,18 +60,11 @@ const  MessageContainer : FC=()=> {
       joinRoom(chatid)
       getMessage()
       }
-    
       return ()=>{
         if(chatid ){
-         console.log("ok  c",  roomId,"na",chatid,"выход","uuid",userMe.uuid)
-         socket.emit("leave",{"chat_id" : roomId, uuid:userMe.uuid})
-         socket.on("leave",(data)=>{
-         console.log(data)
-        
-       })
+         console.log("ok  c","na",chatid,"выход","uuid",userMe.uuid)
+         socket.emit("leave",{"chat_id" : chatid, uuid:userMe.uuid})
         }
-        
-         
        }
   },[chatid,userMe])
 
@@ -100,28 +91,15 @@ useEffect(()=>{
     })
   }
   return ()=>{
-    // socket.off("join")
-  
+    socket.off("join")
   }
   },[userMe,chatid])
 
   useEffect(()=>{
     {message && setMessageArray(message)}
-   
   },[message])
 
-  // useEffect(()=>{
-  //   if(chatid){
-  //     socket.on("join",(data:any)=>{
-  //       console.log(data.users_data.users_data,"user")
-  //       const user  = data.users_data.users_data.find((usern:any)=>usern.uuid !== userMe.uuid)
-  //       setUsersChat(user)
-  //       dispatch(addUsersChat(user))
-  //     })
-  //   }
-   
-   
-  // },[socket,chatid])
+
   const sendMessage = () => {
     // отправляю сообщение 
     
@@ -143,52 +121,72 @@ useEffect(()=>{
   }; 
 
   const s=(data:any)=>{
-   
+    console.log(usersInChate,"usersInChate Status")
     if(data.from_user_id !== userMe.uuid){
-      console.log(userMe)
-      console.log(usersConnect)
-      if(usersConnect.includes(data.from_user_id)){
-          console.log("neua")
+      // console.log(userMe)
+      // console.log(usersConnect)
+      if(usersConnect.includes(data.from_user_id) && usersInChate.length == 2){
+          // console.log("neua")
           dispatch(fetchReadMessage(data.uuid))
           data.has_read = true
           return data
       }
-      // console.log(data.from_user_id)
-     
-      
     }else{
-      //usersChat
-      if(usersConnect.includes(data.from_user_id))
-      console.log("ya")
-
+      if(usersInChate.length == 2){
+        // console.log("ya")
+        data.has_read = true
+        return data
+      }
       return data
     }
-
     return data
   }
 
   useEffect(()=>{
-    if(chatid){
-      // socket.on("user-joined",(data:any)=>{
-      //   console.log(data,"user-joined")
-      // })
-      socket.on("user-left",(data:any)=>{
-        console.log(data,"user-left")
-      })
-      socket.on("user-changed",(data:any)=>{
+    if(chatid && messageArray.length){
+      function name(data:any) {
         console.log(data,"user-changed")
-      })
+        if(data.user_status){
+            setusersInChate([...data.users_in_room])
+            if(data.users_in_room.length == 2){
+              //  console.log(messageArray)
+            if(messageArray.find((i)=>i.has_read == false)){
+              // console.log("find")
+              const str = messageArray.map((item)=>{
+                if(item.has_read == false){
+                  // console.log(item.has_read)
+                  return {...item,has_read : !item.has_read}
+                }
+                return item
+                } )          
+                // console.log(str)
+                setMessageArray(str)
+               }
+            }
+        }else{
+          const userofflineInChat = usersInChate
+          if(userofflineInChat.includes(data.user_uuid)){
+            userofflineInChat.splice( userofflineInChat.indexOf(data.user_uuid),1)
+            setusersInChate([...userofflineInChat])
+           
+          }
+        }
+       console.log(usersInChate,"usersInChate")
+      }
+
+
+      socket.on("user-changed",name)
     }
 
     return ()=>{
-      socket.off("user-joined")
-      socket.off("user-left")
+  
+      socket.off("user-changed")
     }
-  },[socket,chatid])
+  },[socket,chatid,usersInChate,messageArray])
     
   useEffect(()=>{ 
     // получаю сообщения
-      if(chatid && Object.keys(userMe).length !== 0 && usersChat && usersConnect ){
+      if(chatid && Object.keys(userMe).length !== 0 && usersChat && usersConnect && usersInChate){
         socket.on("message", async(data:any) => {
           data = JSON.parse(data.message)
           console.log( data)
@@ -196,15 +194,12 @@ useEffect(()=>{
           await setMessageArray((prev)=>[...prev,{content: data.content, from_user_id : data.from_user_id, uuid : data.uuid,timestamp : data.timestamp,media : data.media,has_read:data.has_read}]) 
           scroll()
         });
-       
       }
-
-    
       return ()=>{
         socket.off("message")
       }
         
-  },[socket,chatid,userMe,usersChat,usersConnect])
+  },[socket,chatid,userMe,usersChat,usersConnect,usersInChate])
 
 
 
@@ -273,8 +268,6 @@ useEffect(()=>{
     if(files && files.length){
       setFile(files[0])
       console.log(files)
-      // setFiles(files)
-      // files.filter((i)=>setArrayURL((prev)=>[...prev,window.URL.createObjectURL(i)]) )
       setArrayURL([window.URL.createObjectURL(files[0])]) 
   }else{
       

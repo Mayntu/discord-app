@@ -31,7 +31,7 @@ const  Message: FC<MessageProps>=({classUser,children,time,media,uuid,hasRead})=
   const [gif,setGif] = useState<string>("")
   const navigate = useNavigate()
   const [audio,setAudio] = useState<boolean>(false)
- 
+ const [hasReadState,sethasReadState]  = useState<boolean>(hasRead || false)
   const isMeduleSet=()=>{
     if(messageUser.uuid){
       dispatch(addMessage(""))
@@ -57,9 +57,21 @@ const  Message: FC<MessageProps>=({classUser,children,time,media,uuid,hasRead})=
   useEffect(()=>{
     isURL(children)
     if(!hasRead && classUser !== me.uuid){
-      // dispatch(fetchReadMessage(uuid))
+      dispatch(fetchReadMessage(uuid)).then((res)=>{
+        if(res.payload.result){
+          sethasReadState(true)
+        }
+      })
     }
   },[])
+
+  useEffect(()=>{
+    if(hasRead ==true){
+      console.log("true")
+      sethasReadState(hasRead)
+    }
+  },[hasRead])
+
   const fetchMessage=async(str:string)=>{
     const res = await $api.get(str)
     if(res.data.result){
@@ -110,7 +122,7 @@ const  Message: FC<MessageProps>=({classUser,children,time,media,uuid,hasRead})=
      <p>{` ${new Date(time).getHours()>10 ? new Date(time).getHours() : "0"+new Date(time).getHours()}
           : ${new Date(time).getMinutes()>10 ? new Date(time).getMinutes() : "0"+new Date(time).getMinutes()}
           : ${new Date(time).getSeconds()>10 ? new Date(time).getSeconds() : "0"+new Date(time).getSeconds() }`}</p>
-           {hasRead ? <p>true</p> : classUser == me.uuid ? <p>false</p> : <button onClick={()=>{dispatch(fetchReadMessage(uuid))}}>обновить статус </button>}
+           {hasReadState ? <p>true</p> : <p>false</p> }
     </div>
         {isModule && <ModuleTest isModule={setIsModule}>
         {gif && (<img src={gif} alt="" />)}

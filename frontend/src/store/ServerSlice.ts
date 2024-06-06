@@ -1,5 +1,5 @@
 import {  ActionReducerMapBuilder, PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { fetchGetServer, fetchGetServerChatRoomMessages, fetchGetServerChatRooms, fetchGetServersUsers } from "./actionServer";
+import { fetchGetServer, fetchGetServerChatRoomMessages, fetchGetServerChatRooms, fetchGetServersUsers, fetchgetServerAudioChatRooms } from "./actionServer";
 
 
 
@@ -8,6 +8,7 @@ type TServerSlice = {
     serverChatSRooms: IServerChatRoom[],
     serverChatMessages: IServerChatNessage[],
     UserInServer : any[]
+    serverChatSRoomsVoice : any[]
 }
 
 const initialState: TServerSlice= {
@@ -15,6 +16,7 @@ const initialState: TServerSlice= {
     serversUser : [],
     serverChatSRooms: [],
     serverChatMessages: [],
+    serverChatSRoomsVoice:[]
 }
 
 
@@ -35,6 +37,8 @@ const serverSlice = createSlice({
             state.serverChatMessages = payload
         })).addCase(fetchGetServersUsers.fulfilled,(state,{payload}: PayloadAction<any>)=>{
             state.UserInServer = payload.users
+        }).addCase(fetchgetServerAudioChatRooms.fulfilled,(state,{payload}: PayloadAction<any>)=>{
+            state.serverChatSRoomsVoice = payload
         })
     }
 })
