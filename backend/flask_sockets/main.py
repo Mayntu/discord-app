@@ -115,16 +115,12 @@ def handle_server_chat_message(message):
 def join(data):
     user_uuid : str = data.get("uuid")
     chat_id : str = data.get("chat_id")
-    token : str = data.get("token")
     print(data)
     join_room(data.get("chat_id"))
     users_data = get_chat_info(
         token=None,
         chat_id=data.get("chat_id")
     )
-    token_info : dict = get_token_info(token=token)
-    user_uuid : str = token_info.get("result").get("uuid")
-    
     if users_data.get("result"):
         if chat_id in USERS_AND_ROOMS:
             if user_uuid in USERS_AND_ROOMS[chat_id]:
@@ -155,11 +151,8 @@ def join_server_chat(data):
 def leave(data):
     user_uuid : str = data.get("uuid")
     chat_id : str = data.get("chat_id")
-    token : str = data.get("token")
     print(chat_id)
     print(user_uuid in USERS_AND_ROOMS[chat_id])
-    token_info : dict = get_token_info(token=token)
-    user_uuid : str = token_info.get("result").get("uuid")
     if user_uuid in USERS_AND_ROOMS[chat_id]:
         print("delete")
         USERS_AND_ROOMS[chat_id].remove(user_uuid)
@@ -218,12 +211,6 @@ def save_server_chat_message(token : str, text : str, from_user_id : str, chat_i
 def get_chat_info(token : str, chat_id : str) -> dict:
     response = requests.post("http://127.0.0.1:8000/api/v1/getUsersChat", data={"token" : token, "chat_id" : chat_id})
     return response.json()
-
-
-def get_token_info(token : str) -> dict:
-    response = requests.post("http://127.0.0.1:8000/api/v1/getTokenInfo", data={"token" : token})
-    data : dict = response.json()
-    return data
 
 
 def get_server_chat_info(token : str, chat_id : str) -> dict:

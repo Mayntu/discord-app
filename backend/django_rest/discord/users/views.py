@@ -256,12 +256,3 @@ def api_dejoin_server(request):
     except Exception as e:
         print(e)
         return JsonResponse(data={"result" : False, "message" : "server not exists"})
-
-
-
-def api_get_token_info(request):
-    data : dict = request.POST
-
-    token : str = data.get("token")
-    token_content : dict = get_token(token=token)
-    return JsonResponse(data={"token_content" : token_content})
