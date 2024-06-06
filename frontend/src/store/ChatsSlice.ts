@@ -45,7 +45,7 @@ const chatsSlice = createSlice({
             for(let i=0;i<state.socketChat.length;i++){
                     state.socketChat[i].users.map(user=>{
                         if(payload.includes(user.uuid)){
-                            console.log(true)
+                            // console.log(true)
                             user.status = true
                         }else{
                             user.status = false
@@ -63,29 +63,23 @@ const chatsSlice = createSlice({
             state.message.content = payload.content
         },
         addUsersConnectState(state,{payload}:PayloadAction<string | string[]>){
-            if( !Array.isArray(payload)  && !state.usersConnect.includes(payload)){
-                console.log("online")
-                state.usersConnect.push(payload)
-            }else if(state.usersConnect.length === 0){
+         if(state.usersConnect.length === 0){
                 state.usersConnect.push(...payload)
-            }else if(!Array.isArray(payload) && state.usersConnect.includes(payload)){
-                console.log("offline")
-                console.log( state.usersConnect.splice(state.usersConnect.indexOf(payload),1))
-                state.usersConnect.splice(state.usersConnect.indexOf(payload),1)
             }
+          
            
            
         },
         userOnline(state,{payload}:PayloadAction<string>){
             if( !Array.isArray(payload)  && !state.usersConnect.includes(payload)){
-                console.log("online")
+                // console.log("online")
                 state.usersConnect.push(payload)
             }
         },
         userOffline(state,{payload}:PayloadAction<string>){
             if(!Array.isArray(payload) && state.usersConnect.includes(payload)){
-                console.log("offline")
-                console.log( state.usersConnect.splice(state.usersConnect.indexOf(payload),1))
+                // console.log("offline")
+                // console.log( state.usersConnect.splice(state.usersConnect.indexOf(payload),1))
                 state.usersConnect.splice(state.usersConnect.indexOf(payload),1)
             }
         },

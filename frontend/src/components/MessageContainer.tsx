@@ -16,6 +16,7 @@ import { addMessage, addUsersChat } from '../store/ChatsSlice';
 import "../css/message_container.css"
 import { changeMessage } from '../hooks/changeMessage';
 import ModuleTest from './Module';
+import $api from '../http';
 
 
 
@@ -45,11 +46,8 @@ const  MessageContainer : FC=()=> {
   const joinRoom = (room:any) => {
     console.log("join","username",userMe.login,"chat_id",room,"uuid",userMe.uuid)
     socket.emit("join", {"username" : userMe.login, "chat_id" : room,uuid:userMe.uuid});
-    console.log(userMe.uuid,"uuid")
+    // console.log(userMe.uuid,"uuid")
     socket.emit("user-joined",{uuid:userMe.uuid})
-    // socket.emit("leave",{"chat_id" : roomId,uuid:userMe.uuid})
-    // socket.on("leave",(data)=>{
-    // console.log(data)})
     setRoomId(room)
   };
  
@@ -64,17 +62,22 @@ const  MessageContainer : FC=()=> {
       joinRoom(chatid)
       getMessage()
       }
-      
+    
       return ()=>{
-        if(roomId !== chatid && chatid !== undefined && roomId !== "" && chatid){
-          console.log("ok",roomId,chatid,"выход")
-          socket.emit("leave",{"chat_id" : roomId,uuid:userMe.uuid})
-          socket.on("leave",(data)=>{
-          console.log(data)
-        })
-        }
+       if(chatid ){
+        console.log("ok  c",  roomId,"na",chatid,"выход","uuid",userMe.uuid)
+        socket.emit("leave",{"chat_id" : roomId, uuid:userMe.uuid})
+        socket.on("leave",(data)=>{
+        console.log(data)
+       
+      })
+       }
+       
+        
       }
   },[chatid,userMe])
+
+
 
  useEffect(()=>{
  
@@ -94,6 +97,10 @@ const  MessageContainer : FC=()=> {
       dispatch(addUsersChat(user))
     })
   }
+  return ()=>{
+    socket.off("join")
+  
+  }
   },[userMe,chatid])
 
   useEffect(()=>{
@@ -101,17 +108,18 @@ const  MessageContainer : FC=()=> {
    
   },[message])
 
-  useEffect(()=>{
-    if(chatid){
-      socket.on("join",(data:any)=>{
-        console.log(data.users_data.users_data,"user")
-        const user  = data.users_data.users_data.find((usern:any)=>usern.uuid !== userMe.uuid)
-        setUsersChat(user)
-        dispatch(addUsersChat(user))
-      })
-    }
+  // useEffect(()=>{
+  //   if(chatid){
+  //     socket.on("join",(data:any)=>{
+  //       console.log(data.users_data.users_data,"user")
+  //       const user  = data.users_data.users_data.find((usern:any)=>usern.uuid !== userMe.uuid)
+  //       setUsersChat(user)
+  //       dispatch(addUsersChat(user))
+  //     })
+  //   }
    
-  },[socket,chatid])
+   
+  // },[socket,chatid])
   const sendMessage = () => {
     // отправляю сообщение 
     
@@ -165,6 +173,11 @@ const  MessageContainer : FC=()=> {
       socket.on("user-left",(data:any)=>{
         console.log(data,"user-left")
       })
+    }
+
+    return ()=>{
+      socket.off("user-joined")
+      socket.off("user-left")
     }
   },[socket,chatid])
     

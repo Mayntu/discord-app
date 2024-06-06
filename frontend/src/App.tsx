@@ -8,13 +8,14 @@ import "./css/module.css"
 import { socket } from './socket'
 import $api from './http'
 import { addUsersConnect, addUsersConnectState, userOffline, userOnline } from './store/ChatsSlice'
+import { fetchGetUserChats } from './store/acthionChat'
 
 function App() {
   const {isAuth,error,isLoading} = useAppSelector(state=> state.auth)
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const {pathname} = useLocation()
-  const connectUsers = useAppSelector(state=>state.chats.usersConnect)
+  const {usersConnect} = useAppSelector(state=>state.chats)
   const {socketChat} = useAppSelector(state=>state.chats)
   useEffect(()=>{
     dispatch(fetchUser())
@@ -29,8 +30,9 @@ function App() {
         data.data.splice(data.data.indexOf(userM.data.user_data.uuid),1)
       }
       if(data.data.length){
+        // console.log(usersConnect.length)
         console.log(data,"connected")
-       await dispatch(addUsersConnectState(data.data))
+        dispatch(addUsersConnectState(data.data))
       }
      
      
@@ -39,21 +41,23 @@ function App() {
 
 
   useEffect(()=>{
-    if(socketChat.length !==0 && connectUsers.length ===0){
+    if(socketChat.length !==0 && usersConnect.length === 0){
       connect()
+    }else if(socketChat.length ===0){
+      dispatch(fetchGetUserChats())
     }
      
   },[socketChat])
 
   useEffect(()=>{
-     dispatch(addUsersConnect(connectUsers))
-},[connectUsers])
+     dispatch(addUsersConnect(usersConnect))
+},[usersConnect])
 
  
   useEffect(()=>{
     socket.on("user_online",(data)=>{
       // console.log(data.user_uuid,"user_online")
-      if(!connectUsers.includes(data.user_uuid)){
+      if(!usersConnect.includes(data.user_uuid)){
         // console.log(data.user_uuid,"user_onlinePPPPP")
         dispatch(userOnline(data.user_uuid))
       }

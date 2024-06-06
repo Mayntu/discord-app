@@ -22,11 +22,11 @@ const ChatList:FC=()=> {
   const connectUsers = useAppSelector(state=>state.chats.usersConnect)
 
   //    сокетты
-  useEffect(()=>{
-    dispatch(fetchGetUserChats()).then(()=>{
-      dispatch( dispatch(addUsersConnect(connectUsers)))
-    })
-  },[])
+  // useEffect(()=>{
+  //   dispatch(fetchGetUserChats()).then(()=>{
+  //     dispatch( dispatch(addUsersConnect(connectUsers)))
+  //   })
+  // },[])
 
 
 
