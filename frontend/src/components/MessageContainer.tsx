@@ -43,8 +43,9 @@ const  MessageContainer : FC=()=> {
   const [newContent,setNewContent] = useState<string>("")
 
   const joinRoom = (room:any) => {
+    console.log("join","username",userMe.login,"chat_id",room,"uuid",userMe.uuid)
     socket.emit("join", {"username" : userMe.login, "chat_id" : room,uuid:userMe.uuid});
-     console.log(userMe.uuid,"uuid")
+    console.log(userMe.uuid,"uuid")
     socket.emit("user-joined",{uuid:userMe.uuid})
     // socket.emit("leave",{"chat_id" : roomId,uuid:userMe.uuid})
     // socket.on("leave",(data)=>{
@@ -64,7 +65,7 @@ const  MessageContainer : FC=()=> {
       }
       
       return ()=>{
-        if(roomId !== chatid && chatid !== undefined && roomId !== ""){
+        if(roomId !== chatid && chatid !== undefined && roomId !== "" && chatid){
           console.log("ok",roomId,chatid,"выход")
           socket.emit("leave",{"chat_id" : roomId,uuid:userMe.uuid})
           socket.on("leave",(data)=>{
@@ -72,10 +73,11 @@ const  MessageContainer : FC=()=> {
         })
         }
       }
-  },[chatid,socket,userMe,chatserverid,serverid])
+  },[chatid,userMe])
 
  useEffect(()=>{
-  if(userMe && Object.keys(userMe).length !== 0 ){
+ 
+  if(userMe && chatid && Object.keys(userMe).length !== 0 ){
     socket.on("join",(data:any)=>{
       console.log(data.users_data.users_data,"user")
       const user  = data.users_data.users_data.find((usern:any)=>usern.uuid !== userMe.uuid)
@@ -83,7 +85,7 @@ const  MessageContainer : FC=()=> {
       dispatch(addUsersChat(user))
     })
   }
-  if(userMe && Object.keys(userMe).length !== 0 ){
+  if(userMe && chatserverid && Object.keys(userMe).length !== 0 ){
     socket.on("join_server_chat",(data:any)=>{
       console.log(data.users_data.users_data,"userццацаца")
       const user  = data.users_data.users_data.find((usern:any)=>usern.uuid !== userMe.uuid)
@@ -91,7 +93,7 @@ const  MessageContainer : FC=()=> {
       dispatch(addUsersChat(user))
     })
   }
-  },[userMe])
+  },[userMe,chatid])
 
   useEffect(()=>{
     {message && setMessageArray(message)}
@@ -99,17 +101,21 @@ const  MessageContainer : FC=()=> {
   },[message])
 
   useEffect(()=>{
-    socket.on("join",(data:any)=>{
-      console.log(data.users_data.users_data,"user")
-      // const user  = data.users_data.users_data.find((usern:any)=>usern.uuid !== userMe.uuid)
-      // setUsersChat(user)
-      // dispatch(addUsersChat(user))
-    })
-  },[socket])
+    if(chatid){
+      socket.on("join",(data:any)=>{
+        console.log(data.users_data.users_data,"user")
+        const user  = data.users_data.users_data.find((usern:any)=>usern.uuid !== userMe.uuid)
+        setUsersChat(user)
+        dispatch(addUsersChat(user))
+      })
+    }
+   
+  },[socket,chatid])
   const sendMessage = () => {
     // отправляю сообщение 
     
     if(messageText.trim()){
+      console.log("message")
       socket.emit("message", {
         "data" : messageText, 
         "chat_id" : chatid, 
@@ -151,14 +157,15 @@ const  MessageContainer : FC=()=> {
   }
 
   useEffect(()=>{
-    socket.on("user-joined",(data:any)=>{
-      console.log(data,"user-joined")
-    })
-    socket.on("user-left",(data:any)=>{
-      console.log(data,"user-left")
-    })
-   
-  },[socket])
+    if(chatid){
+      socket.on("user-joined",(data:any)=>{
+        console.log(data,"user-joined")
+      })
+      socket.on("user-left",(data:any)=>{
+        console.log(data,"user-left")
+      })
+    }
+  },[socket,chatid])
     
   useEffect(()=>{ 
     // получаю сообщения
