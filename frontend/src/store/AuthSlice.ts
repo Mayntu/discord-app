@@ -57,6 +57,7 @@ const authSlice = createSlice({
             state.error = action.payload
         }).addCase(fetchUser.fulfilled,(state : TAuth,action : PayloadAction<IAuthResponse>)=>{
             state.user = action.payload.user_data
+            state.isAuth = true
         }).addCase(fetchChangeUsersLogin.fulfilled,(state : TAuth,{payload} : PayloadAction<any>)=>{
             state.isLoading = true;
             state.error = ""

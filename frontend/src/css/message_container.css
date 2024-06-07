@@ -36,7 +36,8 @@
   .user-chat{
     display: flex;
     flex-direction: row;
-    padding: 2px;
+    align-items: center;
+    /* padding: 2px; */
   }
   .user-chat p{
     margin-left: 10px;
@@ -45,19 +46,24 @@
     width: 30px;
     height: 30px;
   }
+  .icon-call{
+    background-image: url("/frontend\src\assets\Mask group.png");
+  }
   .status-bar{
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
-    padding: 5px;
-    width: 100%;
-    background-color: #232627;
+    justify-content: space-between;
+    padding: 10px 30px;
+    width: 80%;
+    background-color:#333333;
+    border-radius: 10px;
   }
   .icon-message{
     cursor: pointer;
   }
   .status-bar img{
-    max-width: 40px;
+    max-width: 60px;
+
   }
   .get-message-cantainer{
     overflow:auto;

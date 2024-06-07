@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock';
 import { fetchDeleteUser } from '../store/acthion';
 import Message from './Message';
 import avatar from "../assets/sonic.jpg"
-import callIcon from "../assets/call.png"
+import callIcon from "../assets/Ellipse 75.png"
 import { IUserChatT } from '../models/IUserChat';
 import { fetchDeleteServerChatRoom, fetchDeleteServersMessage, fetchGetServerChatRoomMessages, fetchGetServerChatRooms, } from '../store/actionServer';
 import {  fetchDeleteChatMessage, fetchGetChatMessage, fetchGetUserChats, fetchReadMessage } from '../store/acthionChat';
@@ -385,7 +385,7 @@ const isChangemessage=()=>{
                   .then(()=>{navigate("/chat")})
                   .then(()=>{dispatch(fetchGetUserChats())})
                   }}>удалить</button>
-                  <img src={callIcon} className='icon-message' onClick={()=>{setIsCallBlock(true)}}/>
+                  <img src={callIcon} className='icon-message icon-call' onClick={()=>{setIsCallBlock(true)}}/>
           </div>
             <div className="get-message-cantainer" ref={messageContainer} onScroll={()=>{
               if(messageContainer.current?.scrollTop == 0){

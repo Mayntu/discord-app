@@ -18,11 +18,16 @@ const LoginForm:FC=()=> {
 
 
     useEffect(()=>{
-      if(isAuth){
+      if(localStorage.getItem("token")){
         navigate("/")
       }
     },[isAuth])
-   
+    
+    useEffect(()=>{
+      if(localStorage.getItem("token")){
+        navigate("/")
+      }
+    },[])
    useEffect(()=>{
       login.notValid()
       email.notValid()

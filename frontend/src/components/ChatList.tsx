@@ -62,7 +62,8 @@ const ChatList:FC=()=> {
           </div>
         : null}
         {/* отображение item чатов */}
-        <p>ЛИЧНЫЕ СООБЩЕНИЯ</p>
+        {/* <p className='title-chat'>ЛИЧНЫЕ СООБЩЕНИЯ</p> */}
+        <p className='title-chat'>ЧАТЫ</p>
         { socketChat.map(i=>(<ChatListItem key={i.uuid}  chatId={i.uuid} chatsUser={i.users}/>))}
       </div>}
       {!isSettings && <SettingsBlock setIsSettings={setIsSettings}/>}
