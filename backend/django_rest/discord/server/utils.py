@@ -2,6 +2,8 @@ from discord.settings import BASE_DIR
 from soundfile import read, write
 from string import ascii_letters
 from random import randint
+from pydub import AudioSegment
+from io import BytesIO as bIO
 import uuid
 import tempfile
 
@@ -21,6 +23,39 @@ def handle_upload_file_server(file, server_id : str) -> str:
     return f"media/images/servers/{server_id}/{filename}.{file_extension}"
 
 
+# def handle_upload_audio_server(file, server_id : str, file_format_save : str="wav") -> str:
+#     filename : str = str(uuid.uuid4())
+#     file_extension : str = str(file).split(".")[-1]
+
+#     print(file_extension)
+
+#     _path : str = f"{BASE_DIR.parent.parent.parent}/frontend/public/media/audios/servers/{server_id}/{filename}.wav"
+
+#     print(file)
+
+#     convert_audio(
+#         file=file,
+#         path=_path,
+#         file_format=file_extension,
+#         file_format_convert=file_format_save,
+#     )
+
+#     # with open(file=_path, mode="wb") as _file:
+#     #     for _chunk in file.chunks():
+#     #         _file.write(_chunk)
+    
+
+#     # data, samplerate = read(file)
+    
+#     # write(_path, data, samplerate, format='wav')
+    
+#     # print(f"media/audios/servers/{server_id}/{filename}.wav")
+    
+
+#     return f"media/audios/servers/{server_id}/{filename}.wav"
+
+
+
 def handle_upload_audio_server(file, server_id : str) -> str:
     filename : str = str(uuid.uuid4())
     file_extension : str = str(file).split(".")[-1]
@@ -29,18 +64,16 @@ def handle_upload_audio_server(file, server_id : str) -> str:
 
     _path : str = f"{BASE_DIR.parent.parent.parent}/frontend/public/media/audios/servers/{server_id}/{filename}.wav"
 
-    print(file)
-
-    # with open(file=_path, mode="wb") as _file:
-    #     for _chunk in file.chunks():
-    #         _file.write(_chunk)
+    with open(file=_path, mode="wb") as _file:
+        for _chunk in file.chunks():
+            _file.write(_chunk)
     
 
-    data, samplerate = read(file)
+    # data, samplerate = read(file)
     
-    write(_path, data, samplerate, format='wav')
+    # write(_path, data, samplerate, format='wav')
     
-    print(f"media/audios/servers/{server_id}/{filename}.wav")
+    # print(f"media/audios/servers/{server_id}/{filename}.wav")
     
 
     return f"media/audios/servers/{server_id}/{filename}.wav"
@@ -53,3 +86,18 @@ def generate_link(server_uuid : str) -> str:
     link : str = "invite/"
     link += "".join([SYMBOLS[randint(0, SYMBOLS_LENGTH)] for x in range(0, SYMBOLS_LENGTH)])
     return link
+
+
+
+def convert_audio(file, path : str, file_format : str, file_format_convert : str) -> None:
+    file_data = file.read()
+    audio = AudioSegment.from_file(file=bIO(file_data),format=file_format)
+
+    wav_buffer : bIO = bIO()
+
+    audio.export(wav_buffer, format=file_format_convert)
+    wav_buffer.seek(0)
+
+
+    with open(file=path, mode="wb") as wav:
+        wav.write(wav_buffer.getvalue())
