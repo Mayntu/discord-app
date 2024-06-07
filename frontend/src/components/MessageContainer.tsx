@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock';
 import { fetchDeleteUser } from '../store/acthion';
 import Message from './Message';
 import avatar from "../assets/sonic.jpg"
-import callIcon from "../assets/Ellipse 75.png"
+import callIcon from "../assets/Mask group.png"
 import { IUserChatT } from '../models/IUserChat';
 import { fetchDeleteServerChatRoom, fetchDeleteServersMessage, fetchGetServerChatRoomMessages, fetchGetServerChatRooms, } from '../store/actionServer';
 import {  fetchDeleteChatMessage, fetchGetChatMessage, fetchGetUserChats, fetchReadMessage } from '../store/acthionChat';
