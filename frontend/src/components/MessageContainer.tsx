@@ -16,13 +16,14 @@ import { addMessage, addUsersChat} from '../store/ChatsSlice';
 import "../css/message_container.css"
 import { changeMessage } from '../hooks/changeMessage';
 import ModuleTest from './Module';
+import MessageBlock from './MessageBlock';
 
 
 
 
 const  MessageContainer : FC=()=> {
   const {chatid,chatserverid,serverid} = useParams()
-  const [limit, setLimit] = useState<number>(10)
+  const [limit, setLimit] = useState<number>(30)
   const [isCallBlock,setIsCallBlock] = useState<boolean>(false)
   const [messageText,setMessageText] = useState<string>("")
   const [messageArray,setMessageArray] = useState<any[]>([])
@@ -42,6 +43,9 @@ const  MessageContainer : FC=()=> {
   const [doMs,setDoMs]= useState<number>(0)
   const [newContent,setNewContent] = useState<string>("")
   const [usersInChate,setusersInChate] = useState<string[]>([])
+  const [newMessageArray,setNewMessageArray] = useState<any[][]>([[]])
+
+
   const joinRoom = (room:any) => {
     console.log("join","username",userMe.login,"chat_id",room,"uuid",userMe.uuid)
     socket.emit("join", {"username" : userMe.login, "chat_id" : room,uuid:userMe.uuid});
@@ -97,6 +101,26 @@ useEffect(()=>{
 
   useEffect(()=>{
     {message && setMessageArray(message)}
+    let newMessage:any[][] = [[]]
+    console.log(newMessage[0].length)
+    for(let i=0;i<message.length;i++){
+      let userM = message[i]
+      
+      if(newMessage[newMessage.length-1].length == 0){
+        newMessage[newMessage.length-1].push(userM) 
+        console.log(1)
+        // console.log(newMessage[newMessage.length-1][0].from_user_id)
+      }else if(newMessage[newMessage.length-1][0].from_user_id == userM.from_user_id){
+        newMessage[newMessage.length-1].push(userM)
+        console.log(newMessage[newMessage.length-1],"asasas")
+      }else{
+        newMessage.push([])
+        newMessage[newMessage.length-1].push(userM)
+        console.log(newMessage[newMessage.length-1])
+      }
+    }
+    setNewMessageArray([...newMessage])
+    console.log(newMessage,"newMessage")
   },[message])
 
 
@@ -192,6 +216,24 @@ useEffect(()=>{
           console.log( data)
            data =  s(data)
           await setMessageArray((prev)=>[...prev,{content: data.content, from_user_id : data.from_user_id, uuid : data.uuid,timestamp : data.timestamp,media : data.media,has_read:data.has_read}]) 
+          
+          if(newMessageArray[newMessageArray.length-1].length == 0){
+            newMessageArray[newMessageArray.length-1].push(data) 
+            // setNewMessageArray((prev)=>prev[newMessageArray.length-1] = [...prev[newMessageArray.length-1],data])
+            console.log(1)
+            // console.log(newMessage[newMessage.length-1][0].from_user_id)
+          }else if(newMessageArray[newMessageArray.length-1][0].from_user_id == data.from_user_id){
+            // newMessageArray[newMessageArray.length-1].push(data)
+            console.log("dddddddddddddddddddd")
+            // setNewMessageArray()
+            // console.log(newMessageArray[newMessageArray.length-1],"asasas")
+            // setNewMessageArray((prev)=>prev[newMessageArray.length-1] = [...prev[newMessageArray.length-1],data])
+          }else{
+            newMessageArray.push([])
+            newMessageArray[newMessageArray.length-1].push(data)
+            console.log("sasasasasasasasas")
+            // console.log(newMessageArray[newMessageArray.length-1])
+          }
           scroll()
         });
       }
@@ -352,7 +394,7 @@ const isChangemessage=()=>{
               }
             }}>
               {messageArray.length !==0 ? messageArray.map((ms,index)=><Message key={index} uuid={ms.uuid} classUser={ms.from_user_id} media={ms.media}  time={ms.timestamp} children={ms.content} hasRead={ms.has_read}/>): null}
-                  
+                {/* {newMessageArray[0].length !==0 ? newMessageArray.map((messageBlock,index)=><MessageBlock key={index+"wopkfowk"} messageBlock={messageBlock}>wfwfwdwdwdw</MessageBlock>) : null}   */}
             </div>
             <div className="file-input">
               {file &&  arrayURL.map(i=>(<img src={i} key={i}/>)) }

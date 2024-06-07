@@ -101,12 +101,21 @@ const  Message: FC<MessageProps>=({classUser,children,time,media,uuid,hasRead})=
         }
       </div>
         <div className="row">
-          {isUrl ? URLdomen ? 
-          <a onClick={()=>{fetchMessage(URLdomen)}}>{children}</a> 
-          : 
-          gif ? null: (<a href={children}>{children}</a>) 
-          : 
-          ( <p>{children}</p>)}
+          <div className="row-con">
+              {/* {
+            classUser == me.uuid  ? 
+            <p className='title'>{me.login}</p>
+              :  
+            <p className='title'>{NoMe.login}</p>
+            } */}
+              {isUrl ? URLdomen ? 
+              <a onClick={()=>{fetchMessage(URLdomen)}}>{children}</a> 
+              : 
+              gif ? null: (<a href={children}>{children}</a>) 
+              : 
+              ( <p>{children}</p>)}
+          </div>
+
          
         </div>
         </>

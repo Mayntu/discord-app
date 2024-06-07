@@ -26,11 +26,9 @@ function App() {
     socket.emit("user_connected",{token:userM.data.user_data.uuid})
     socket.on("connected", async (data:any)=>{
       if(data.data.includes(userM.data.user_data.uuid)){
-        // console.log(data,"connected111111111")
         data.data.splice(data.data.indexOf(userM.data.user_data.uuid),1)
       }
       if(data.data.length){
-        // console.log(usersConnect.length)
         console.log(data,"connected")
         dispatch(addUsersConnectState(data.data))
       }

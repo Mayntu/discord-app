@@ -75,7 +75,6 @@
     max-height: 30px;
   }
   .file-input{
-  
     max-height: 200px;
     width: 100%;
     display: flex;
@@ -167,12 +166,14 @@
     display: flex;
     align-items: flex-start;
     flex-direction: column;
-    padding:5px ;
+    /* padding:5px ; */
     align-self: flex-start;
     max-width: 400px;
+    
     color: black;
     flex-wrap: wrap;
     position: relative;
+    
   }
   .context-message{
     position: absolute;
@@ -186,34 +187,114 @@
   .message:hover {
     background-color: #213547;
   }
-  .chat-message{
+  .chat-message, .chat-message-new{
     gap: 10px;
     border-radius: 5px;
     padding:5px ;
     max-width: 400px;
+    min-width: 200px;
     border: 1px solid green;
     background-color: white;
     display: flex;
     flex-direction: row;
-    align-items: flex-end;
+    align-items: flex-start;
     word-wrap: break-word;
     overflow-x:hidden;
   }
-  .chat-message >.row p , .row a{
+  .chat-message-new{
+    flex-direction: column;
+  }
+  .chat-message >.row-con p , .row-con a{
     text-align: start;
     min-width: 70%;
-   
+    
+  }
+  .chat-message-new >.row>.row-con p , .row-con a{
+    text-align: start;
+    min-width: 100%;
+    
+  }
+  .my-message > .chat-message-new{
+    align-items: flex-end;
+  }
+  .my-message > .chat-message-new>.row> .row-con{
+    padding-right: 10px;
+  }
+  .avatar-message{
+    display: flex;
+    flex-direction: row;
+  }
+  .date{
+    display: block;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 3px;
+    justify-content: flex-end;
+    width: 100%;
+  }
+  .row{
+    gap: 8px;
+    display: flex;
+  
+    text-align: left; 
+     flex-direction: row;
+  }
+  .my-message > .chat-message-new> .row{
+    text-align: right;
   }
   .row a{
     cursor: pointer;
   }
-  .row{
-    max-width: 70%;
-  
+  .row,.row-con{
+    max-width: 80%;
+    /* width: 100%; */
+    background-color: red;
   }
+  .row{
+    border-radius: 10px;
+  }
+  .title{
+    text-align: center;
+    font-size: 18px;
+    font-weight: 500;
+    /* display: block; */
+    border-bottom: 1px solid black;
+  }
+  .row-con{
+    padding: 2px;
+     border-radius: 10px;
+    padding-left: 10px;
+    max-width: 100%;
+    background-color: #38ff10;
+    gap: 2px;
+    padding-right: 10px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    height: auto;
+  }
+
   .my-message{
     align-self: flex-end;
     align-items: flex-end;
+  }
+  .my-message >  .chat-message-new > .avatar-message{
+    flex-direction: row-reverse;
+  }
+  /* .my-message>.chat-message,.my-message>.chat-message-new {
+    flex-direction: row-reverse;
+    align-items: flex-start;
+  } */
+
+  .false-status,.true-status{
+    width: 14px;
+    height: 14px;
+    border-radius: 100%;
+    background-color: red;
+  }
+  .true-status{
+    background-color: aqua;
   }
   .column{
     display: flex;
@@ -222,13 +303,7 @@
     flex-direction: column;
   
   }
-  .row{
-    gap: 8px;
-    display: flex;
-   
-    text-align: right;
-    flex-direction: row;
-  }
+
   
 
   .image-message{
