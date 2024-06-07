@@ -216,10 +216,10 @@ useEffect(()=>{
           console.log( data)
            data =  s(data)
           await setMessageArray((prev)=>[...prev,{content: data.content, from_user_id : data.from_user_id, uuid : data.uuid,timestamp : data.timestamp,media : data.media,has_read:data.has_read}]) 
-          
+          let messageArrayZ = newMessageArray
           if(newMessageArray[newMessageArray.length-1].length == 0){
-            newMessageArray[newMessageArray.length-1].push(data) 
-            // setNewMessageArray((prev)=>prev[newMessageArray.length-1] = [...prev[newMessageArray.length-1],data])
+            messageArrayZ[newMessageArray.length-1].push(data) 
+            setNewMessageArray([...messageArrayZ])
             console.log(1)
             // console.log(newMessage[newMessage.length-1][0].from_user_id)
           }else if(newMessageArray[newMessageArray.length-1][0].from_user_id == data.from_user_id){
@@ -393,8 +393,8 @@ const isChangemessage=()=>{
                 }
               }
             }}>
-              {messageArray.length !==0 ? messageArray.map((ms,index)=><Message key={index} uuid={ms.uuid} classUser={ms.from_user_id} media={ms.media}  time={ms.timestamp} children={ms.content} hasRead={ms.has_read}/>): null}
-                {/* {newMessageArray[0].length !==0 ? newMessageArray.map((messageBlock,index)=><MessageBlock key={index+"wopkfowk"} messageBlock={messageBlock}>wfwfwdwdwdw</MessageBlock>) : null}   */}
+              {/* {messageArray.length !==0 ? messageArray.map((ms,index)=><Message key={index} uuid={ms.uuid} classUser={ms.from_user_id} media={ms.media}  time={ms.timestamp} children={ms.content} hasRead={ms.has_read}/>): null} */}
+                {newMessageArray[0].length !==0 ? newMessageArray.map((messageBlock,index)=><MessageBlock key={index+"wopkfowk"} messageBlock={messageBlock}>wfwfwdwdwdw</MessageBlock>) : null}  
             </div>
             <div className="file-input">
               {file &&  arrayURL.map(i=>(<img src={i} key={i}/>)) }
@@ -407,7 +407,7 @@ const isChangemessage=()=>{
                 }}>удалить
               </button>
               {messageUser.content &&  <button onClick={()=>setIsModule(true)}>изменить</button>}
-             {isModule && isChangemessage()}
+                {isModule && isChangemessage()}
               <button>Ответ</button>
               
             </div>

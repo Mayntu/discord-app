@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock'
 import { useNavigate } from 'react-router-dom'
 import { fetchReadMessage } from '../store/acthionChat'
 import { addMessage } from '../store/ChatsSlice'
+import ModuleTest from './Module'
 
 interface MessageProps{
     content : string
@@ -83,6 +84,10 @@ const NewMessage:FC<MessageProps>=({media,content,hasRead,classUser,uuid,time})=
                 {gif && (<img src={gif} alt="" />)}
                 {media && <img src={"http://localhost:5173/public/"+media} alt="" />}
               </div>
+              {isModule && <ModuleTest isModule={setIsModule}>
+        {gif && (<img src={gif} alt="" />)}
+        <img src={"http://localhost:5173/public/"+media} alt="" />
+          </ModuleTest>}
     </>
   )
 }
