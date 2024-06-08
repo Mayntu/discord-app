@@ -3,6 +3,9 @@ import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock'
 import { useEffect,  useRef, useState } from 'react'
 import { fetchCreateServer, fetchGetServer} from '../store/actionServer'
 import iconCamera from "../assets/camera.png"
+import chatIcon from "../assets/chat-group.png"
+import addServer from "../assets/addServer.png"
+
 import "../css/server.css"
 
 import ModuleTest from './Module'
@@ -38,11 +41,12 @@ const ServerContainer=()=> {
     <div className="container-server">
     <NavLink to={"/chat"}>
       <div className="block-server-chat">
-        просто чаты
+        <img src={chatIcon} alt="" />
       </div>
     </NavLink>
-    <div className="block-server" onClick={()=>{setIsCreateSreverM(true)}}>
-      создать сервер
+    <div className=" addblockserver" onClick={()=>{setIsCreateSreverM(true)}}>
+      <img src={addServer} alt=""  />
+     
     </div>
     {serversUser.length !== 0 && serversUser.map(i=>(
     <NavLink to={`/server/${i.uuid}`}  key={i.uuid} 

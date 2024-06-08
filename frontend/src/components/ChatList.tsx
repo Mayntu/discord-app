@@ -19,7 +19,6 @@ const ChatList:FC=()=> {
   const [isSettings,setIsSettings] = useState<boolean>(true)
   const dispatch = useAppDispatch()
   const {socketChat} = useAppSelector(state=>state.chats)
-  const connectUsers = useAppSelector(state=>state.chats.usersConnect)
 
   //    сокетты
   // useEffect(()=>{
@@ -27,16 +26,6 @@ const ChatList:FC=()=> {
   //     dispatch( dispatch(addUsersConnect(connectUsers)))
   //   })
   // },[])
-
-
-
-
-  //    сокетты
-
-
-
-
-
   
   const seacrhChat = (e:string)=>{
       dispatch(fetchFindChat(e))

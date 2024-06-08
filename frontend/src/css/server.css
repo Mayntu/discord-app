@@ -1,8 +1,8 @@
 
   .block-server-chat,.block-server{
     color: white;
-    width: 60px;
-    height: 60px;
+    width: 80px;
+    height: 80px;
     min-width: 60px;
     min-height: 60px;
     background-color: #333333;
@@ -17,10 +17,16 @@
     align-items: center;
     justify-content: center;
   }
+  .block-server-chat{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
 
   .block-server img{
-    width: 60px;
-    height: 60px;
+    width: 100%;
+    height: 100%;
     border-radius: 100px;
   }
   .server-chat-block:hover{
@@ -29,6 +35,16 @@
   }
   .server-chat-block{
     color: #949BA4
+  }
+  .addblockserver > img{
+    margin: 10px 0px ;
+    /* background-color:#333333 !important; */
+  }
+  .addblockserver:hover{
+    padding-left: 13px;
+    padding-right: 13px;
+    background-color: #404249;
+    border-radius: 100px;
   }
   .add-server-room{
     cursor: pointer;

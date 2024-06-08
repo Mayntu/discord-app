@@ -1,7 +1,7 @@
 .chat-container{
     display: flex;
     flex-direction: row;
-    max-width:250px;
+    max-width:330px;
     align-items: center;
     justify-content: space-between;
     border-radius: 10px;
@@ -48,7 +48,7 @@
   .chat-list-container,.settings-container{
     background-color: #242424;
     padding: 5px;
-    width: 300px;
+    width: 400px;
     /* animation-duration: 10s;
     transition: 10s; */
     display: flex;
