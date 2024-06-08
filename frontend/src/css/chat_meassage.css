@@ -133,3 +133,12 @@
     background-color: #404249;
     color: white;
   }
+
+  .title-chat{
+    font-size: 25px;
+    font-weight: bold;
+    font-family: "Inter", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: bold;
+    font-style: normal;
+  }

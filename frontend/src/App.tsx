@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from './hooks/redux-hoock'
 import { setIsAuth } from './store/AuthSlice'
 import { Outlet,  useLocation,  useNavigate } from 'react-router-dom'
@@ -15,8 +15,11 @@ function App() {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const {pathname} = useLocation()
+  const [isSocketChat,setisSocketChat] = useState<boolean>(true)
   const {usersConnect} = useAppSelector(state=>state.chats)
   const {socketChat} = useAppSelector(state=>state.chats)
+  
+ 
   useEffect(()=>{
     dispatch(fetchUser())
   },[])
@@ -39,12 +42,17 @@ function App() {
 
 
   useEffect(()=>{
-    if(socketChat.length !==0 && usersConnect.length === 0){
-      connect()
-    }else if(socketChat.length ===0){
-      dispatch(fetchGetUserChats())
+    if(localStorage.getItem("token")){
+      if(socketChat.length !==0 && usersConnect.length === 0){
+        connect()
+      }else if(socketChat.length ===0 && isSocketChat){
+        dispatch(fetchGetUserChats()).then((res)=>{
+          if(res.payload.data.length == 0){
+            setisSocketChat(false)
+          }
+        })
+      }
     }
-     
   },[socketChat])
 
   useEffect(()=>{
