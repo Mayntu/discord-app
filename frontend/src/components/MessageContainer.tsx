@@ -104,25 +104,25 @@ useEffect(()=>{
     {message && setMessageArray(message)}
     if(message.length !==0 ){
       let newMessage:any[][] = [[]]
-      console.log(newMessage[0].length)
+      // console.log(newMessage[0].length)
       for(let i=0;i<message.length;i++){
         let userM = message[i]
         
         if(newMessage[newMessage.length-1].length == 0){
           newMessage[newMessage.length-1].push(userM) 
-          console.log(1)
+          // console.log(1)
           // console.log(newMessage[newMessage.length-1][0].from_user_id)
         }else if(newMessage[newMessage.length-1][0].from_user_id == userM.from_user_id){
           newMessage[newMessage.length-1].push(userM)
-          console.log(newMessage[newMessage.length-1],"asasas")
+          // console.log(newMessage[newMessage.length-1],"asasas")
         }else{
           newMessage.push([])
           newMessage[newMessage.length-1].push(userM)
-          console.log(newMessage[newMessage.length-1])
+          // console.log(newMessage[newMessage.length-1])
         }
       }
       setNewMessageArray([...newMessage])
-      console.log(newMessage,"newMessage")
+      // console.log(newMessage,"newMessage")
     }   
   },[message])
 

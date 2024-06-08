@@ -1,12 +1,7 @@
-import  { FC,  useEffect, useState,  } from 'react'
+import  { FC  } from 'react'
 import avatar from "../assets/sonic.jpg"
-import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock'
-import { addMessage } from '../store/ChatsSlice'
-import $api from '../http'
-import { fetchGetServer } from '../store/actionServer'
-import { useNavigate } from 'react-router-dom'
-import ModuleTest from './Module'
-import { fetchReadMessage } from '../store/acthionChat'
+import { useAppSelector } from '../hooks/redux-hoock'
+
 import "../css/message_container.css"
 import NewMessage from './NewMessage'
 
@@ -22,17 +17,10 @@ interface MessageProps{
 
 
 
-const  MessageBlock: FC<MessageProps>=({messageBlock,children})=> {
+const  MessageBlock: FC<MessageProps>=({messageBlock})=> {
   const me = useAppSelector(state=>state.auth.user)
   const NoMe = useAppSelector(state=>state.chats.users)
-  const [isModule,setIsModule] = useState<boolean>(false)
-  const dispatch = useAppDispatch()
-  const messageUser = useAppSelector(state=>state.chats.message)
-  const [isUrl,setIsURL] = useState<boolean>(false)
-  const [URLdomen,setURLdomen] = useState<string>("")
-  const [gif,setGif] = useState<string>("")
-  const navigate = useNavigate()
-  const [audio,setAudio] = useState<boolean>(false)
+ 
 
 
 
@@ -40,9 +28,9 @@ const  MessageBlock: FC<MessageProps>=({messageBlock,children})=> {
 
 
 
-useEffect(()=>{
-    console.log(messageBlock,"block")
-},[])
+// useEffect(()=>{
+//     console.log(messageBlock,"block")
+// },[])
   return (
     <>
      <div className={messageBlock[0].from_user_id == me.uuid || me.uuid == "" || undefined ? 'message my-message'  : 'message'}>
@@ -68,7 +56,7 @@ useEffect(()=>{
 
 
                   
-      {messageBlock.map(message=>( <NewMessage uuid={message.uuid} content={message.content} media={message.media} classUser={message.from_user_id} time={message.timestamp}  hasRead={message.has_read}></NewMessage>
+      {messageBlock.map(message=>( <NewMessage uuid={message.uuid} key={message.uuid} content={message.content} media={message.media} classUser={message.from_user_id} time={message.timestamp}  hasRead={message.has_read}></NewMessage>
         ))}
 
 

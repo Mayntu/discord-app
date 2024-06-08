@@ -137,7 +137,9 @@ const VideoCallBlock:FC<IVideoCallBlock>=({user,setIsCallBlock})=> {
     
     
         socketWebRTC.on("add-peer", handleNewPeer);
-    
+        socketWebRTC.on("user-disconnect",(data)=>{
+          console.log("user-disconnect=",data)
+        })
         return () => {
           socketWebRTC.off("add-peer");
           socketWebRTC.emit("leave-room");
@@ -192,6 +194,7 @@ const VideoCallBlock:FC<IVideoCallBlock>=({user,setIsCallBlock})=> {
 
       useEffect(() => {
         const handleRemovePeer = ({peerID}: newPeer) => {
+          console.log(peerID,"remove-peer")
           if (peerConnecthions.current[peerID]) {
             peerConnecthions.current[peerID].close();
           }
@@ -205,6 +208,7 @@ const VideoCallBlock:FC<IVideoCallBlock>=({user,setIsCallBlock})=> {
         socketWebRTC.on("remove-peer", handleRemovePeer);
     
         return () => {
+        
           socketWebRTC.off("remove-peer");
           socketWebRTC.emit("leave-room");
         }
