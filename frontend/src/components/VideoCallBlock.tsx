@@ -72,7 +72,7 @@ const VideoCallBlock:FC<IVideoCallBlock>=({user,setIsCallBlock})=> {
       
           return () => {
             streamData.current?.getTracks().forEach(track=>track.stop())
-      
+            console.log("exit-video")
             socketWebRTC.emit("leave-room");
           };
         

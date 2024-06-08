@@ -18,9 +18,10 @@ const LoginForm:FC=()=> {
 
 
     useEffect(()=>{
-      if(localStorage.getItem("token")){
+      if(localStorage.getItem("token") || isAuth){
         navigate("/")
       }
+   
     },[isAuth])
     
     useEffect(()=>{
