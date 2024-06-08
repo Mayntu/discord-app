@@ -69,9 +69,11 @@ def on_leave_room():
         room_id = _room_of_sid[sid]
         display_name = _name_of_sid[sid]
         print("[{}] Member left: {}<{}>".format(room_id, display_name, sid))
-        emit("user-disconnect", {"sid": sid}, broadcast=True, include_self=False, room=room_id)
+        # emit("user-disconnect", {"sid": sid}, broadcast=True, include_self=False, room=room_id)
        
-        _users_in_room[room_id].pop(sid)
+        print("wgagagwa")
+        print(_users_in_room[room_id])
+        _users_in_room[room_id].remove(sid)
         print("_users_in_room=",_users_in_room)
         try:
             if len(_users_in_room[room_id]) == 0:
@@ -87,6 +89,7 @@ def on_leave_room():
         _room_of_sid.pop(sid)
         _name_of_sid.pop(sid)
 
+        print("users in room")
         print("\nusers: ", _users_in_room, "\n")
     except:
         ...
@@ -100,9 +103,9 @@ def on_disconnect():
         display_name = _name_of_sid[sid]
 
         print("[{}] Member left: {}<{}>".format(room_id, display_name, sid))
-        emit("user-disconnect", {"sid": sid}, broadcast=True, include_self=False, room=room_id)
+        # emit("user-disconnect", {"sid": sid}, broadcast=True, include_self=False, room=room_id)
 
-        _users_in_room[room_id].pop(sid)
+        _users_in_room[room_id].remove(sid)
         try:
             if len(_users_in_room[room_id]) == 0:
                 _users_in_room.pop(room_id)

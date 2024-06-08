@@ -13,11 +13,15 @@ from chats.models import (
     Chat,
 )
 from server.models import (
+    ServerMember,
+    ServerRole,
     Server,
     ServerChatRoom,
     ServerAudioRoom,
     ServerMessage,
     InvitationLink,
+    ROLES,
+    PERMISSIONS
 )
 from server.serializers import (
     ServerSerializer,
@@ -136,6 +140,13 @@ def api_create_server(request):
     print(server.uuid)
     owner_user : User = User.objects.get(uuid=owner_user_id)
     owner_user.servers.add(server)
+    server_member : ServerMember = ServerMember.objects.create(
+        user_uuid=str(owner_user.uuid),
+        name=owner_user.login,
+        role=ROLES.owner,
+    )
+    server.members.add(server_member)
+    print(server_member.role.has_perm(permission=PERMISSIONS.CREATE_CHAT))
 
     print(owner_user.servers.all())
 
@@ -180,6 +191,51 @@ def api_get_servers_users(request):
 
 
 
+def api_get_server_members(request):
+    data : dict = request.headers
+
+
+    token : str = data.get("Authorization").replace('"', "")
+    token_content : dict = get_token(
+        token=token
+    )
+
+    if not token_content:
+        return JsonResponse(data={"result" : False, "error" : "not valid token"})
+    
+    
+    data : dict = json.loads(request.body)
+
+    
+    server_uuid : str = data.get("uuid")
+
+    server : Server = Server.objects.get(uuid=server_uuid)
+
+    server_members = server.members.all()
+    
+    members : list = []
+    for server_member in server_members:
+        member : dict = {}
+        role : dict = {}
+        
+        member["uuid"] = server_member.uuid
+        member["name"] = server_member.role
+
+        role["uuid"] = server_member.role.uuid
+        role["name"] = server_member.role.name
+        role["color"] = server_member.role.color
+        role["permissions"] = server_member.role.permissions
+        member["role"] = role
+
+        member["avatar"] = server_member.avatar
+
+        members.append(member)
+
+
+    return JsonResponse(data={"result" : True, "users" : members})
+
+
+
 def api_create_server_chat(request):
     data : dict = request.headers
 
@@ -198,47 +254,86 @@ def api_create_server_chat(request):
     user_uuid : str = token_content.get("uuid")
     server_uuid : str = data.get("uuid")
     chat_room_title : str = data.get("title")
+    is_private : bool = data.get("is_private") == "true"
 
     user : User = User.objects.get(pk=user_uuid)
 
     server : Server = Server.objects.get(pk=server_uuid)
-    print(str(user.uuid), str(server.owner_id))
+    server_member : ServerMember = server.members.filter(user_uuid=user_uuid).first()
+    # print(str(user.uuid), str(server.owner_id))
 
-    if not str(user.uuid) == server.owner_id:
-        return JsonResponse(data={"result" : False, "message" : "you must be server owner"})
+    # if not str(user.uuid) == server.owner_id:
+    #     return JsonResponse(data={"result" : False, "message" : "you must be server owner"})
+
+    
+    has_create_chat_permission : bool = server_member.role.has_perm(
+        permission=PERMISSIONS.CREATE_CHAT,
+    )
+    has_create_private_chat_permission : bool = server_member.role.has_perm(
+        permission=PERMISSIONS.CREATE_PRIVATE_CHAT,
+    )
+    
+    if is_private:
+        if not has_create_private_chat_permission:
+            return JsonResponse(data={"result" : False, "content" : "user has no permission"})
+    
+    if not is_private:
+        if not has_create_chat_permission:
+            return JsonResponse(data={"result" : False, "content" : "user has no permission"})
     
 
-    server_chat_room : ServerChatRoom = ServerChatRoom.objects.create(title=chat_room_title, server_object=server)
+    server_chat_room : ServerChatRoom = ServerChatRoom.objects.create(
+        title=chat_room_title,
+        server_object=server,
+        is_private=is_private,
+    )
     server.chat_rooms.add(server_chat_room)
-
 
     return JsonResponse(data={"result" : True, "server_chat_room_uuid" : server_chat_room.uuid})
 
 
 
 def api_get_server_chat_rooms(request):
+    print("get_server_chat_rooms")
     data  : dict = request.headers
     token : str  = data.get("Authorization").replace('"', "")
 
     token_content = get_token(token=token)
     if not token_content:
         return JsonResponse(data={"result" : False, "message" : "not valid token"})
+    
+    print("2")
 
 
     data : dict = json.loads(request.body)
 
-
+    user_uuid : str = token_content.get("uuid")
     server_uuid : str = data.get("server_uuid")
 
 
+    print("3")
     try:
         server : Server = Server.objects.get(uuid=server_uuid)
-        server_chat_rooms = server.chat_rooms.all()
+        print("4")
+        server_member : ServerMember = server.members.filter(user_uuid=str(user_uuid)).first()
+        print(server_member)
+        print(PERMISSIONS.SEE_PRIVATE)
+        print(server_member.role.has_perm(PERMISSIONS.SEE_PRIVATE))
+        
+        if server_member.role.has_perm(PERMISSIONS.SEE_PRIVATE):
+            print("5")
+            server_chat_rooms = server.chat_rooms.all()
+        else:
+            print("5")
+            server_chat_rooms = server.chat_rooms.filter(is_private=False)
+        
         print(server_chat_rooms)
         result : list = []
         for server_chat_room in server_chat_rooms:
             temp : dict = {"uuid" : str(server_chat_room.uuid), "title" : server_chat_room.title}
             result.append(temp)
+        
+        print(result)
 
         return JsonResponse(data={"result" : True, "data" : result}, safe=False)
     except Exception as e:

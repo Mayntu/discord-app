@@ -2,7 +2,6 @@ from discord.settings import BASE_DIR
 from soundfile import read, write
 from string import ascii_letters
 from random import randint
-from pydub import AudioSegment
 from io import BytesIO as bIO
 import uuid
 import tempfile
@@ -90,14 +89,15 @@ def generate_link(server_uuid : str) -> str:
 
 
 def convert_audio(file, path : str, file_format : str, file_format_convert : str) -> None:
-    file_data = file.read()
-    audio = AudioSegment.from_file(file=bIO(file_data),format=file_format)
+    pass
+    # file_data = file.read()
+    # audio = AudioSegment.from_file(file=bIO(file_data),format=file_format)
 
-    wav_buffer : bIO = bIO()
+    # wav_buffer : bIO = bIO()
 
-    audio.export(wav_buffer, format=file_format_convert)
-    wav_buffer.seek(0)
+    # audio.export(wav_buffer, format=file_format_convert)
+    # wav_buffer.seek(0)
 
 
-    with open(file=path, mode="wb") as wav:
-        wav.write(wav_buffer.getvalue())
+    # with open(file=path, mode="wb") as wav:
+    #     wav.write(wav_buffer.getvalue())

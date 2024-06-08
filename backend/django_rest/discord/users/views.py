@@ -71,6 +71,8 @@ def api_reg(request):
                 login=user.login,
                 password=user.password,
             )
+            
+            print(token)
 
             return JsonResponse(data={"result" : True, "token" : token}, safe=True)
         

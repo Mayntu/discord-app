@@ -2,8 +2,25 @@ from django.db import models
 from uuid import uuid4
 
 from users.models import User
+from server.settings import ServerRole, PERMISSIONS, ROLES
 
+"""
+    Функционал на сервере:
 
+    Owner:
+        1. Удалять сервер.
+        2. Переименовывать сервер.
+        3. Изменять аватарку сервера.
+    
+    Owner / Moderator
+        1. Создавать обычные каналы.
+        2. Создавать приватные каналы (текст, аудио).
+        3. Удалять каналы.
+        4. Приглашать пользователей, удалять пользователей.
+        5. Просматривать все каналы и приватные и обычные.
+        6. Удалять сообщения.
+        7. Создавать роли.
+"""
 
 class ServerAudioRoom(models.Model):
     uuid = models.UUIDField(default=uuid4, primary_key=True, verbose_name="UUID")
@@ -16,14 +33,22 @@ class ServerChatRoom(models.Model):
     uuid = models.UUIDField(default=uuid4, primary_key=True, verbose_name="UUID")
     server_object = models.ForeignKey("Server", on_delete=models.CASCADE)
     title = models.CharField(max_length=256, verbose_name="title")
+    is_private = models.BooleanField(default=False, verbose_name="private?")
     messages = models.ManyToManyField("ServerMessage", blank=True)
 
 
+class ServerMember(User):
+    user_uuid = models.CharField(max_length=32, null=True, verbose_name="APP USER UUID")
+    name = models.CharField(max_length=64, verbose_name="name")
+    role = models.ForeignKey(ServerRole, default=ROLES.user.uuid, on_delete=models.PROTECT, verbose_name="role")
+    
 class Server(models.Model):
     uuid = models.UUIDField(default=uuid4, primary_key=True, verbose_name="UUID")
     title = models.CharField(max_length=32, blank=False, verbose_name="title")
     owner_id = models.CharField(max_length=256, blank=False, verbose_name="owner")
-    users = models.ManyToManyField(User, blank=True, verbose_name="users")
+    users = models.ManyToManyField(User, blank=True, verbose_name="users", related_name="users")
+    members = models.ManyToManyField(ServerMember, blank=True, verbose_name="members", related_name="members")
+    moderators = models.ManyToManyField(User, blank=True, verbose_name="moderators", related_name="moderators")
     chat_rooms = models.ManyToManyField(ServerChatRoom, blank=True, verbose_name="chat_rooms")
     audio_rooms = models.ManyToManyField(ServerAudioRoom, blank=True, verbose_name="audio_rooms")
     avatar = models.CharField(max_length=256, verbose_name="avatar")
