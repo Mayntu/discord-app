@@ -10,8 +10,11 @@ import { ChatService } from "../services/ChatService"
       try {
         const response = await AuthService.login(payload.login,payload.password)
         console.log(response.data,"login")
-        localStorage.setItem('token',response.data.token)
-        return response.data
+        if(response.data.result){
+          localStorage.setItem('token',response.data.token)
+          return response.data
+        }
+       
       } catch (error: any) {
         return thunkAPI.rejectWithValue(error?.message)
       }
@@ -25,7 +28,9 @@ import { ChatService } from "../services/ChatService"
       try {
         const response = await AuthService.registration(payload.email,payload.login,payload.password)
         console.log(response.data,"fetchRegistration")
-        localStorage.setItem('token',response.data.token)
+        if(response.data.result){
+          localStorage.setItem('token',response.data.token)
+        }
         return response.data
       } catch (error: any) {
         return thunkAPI.rejectWithValue(error?.message)

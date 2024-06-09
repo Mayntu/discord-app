@@ -76,7 +76,7 @@ const InputMessage:FC<IInputMessage>=({dropImage,sendMessage,setFile,setMessageT
       mediaRecorder.current.stop();
       mediaRecorder.current.onstop = () => {
       
-         const audioBlob = new Blob(audioChunks, { type:  'audio/mp3' });
+         const audioBlob = new Blob(audioChunks, { type:  'audio/wav' });
          setAudioBlob(audioBlob)
       
          setAudioChunks([]);
@@ -89,7 +89,7 @@ const InputMessage:FC<IInputMessage>=({dropImage,sendMessage,setFile,setMessageT
                 "data" : "", 
                 "chat_id" : chatid,
                 "token" : localStorage.getItem("token"), 
-                media:{file : audioBlob, name : "audio/mp3"} });
+                media:{file : audioBlob, name : "audio/wav"} });
             }
             if(chatserverid){
               
@@ -99,7 +99,7 @@ const InputMessage:FC<IInputMessage>=({dropImage,sendMessage,setFile,setMessageT
                 "chat_id" : chatserverid, 
                 "server_id" : serverid,
                 "token" : localStorage.getItem("token"), 
-                media:  {file : audioBlob, name : "audio/mp3"}});
+                media:  {file : audioBlob, name : "audio/wav"}});
             }
               setAudioBlob(undefined)
          }

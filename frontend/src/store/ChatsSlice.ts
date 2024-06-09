@@ -65,10 +65,7 @@ const chatsSlice = createSlice({
         addUsersConnectState(state,{payload}:PayloadAction<string | string[]>){
          if(state.usersConnect.length === 0){
                 state.usersConnect.push(...payload)
-            }
-          
-           
-           
+            } 
         },
         userOnline(state,{payload}:PayloadAction<string>){
             if( !Array.isArray(payload)  && !state.usersConnect.includes(payload)){
@@ -77,12 +74,13 @@ const chatsSlice = createSlice({
             }
         },
         userOffline(state,{payload}:PayloadAction<string>){
-            if(!Array.isArray(payload) && state.usersConnect.includes(payload)){
+            if( state.usersConnect.includes(payload)){
                 // console.log("offline")
                 // console.log( state.usersConnect.splice(state.usersConnect.indexOf(payload),1))
                 state.usersConnect.splice(state.usersConnect.indexOf(payload),1)
             }
         },
+       
     },
     extraReducers: (builder:  ActionReducerMapBuilder<TChats>)=>{
         // получение чатов 

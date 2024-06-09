@@ -6,7 +6,6 @@ import { fetchDeleteUser } from '../store/acthion';
 import Message from './Message';
 import avatar from "../assets/sonic.jpg"
 import callIcon from "../assets/Mask group.png"
-import backImage from "../assets/Rectangle.png"
 import { IUserChatT } from '../models/IUserChat';
 import { fetchDeleteServerChatRoom, fetchDeleteServersMessage, fetchGetServerChatRoomMessages, fetchGetServerChatRooms, } from '../store/actionServer';
 import {  fetchDeleteChatMessage, fetchGetChatMessage, fetchGetUserChats, fetchReadMessage } from '../store/acthionChat';
@@ -18,7 +17,7 @@ import "../css/message_container.css"
 import { changeMessage } from '../hooks/changeMessage';
 import ModuleTest from './Module';
 import MessageBlock from './MessageBlock';
-
+import { v4 as uuidv4 } from 'uuid';
 
 
 
@@ -103,28 +102,29 @@ useEffect(()=>{
   useEffect(()=>{
    
     {message && setMessageArray(message)}
-    if(message.length !==0 ){
-      let newMessage:any[][] = [[]]
-      // console.log(newMessage[0].length)
-      for(let i=0;i<message.length;i++){
-        let userM = message[i]
+    // if(message.length !==0 ){
+    //   let newMessage:any[][] = [[]]
+    //   // console.log(newMessage[0].length)
+    //   for(let i=0;i<message.length;i++){
+    //     let userM = message[i]
         
-        if(newMessage[newMessage.length-1].length == 0){
-          newMessage[newMessage.length-1].push(userM) 
-          // console.log(1)
-          // console.log(newMessage[newMessage.length-1][0].from_user_id)
-        }else if(newMessage[newMessage.length-1][0].from_user_id == userM.from_user_id){
-          newMessage[newMessage.length-1].push(userM)
-          // console.log(newMessage[newMessage.length-1],"asasas")
-        }else{
-          newMessage.push([])
-          newMessage[newMessage.length-1].push(userM)
-          // console.log(newMessage[newMessage.length-1])
-        }
-      }
-      setNewMessageArray([...newMessage])
-      // console.log(newMessage,"newMessage")
-    }   
+    //     if(newMessage[newMessage.length-1].length == 0){
+    //       newMessage[newMessage.length-1].push(userM) 
+    //       // console.log(1)
+    //       // console.log(newMessage[newMessage.length-1][0].from_user_id)
+    //     }else if(newMessage[newMessage.length-1][0].from_user_id == userM.from_user_id){
+    //       newMessage[newMessage.length-1].push(userM)
+    //       // console.log(newMessage[newMessage.length-1],"asasas")
+    //     }else{
+    //       newMessage.push([])
+    //       newMessage[newMessage.length-1].push(userM)
+    //       // console.log(newMessage[newMessage.length-1])
+    //     }
+    //   }
+    //   setNewMessageArray([...newMessage])
+    //   // console.log(newMessage,"newMessage")
+    // }   
+    createMeassageBlock(message)
   },[message])
 
 
@@ -170,6 +170,32 @@ useEffect(()=>{
     return data
   }
 
+  const createMeassageBlock=(message:any)=>{
+    if(message.length !==0 ){
+      let newMessageBlock:any[] = []
+      let newMessageInBlock:any[] = []
+      for(let i=0;i<message.length;i++){
+        if(newMessageBlock[newMessageBlock.length-1] == undefined){
+          let idBlock = uuidv4()
+          newMessageBlock.push({idBlock:idBlock,userBlock:message[i].from_user_id})
+          newMessageInBlock.push({idBlock:idBlock,messages:[message[i]]})
+        }else if(newMessageBlock[newMessageBlock.length-1].userBlock == message[i].from_user_id){
+          let idBlock = newMessageBlock[newMessageBlock.length-1].idBlock
+         console.log( newMessageInBlock[0].idBlock == idBlock)
+        let index = newMessageInBlock.findLastIndex(i=>i.idBlock == newMessageBlock[newMessageBlock.length-1].idBlock)
+        newMessageInBlock[index].messages.push(message[i])
+        }else{
+          let idBlock = uuidv4()
+          newMessageBlock.push({idBlock:idBlock,userBlock:message[i].from_user_id})
+          newMessageInBlock.push({idBlock:idBlock,messages:[message[i]]})
+        }
+      }
+      // setNewMessageArray([...newMessage])
+      console.log(newMessageBlock,"newMessageBlock")
+      console.log(newMessageInBlock,"newMessageInBlock")
+    }   
+  }
+
   useEffect(()=>{
     if(chatid && messageArray.length){
       function name(data:any) {
@@ -205,7 +231,7 @@ useEffect(()=>{
 
       socket.on("user-changed",name)
     }
-
+   
     return ()=>{
   
       socket.off("user-changed")
@@ -228,14 +254,14 @@ useEffect(()=>{
             // console.log(newMessage[newMessage.length-1][0].from_user_id)
           }else if(newMessageArray[newMessageArray.length-1][0].from_user_id == data.from_user_id){
             // newMessageArray[newMessageArray.length-1].push(data)
-            console.log("dddddddddddddddddddd")
+            // console.log("dddddddddddddddddddd")
             // setNewMessageArray()
             // console.log(newMessageArray[newMessageArray.length-1],"asasas")
             // setNewMessageArray((prev)=>prev[newMessageArray.length-1] = [...prev[newMessageArray.length-1],data])
           }else{
             newMessageArray.push([])
             newMessageArray[newMessageArray.length-1].push(data)
-            console.log("sasasasasasasasas")
+            // console.log("sasasasasasasasas")
             // console.log(newMessageArray[newMessageArray.length-1])
           }
           scroll()

@@ -1,7 +1,7 @@
 .chat-container{
     display: flex;
     flex-direction: row;
-    max-width:330px;
+    max-width:250px;
     align-items: center;
     justify-content: space-between;
     border-radius: 10px;
@@ -33,12 +33,12 @@
   }
   
   .status,.status-red {
-    width: 10px;
-    height: 10px;
+    width: 12px;
+    height: 12px;
     background-color: #38ff10;
     position: absolute;
-    right: 10px;
-    top: 0px;
+    right: 7px;
+    top: -7px;
     border-radius: 100%;
   }
   
@@ -47,8 +47,9 @@
   }
   .chat-list-container,.settings-container{
     background-color: #242424;
-    padding: 5px;
-    width: 400px;
+    padding: 5px 10px;
+    width: 314px;
+
     /* animation-duration: 10s;
     transition: 10s; */
     display: flex;
