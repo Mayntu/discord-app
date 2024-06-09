@@ -21,7 +21,9 @@ function App() {
   
  
   useEffect(()=>{
-    dispatch(fetchUser())
+    if(localStorage.getItem("token")){
+      dispatch(fetchUser())
+    }
   },[])
 
   const connect=async()=>{

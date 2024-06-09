@@ -1,6 +1,5 @@
 import { ActionReducerMapBuilder, PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { IMessage, IUserChat, IUserChatT, IUserChatTSearch } from "../models/IUserChat";
-import {   fetchTest } from "./acthion";
 import { fetchCreateChat, fetchFindChat, fetchGetChatMessage, fetchGetUserChats } from "./acthionChat";
 
 
@@ -99,9 +98,6 @@ const chatsSlice = createSlice({
         .addCase(fetchFindChat.fulfilled,(state,{payload}:PayloadAction<any>)=>{
             state.searcChat = payload.users_results
             
-        })// для теста
-        .addCase(fetchTest.fulfilled,(state,{payload}:PayloadAction<any>)=>{
-            state.test = JSON.stringify(payload)
         })
         .addCase(fetchCreateChat.fulfilled,(state,{payload}:PayloadAction<any>)=>{
             state.newChatid = payload.chat_id

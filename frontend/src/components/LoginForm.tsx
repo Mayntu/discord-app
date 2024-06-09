@@ -18,8 +18,9 @@ const LoginForm:FC=()=> {
 
 
     useEffect(()=>{
-      if(localStorage.getItem("token")  && isAuth){
-        console.log(localStorage.getItem("token"),"token")
+      console.log(localStorage.getItem("token"),"token",1)
+      if(isAuth && localStorage.getItem("token")){
+        console.log(localStorage.getItem("token"),"token",2)
         navigate("/chat")
       }
    

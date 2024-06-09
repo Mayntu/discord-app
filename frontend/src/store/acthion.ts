@@ -30,6 +30,7 @@ import { ChatService } from "../services/ChatService"
         console.log(response.data,"fetchRegistration")
         if(response.data.result){
           localStorage.setItem('token',response.data.token)
+          console.log(  localStorage.getItem('token'))
         }
         return response.data
       } catch (error: any) {
@@ -53,18 +54,7 @@ import { ChatService } from "../services/ChatService"
     },
   )
  
-  export const fetchTest = createAsyncThunk(
-    'users/fetchTest',
-    async (payload:string, thunkAPI) => {
-      try {
-        const response = await ChatService.test(payload)
-        console.log(response.data,"test")
-        return response.data
-      } catch (error: any) {
-        return thunkAPI.rejectWithValue(error?.message)
-      }
-    },
-  )
+
 
 
   export const fetchMedia = createAsyncThunk(
@@ -80,19 +70,7 @@ import { ChatService } from "../services/ChatService"
       }
     },
   )
-  // export const fetchMedia2 = createAsyncThunk(
-  //   'users/fetchMedia2',
-  //   async (payload:any, thunkAPI) => {
-  //     try {
-  //       console.log(payload)
-  //       const response = await ChatService.saveM2(payload)
-  //       console.log(response.data,"media")
-  //       return response.data
-  //     } catch (error: any) {
-  //       return thunkAPI.rejectWithValue(error?.message)
-  //     }
-  //   },
-  // )
+
 
   export const fetchUser = createAsyncThunk(
     'users/fetchUser',

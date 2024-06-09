@@ -6,7 +6,7 @@ import { fetchDeleteUser } from '../store/acthion';
 import Message from './Message';
 import avatar from "../assets/sonic.jpg"
 import callIcon from "../assets/Mask group.png"
-import { IUserChatT } from '../models/IUserChat';
+import { IMessage, IUserChatT } from '../models/IUserChat';
 import { fetchDeleteServerChatRoom, fetchDeleteServersMessage, fetchGetServerChatRoomMessages, fetchGetServerChatRooms, } from '../store/actionServer';
 import {  fetchDeleteChatMessage, fetchGetChatMessage, fetchGetUserChats, fetchReadMessage } from '../store/acthionChat';
 import InputMessage from './InputMessage';
@@ -18,6 +18,8 @@ import { changeMessage } from '../hooks/changeMessage';
 import ModuleTest from './Module';
 import MessageBlock from './MessageBlock';
 import { v4 as uuidv4 } from 'uuid';
+import { TmessageBlocks } from '../hooks/useCreateMessageBlock';
+
 
 
 
@@ -44,8 +46,8 @@ const  MessageContainer : FC=()=> {
   const [newContent,setNewContent] = useState<string>("")
   const [usersInChate,setusersInChate] = useState<string[]>([])
   const [newMessageArray,setNewMessageArray] = useState<any[][]>([[]])
-
-
+  const [BlockMessage,setBlockMessage] = useState<TmessageBlocks[]>([])
+  const [MessageInBlock,setMessageInBlock] = useState<{ [key: string]: IMessage[]}>({})
   const joinRoom = (room:any) => {
     console.log("join","username",userMe.login,"chat_id",room,"uuid",userMe.uuid)
     socket.emit("join", {"username" : userMe.login, "chat_id" : room,uuid:userMe.uuid});
@@ -100,31 +102,7 @@ useEffect(()=>{
   },[userMe,chatid])
 
   useEffect(()=>{
-   
-    {message && setMessageArray(message)}
-    // if(message.length !==0 ){
-    //   let newMessage:any[][] = [[]]
-    //   // console.log(newMessage[0].length)
-    //   for(let i=0;i<message.length;i++){
-    //     let userM = message[i]
-        
-    //     if(newMessage[newMessage.length-1].length == 0){
-    //       newMessage[newMessage.length-1].push(userM) 
-    //       // console.log(1)
-    //       // console.log(newMessage[newMessage.length-1][0].from_user_id)
-    //     }else if(newMessage[newMessage.length-1][0].from_user_id == userM.from_user_id){
-    //       newMessage[newMessage.length-1].push(userM)
-    //       // console.log(newMessage[newMessage.length-1],"asasas")
-    //     }else{
-    //       newMessage.push([])
-    //       newMessage[newMessage.length-1].push(userM)
-    //       // console.log(newMessage[newMessage.length-1])
-    //     }
-    //   }
-    //   setNewMessageArray([...newMessage])
-    //   // console.log(newMessage,"newMessage")
-    // }   
-    createMeassageBlock(message)
+    {message && setMessageArray(message), createMeassageBlock(message)}  
   },[message])
 
 
@@ -172,28 +150,42 @@ useEffect(()=>{
 
   const createMeassageBlock=(message:any)=>{
     if(message.length !==0 ){
-      let newMessageBlock:any[] = []
-      let newMessageInBlock:any[] = []
+      let newMessageBlock:TmessageBlocks[]  = []
+      // let newMessageInBlock:TmessagesInBlock[] = []
+      let newMessageInBlock2:  { [key: string]: IMessage[]} = {}
       for(let i=0;i<message.length;i++){
         if(newMessageBlock[newMessageBlock.length-1] == undefined){
           let idBlock = uuidv4()
           newMessageBlock.push({idBlock:idBlock,userBlock:message[i].from_user_id})
-          newMessageInBlock.push({idBlock:idBlock,messages:[message[i]]})
+          // newMessageInBlock.push({idBlock:idBlock,messages:[message[i]]})
+          newMessageInBlock2[idBlock] = [message[i]]
         }else if(newMessageBlock[newMessageBlock.length-1].userBlock == message[i].from_user_id){
+         
           let idBlock = newMessageBlock[newMessageBlock.length-1].idBlock
-         console.log( newMessageInBlock[0].idBlock == idBlock)
-        let index = newMessageInBlock.findLastIndex(i=>i.idBlock == newMessageBlock[newMessageBlock.length-1].idBlock)
-        newMessageInBlock[index].messages.push(message[i])
+        //   console.log(idBlock)
+
+        //  console.log( newMessageInBlock[0].idBlock == idBlock)
+        // let index = newMessageInBlock.findLastIndex((i:any)=>i.idBlock == newMessageBlock[newMessageBlock.length-1].idBlock)
+        // newMessageInBlock[index].messages.push(message[i])
+        newMessageInBlock2[idBlock].push(message[i])
+        // console.log(newMessageInBlock2[idBlock])
         }else{
           let idBlock = uuidv4()
           newMessageBlock.push({idBlock:idBlock,userBlock:message[i].from_user_id})
-          newMessageInBlock.push({idBlock:idBlock,messages:[message[i]]})
+          newMessageInBlock2[idBlock] = [message[i]]
+          // newMessageInBlock.push({idBlock:idBlock,messages:[message[i]]})
         }
       }
       // setNewMessageArray([...newMessage])
-      console.log(newMessageBlock,"newMessageBlock")
-      console.log(newMessageInBlock,"newMessageInBlock")
-    }   
+      // console.log(newMessageBlock,"newMessageBlock")
+      setBlockMessage(newMessageBlock)
+      setMessageInBlock(newMessageInBlock2)
+      // console.log(newMessageInBlock,"newMessageInBlock")
+      // console.log(newMessageInBlock2,"newMessageInBlock2")
+    }  else{
+      setBlockMessage([])
+      setMessageInBlock({})
+    }
   }
 
   useEffect(()=>{
@@ -232,46 +224,57 @@ useEffect(()=>{
       socket.on("user-changed",name)
     }
    
-    return ()=>{
-  
-      socket.off("user-changed")
-    }
+    return ()=>{socket.off("user-changed")}
+
+
   },[socket,chatid,usersInChate,messageArray])
     
+const updateBlockOrMesasage=async(datan:any)=>{
+
+  let  data:IMessage = JSON.parse(datan.message)
+  console.log( data)
+   data =  s(data)
+     await setMessageArray((prev)=>[...prev,{content: data.content, from_user_id : data.from_user_id, uuid : data.uuid,timestamp : data.timestamp,media : data.media,has_read:data.has_read}]) 
+     updateBlockOrMesasage(data)
+  scroll()
+
+  if(BlockMessage[BlockMessage.length-1] == undefined){
+    let idBlock = uuidv4()
+    let block = [{idBlock:idBlock,userBlock:data.from_user_id}]
+     setBlockMessage(block)
+     let ms:any = {}
+     console.log(1,BlockMessage[BlockMessage.length-1])
+     ms[idBlock]= [data]
+     setMessageInBlock(ms)
+  }else if(BlockMessage[BlockMessage.length-1].userBlock == data.from_user_id){
+    let idBlock = BlockMessage[BlockMessage.length-1].idBlock
+    let messages = MessageInBlock
+    console.log(2)
+    messages[idBlock] = [...messages[idBlock],data]
+    setMessageInBlock(messages)
+    // setMessageInBlock({...MessageInBlock,[idBlock]:[...MessageInBlock[idBlock],data]})
+  }else{
+    let idBlock = uuidv4()
+    let block = BlockMessage
+    block.push({idBlock:idBlock,userBlock:data.from_user_id})
+    setBlockMessage(block)
+    let messages = MessageInBlock
+    messages[idBlock] = [data]
+    console.log(3)
+    setMessageInBlock(messages)
+  }
+}
+
   useEffect(()=>{ 
     // получаю сообщения
       if(chatid && Object.keys(userMe).length !== 0 && usersChat && usersConnect && usersInChate){
-        socket.on("message", async(data:any) => {
-          data = JSON.parse(data.message)
-          console.log( data)
-           data =  s(data)
-          await setMessageArray((prev)=>[...prev,{content: data.content, from_user_id : data.from_user_id, uuid : data.uuid,timestamp : data.timestamp,media : data.media,has_read:data.has_read}]) 
-          let messageArrayZ = newMessageArray
-          if(newMessageArray[newMessageArray.length-1].length == 0){
-            messageArrayZ[newMessageArray.length-1].push(data) 
-            setNewMessageArray([...messageArrayZ])
-            console.log(1)
-            // console.log(newMessage[newMessage.length-1][0].from_user_id)
-          }else if(newMessageArray[newMessageArray.length-1][0].from_user_id == data.from_user_id){
-            // newMessageArray[newMessageArray.length-1].push(data)
-            // console.log("dddddddddddddddddddd")
-            // setNewMessageArray()
-            // console.log(newMessageArray[newMessageArray.length-1],"asasas")
-            // setNewMessageArray((prev)=>prev[newMessageArray.length-1] = [...prev[newMessageArray.length-1],data])
-          }else{
-            newMessageArray.push([])
-            newMessageArray[newMessageArray.length-1].push(data)
-            // console.log("sasasasasasasasas")
-            // console.log(newMessageArray[newMessageArray.length-1])
-          }
-          scroll()
-        });
+        socket.on("message", updateBlockOrMesasage);
       }
       return ()=>{
         socket.off("message")
       }
         
-  },[socket,chatid,userMe,usersChat,usersConnect,usersInChate])
+  },[socket,chatid,userMe,usersChat,usersConnect,usersInChate,MessageInBlock])
 
 
 
@@ -425,8 +428,9 @@ const isChangemessage=()=>{
                 }
               }
             }}>
-              {messageArray.length !==0 ? messageArray.map((ms,index)=><Message key={index} uuid={ms.uuid} classUser={ms.from_user_id} media={ms.media}  time={ms.timestamp} children={ms.content} hasRead={ms.has_read}/>): null}
-                {/* {newMessageArray[0].length !==0 ? newMessageArray.map((messageBlock,index)=><MessageBlock key={index+"wopkfowk"} messageBlock={messageBlock}>wfwfwdwdwdw</MessageBlock>) : null}   */}
+              {/* {messageArray.length !==0 ? messageArray.map((ms,index)=><Message key={index} uuid={ms.uuid} classUser={ms.from_user_id} media={ms.media}  time={ms.timestamp} children={ms.content} hasRead={ms.has_read}/>): null} */}
+                {/* {BlockMessage.length !==0 ? newMessageArray.map((messageBlock,index)=><MessageBlock key={index+"wopkfowk"} messageBlock={messageBlock}>wfwfwdwdwdw</MessageBlock>) : null}   */}
+                {BlockMessage.length !==0 ? BlockMessage.map((messageBlock)=><MessageBlock key={messageBlock.idBlock} messageBlock={messageBlock.userBlock} messages={MessageInBlock} Blockid={messageBlock.idBlock}></MessageBlock>) : null}  
             </div>
             <div className="file-input">
               {file &&  arrayURL.map(i=>(<img src={i} key={i}/>)) }

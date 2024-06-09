@@ -27,5 +27,7 @@ export interface IMessage{
     content: string,
     uuid : string,
     from_user_id: string,
-    chat_id : string
+    chat_id : string,
+    has_read:boolean,
+    timestamp:string
 }
