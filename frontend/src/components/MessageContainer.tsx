@@ -12,9 +12,9 @@ import {  fetchDeleteChatMessage, fetchGetChatMessage, fetchGetUserChats, fetchR
 import InputMessage from './InputMessage';
 import ServerUsersList from './ServerUsersList';
 import VideoCallBlock from './VideoCallBlock';
-import { addMessage, addUsersChat} from '../store/ChatsSlice';
+import { addMessage, addNewMessage, addNewMessageStatus, addUsersChat} from '../store/ChatsSlice';
 import "../css/message_container.css"
-import { changeMessage } from '../hooks/changeMessage';
+import { changeMessage, changeMessageN } from '../hooks/changeMessage';
 import ModuleTest from './Module';
 import MessageBlock from './MessageBlock';
 import { v4 as uuidv4 } from 'uuid';
@@ -35,6 +35,7 @@ const  MessageContainer : FC=()=> {
   const serverMessages = useAppSelector(state=>state.server.serverChatMessages)
   const message_count = useAppSelector(state=>state.chats.message_count)
   const usersConnect = useAppSelector(state=>state.chats.usersConnect)
+  const newMessage = useAppSelector(state=>state.chats.newMessage)
   const userMe = useAppSelector(state=>state.auth.user)
   const [isModule,setIsModule] = useState<boolean>(false)
   const [file,setFile] = useState<File>()
@@ -45,7 +46,6 @@ const  MessageContainer : FC=()=> {
   const [doMs,setDoMs]= useState<number>(0)
   const [newContent,setNewContent] = useState<string>("")
   const [usersInChate,setusersInChate] = useState<string[]>([])
-  const [newMessageArray,setNewMessageArray] = useState<any[][]>([[]])
   const [BlockMessage,setBlockMessage] = useState<TmessageBlocks[]>([])
   const [MessageInBlock,setMessageInBlock] = useState<{ [key: string]: IMessage[]}>({})
   const joinRoom = (room:any) => {
@@ -102,7 +102,7 @@ useEffect(()=>{
   },[userMe,chatid])
 
   useEffect(()=>{
-    {message && setMessageArray(message), createMeassageBlock(message)}  
+    {message &&  createMeassageBlock(message)}  
   },[message])
 
 
@@ -110,7 +110,6 @@ useEffect(()=>{
     // отправляю сообщение 
     
     if(messageText.trim()){
-      console.log("message")
       socket.emit("message", {
         "data" : messageText, 
         "chat_id" : chatid, 
@@ -129,17 +128,16 @@ useEffect(()=>{
   const s=(data:any)=>{
     console.log(usersInChate,"usersInChate Status")
     if(data.from_user_id !== userMe.uuid){
-      // console.log(userMe)
-      // console.log(usersConnect)
       if(usersConnect.includes(data.from_user_id) && usersInChate.length == 2){
-          // console.log("neua")
+          console.log("neua")
           dispatch(fetchReadMessage(data.uuid))
+          console.log(2)
           data.has_read = true
           return data
       }
     }else{
       if(usersInChate.length == 2){
-        // console.log("ya")
+        console.log("ya")
         data.has_read = true
         return data
       }
@@ -148,125 +146,139 @@ useEffect(()=>{
     return data
   }
 
+
+
+  useEffect(()=>{
+    console.log(newMessage,"newMessage")
+  },[newMessage])
+
+
+
   const createMeassageBlock=(message:any)=>{
     if(message.length !==0 ){
       let newMessageBlock:TmessageBlocks[]  = []
-      // let newMessageInBlock:TmessagesInBlock[] = []
-      let newMessageInBlock2:  { [key: string]: IMessage[]} = {}
+      // let newMessageInBlock2:  { [key: string]: IMessage[]} = {}
       for(let i=0;i<message.length;i++){
         if(newMessageBlock[newMessageBlock.length-1] == undefined){
           let idBlock = uuidv4()
           newMessageBlock.push({idBlock:idBlock,userBlock:message[i].from_user_id})
-          // newMessageInBlock.push({idBlock:idBlock,messages:[message[i]]})
-          newMessageInBlock2[idBlock] = [message[i]]
+          // newMessageInBlock2[idBlock] = [message[i]]
+          dispatch(addNewMessage({id:idBlock,ms:message[i]}))
         }else if(newMessageBlock[newMessageBlock.length-1].userBlock == message[i].from_user_id){
-         
           let idBlock = newMessageBlock[newMessageBlock.length-1].idBlock
-        //   console.log(idBlock)
-
-        //  console.log( newMessageInBlock[0].idBlock == idBlock)
-        // let index = newMessageInBlock.findLastIndex((i:any)=>i.idBlock == newMessageBlock[newMessageBlock.length-1].idBlock)
-        // newMessageInBlock[index].messages.push(message[i])
-        newMessageInBlock2[idBlock].push(message[i])
-        // console.log(newMessageInBlock2[idBlock])
+          //  newMessageInBlock2[idBlock].push(message[i])
+        dispatch(addNewMessage({id:idBlock,ms:message[i]}))
         }else{
           let idBlock = uuidv4()
           newMessageBlock.push({idBlock:idBlock,userBlock:message[i].from_user_id})
-          newMessageInBlock2[idBlock] = [message[i]]
-          // newMessageInBlock.push({idBlock:idBlock,messages:[message[i]]})
+          // newMessageInBlock2[idBlock] = [message[i]]
+          dispatch(addNewMessage({id:idBlock,ms:message[i]}))
         }
       }
-      // setNewMessageArray([...newMessage])
-      // console.log(newMessageBlock,"newMessageBlock")
+      console.log(newMessage,"newMessage")
       setBlockMessage(newMessageBlock)
-      setMessageInBlock(newMessageInBlock2)
-      // console.log(newMessageInBlock,"newMessageInBlock")
-      // console.log(newMessageInBlock2,"newMessageInBlock2")
+      // setMessageInBlock(newMessageInBlock2)
     }  else{
       setBlockMessage([])
-      setMessageInBlock({})
+      // setMessageInBlock({})
     }
   }
 
   useEffect(()=>{
-    if(chatid && messageArray.length){
-      function name(data:any) {
+    if(chatid  && Object.keys(newMessage).length !==0){
+      function userChanged(data:any) {
         console.log(data,"user-changed")
         if(data.user_status){
             setusersInChate([...data.users_in_room])
             if(data.users_in_room.length == 2){
-              //  console.log(messageArray)
-            if(messageArray.find((i)=>i.has_read == false)){
-              // console.log("find")
-              const str = messageArray.map((item)=>{
-                if(item.has_read == false){
-                  // console.log(item.has_read)
-                  return {...item,has_read : !item.has_read}
+              let keys = Object.keys(newMessage)
+              keys.map(i=>{
+                if(newMessage[i].find((i)=>i.has_read == false)){
+                  newMessage[i].map((item)=>{
+                          if(item.has_read == false){
+                            // console.log(item.has_read)
+                            dispatch(addNewMessageStatus({id:i}))
+                           
+                            console.log(1)
+                            return item
+                          }
+                          return item
+                      })
                 }
-                return item
-                } )          
-                // console.log(str)
-                setMessageArray(str)
-               }
+                
+              })
+              keys.map(i=>{
+                if(newMessage[i].find((i)=>i.has_read == false)){
+                  newMessage[i].map((item)=>{
+                          if(item.has_read == false){
+                            // console.log(item.has_read)
+                        
+                            dispatch(fetchReadMessage(item.uuid))
+                            console.log(3)
+                            return item
+                          }
+                          return item
+                      })
+                }
+                
+              })
             }
         }else{
           const userofflineInChat = usersInChate
           if(userofflineInChat.includes(data.user_uuid)){
             userofflineInChat.splice( userofflineInChat.indexOf(data.user_uuid),1)
             setusersInChate([...userofflineInChat])
-           
           }
         }
        console.log(usersInChate,"usersInChate")
       }
 
 
-      socket.on("user-changed",name)
+      socket.on("user-changed",userChanged)
     }
    
     return ()=>{socket.off("user-changed")}
 
 
-  },[socket,chatid,usersInChate,messageArray])
+  },[socket,chatid,usersInChate,newMessage])
     
+
+
+
 const updateBlockOrMesasage=async(datan:any)=>{
 
   let  data:IMessage = JSON.parse(datan.message)
   console.log( data)
    data =  s(data)
-     await setMessageArray((prev)=>[...prev,{content: data.content, from_user_id : data.from_user_id, uuid : data.uuid,timestamp : data.timestamp,media : data.media,has_read:data.has_read}]) 
-     updateBlockOrMesasage(data)
-  scroll()
-
+    //  await setMessageArray((prev)=>[...prev,{content: data.content, from_user_id : data.from_user_id, uuid : data.uuid,timestamp : data.timestamp,media : data.media,has_read:data.has_read}]) 
+   
   if(BlockMessage[BlockMessage.length-1] == undefined){
     let idBlock = uuidv4()
     let block = [{idBlock:idBlock,userBlock:data.from_user_id}]
      setBlockMessage(block)
-     let ms:any = {}
-     console.log(1,BlockMessage[BlockMessage.length-1])
-     ms[idBlock]= [data]
-     setMessageInBlock(ms)
+    //  let ms:any = {}
+    //  ms[idBlock]= [data]
+     dispatch(addNewMessage({id: idBlock,ms:data}))
+    //  setMessageInBlock(ms)
   }else if(BlockMessage[BlockMessage.length-1].userBlock == data.from_user_id){
-    let idBlock = BlockMessage[BlockMessage.length-1].idBlock
-    let messages = MessageInBlock
-    console.log(2)
-    messages[idBlock] = [...messages[idBlock],data]
-    setMessageInBlock(messages)
-    // setMessageInBlock({...MessageInBlock,[idBlock]:[...MessageInBlock[idBlock],data]})
+    // let messages = MessageInBlock
+    // messages[ BlockMessage[BlockMessage.length-1].idBlock] = [...messages[BlockMessage[BlockMessage.length-1].idBlock],data]
+    dispatch(addNewMessage({id: BlockMessage[BlockMessage.length-1].idBlock,ms:data}))
+    // setMessageInBlock(messages)
   }else{
     let idBlock = uuidv4()
     let block = BlockMessage
     block.push({idBlock:idBlock,userBlock:data.from_user_id})
     setBlockMessage(block)
-    let messages = MessageInBlock
-    messages[idBlock] = [data]
-    console.log(3)
-    setMessageInBlock(messages)
+    // let messages = MessageInBlock
+    // messages[idBlock] = [data]
+    dispatch(addNewMessage({id: idBlock,ms:data}))
+    // setMessageInBlock(messages)
   }
+  scroll()
 }
 
   useEffect(()=>{ 
-    // получаю сообщения
       if(chatid && Object.keys(userMe).length !== 0 && usersChat && usersConnect && usersInChate){
         socket.on("message", updateBlockOrMesasage);
       }
@@ -274,7 +286,7 @@ const updateBlockOrMesasage=async(datan:any)=>{
         socket.off("message")
       }
         
-  },[socket,chatid,userMe,usersChat,usersConnect,usersInChate,MessageInBlock])
+  },[socket,chatid,userMe,usersChat,usersConnect,usersInChate,newMessage])
 
 
 
@@ -350,8 +362,10 @@ const updateBlockOrMesasage=async(datan:any)=>{
   }
 
   const scroll=()=>{
+   setTimeout(()=>{
+    messageContainer.current?.scrollBy(0,messageContainer.current.scrollHeight+100)
+   },50)
    
-    messageContainer.current?.scrollBy(0,messageContainer.current.scrollHeight)
     if(messageContainer.current)
     // console.log(messageContainer.current.scrollHeight,"scroll")
     // console.log(doMs,"scroll")
@@ -374,7 +388,7 @@ const updateBlockOrMesasage=async(datan:any)=>{
       scrollView()
     }
   
-  },[messageArray])
+  },[messageArray,newMessage])
 
 
 
@@ -385,7 +399,8 @@ const isChangemessage=()=>{
                 <>
                   <input type="text" onChange={(e)=>{setNewContent(e.target.value)}} value={newContent}/>
                   <button onClick={()=>{
-                    chatid && changeMessage(messageArray,setMessageArray,messageUser,dispatch,{chatid},newContent)
+                    // chatid && changeMessage(messageArray,setMessageArray,messageUser,dispatch,{chatid},newContent)
+                    chatid && changeMessageN(newMessage,setMessageInBlock,messageUser,dispatch,{chatid},newContent)
                     chatserverid && changeMessage(messageArray,setMessageArray,messageUser,dispatch,{chatserverid},newContent)
                     setIsModule(false)
                     setNewContent("")
@@ -402,9 +417,7 @@ const isChangemessage=()=>{
       
           {chatid  &&
           <>   
-          <div className='message-container'
-          //  style={{backgroundImage: `url(${backImage})`}}
-           >
+          <div className='message-container'>
           <div className="status-bar">
             <div className="user-chat avatar">
               {usersChat && (<>
@@ -429,7 +442,6 @@ const isChangemessage=()=>{
               }
             }}>
               {/* {messageArray.length !==0 ? messageArray.map((ms,index)=><Message key={index} uuid={ms.uuid} classUser={ms.from_user_id} media={ms.media}  time={ms.timestamp} children={ms.content} hasRead={ms.has_read}/>): null} */}
-                {/* {BlockMessage.length !==0 ? newMessageArray.map((messageBlock,index)=><MessageBlock key={index+"wopkfowk"} messageBlock={messageBlock}>wfwfwdwdwdw</MessageBlock>) : null}   */}
                 {BlockMessage.length !==0 ? BlockMessage.map((messageBlock)=><MessageBlock key={messageBlock.idBlock} messageBlock={messageBlock.userBlock} messages={MessageInBlock} Blockid={messageBlock.idBlock}></MessageBlock>) : null}  
             </div>
             <div className="file-input">

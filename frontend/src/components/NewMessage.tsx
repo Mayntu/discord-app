@@ -15,9 +15,9 @@ interface MessageProps{
     media : string 
     uuid: string
     hasRead?: boolean
-    
+    blockId: string;
 }
-const NewMessage:FC<MessageProps>=({media,content,hasRead,classUser,uuid,time})=> {
+const NewMessage:FC<MessageProps>=({media,content,hasRead,classUser,uuid,time,blockId})=> {
     const me = useAppSelector(state=>state.auth.user)
     const NoMe = useAppSelector(state=>state.chats.users)
     const [isModule,setIsModule] = useState<boolean>(false)
@@ -29,11 +29,13 @@ const NewMessage:FC<MessageProps>=({media,content,hasRead,classUser,uuid,time})=
     const navigate = useNavigate()
     const [audio,setAudio] = useState<boolean>(false)
     const [hasReadState,sethasReadState]  = useState<boolean>(hasRead || false)
+   
+   
     const isMeduleSet=()=>{
         if(messageUser.uuid){
           dispatch(addMessage(""))
         }else{
-          dispatch(addMessage({uuid,content}))
+          dispatch(addMessage({uuid,content,blockId}))
         }
       }
     function isURL(str:string) {
@@ -52,14 +54,16 @@ const NewMessage:FC<MessageProps>=({media,content,hasRead,classUser,uuid,time})=
 
     useEffect(()=>{
     isURL(content)
-    if(!hasRead && classUser !== me.uuid){
-      dispatch(fetchReadMessage(uuid)).then((res)=>{
-        if(res.payload.result){
-          sethasReadState(true)
-        }
-      })
-    }
   },[])
+
+
+  useEffect(()=>{
+    if(hasRead ==true){
+      console.log("true")
+      sethasReadState(hasRead)
+    }
+  },[hasRead])
+
   return (
     <>
        <div className="row" key={uuid} onClick={isMeduleSet}>
@@ -74,7 +78,7 @@ const NewMessage:FC<MessageProps>=({media,content,hasRead,classUser,uuid,time})=
                               
                       </p>)}
                       <span className='date'>   {` ${new Date(time).getHours()>10 ? new Date(time).getHours() : "0"+new Date(time).getHours()}
-                        : ${new Date(time).getMinutes()>10 ? new Date(time).getMinutes() : "0"+new Date(time).getMinutes()}`}   <div className={hasReadState ? "true-status" : "false-status"}></div></span>
+                        : ${new Date(time).getMinutes()>10 ? new Date(time).getMinutes() : "0"+new Date(time).getMinutes()}`} {classUser == me.uuid && (<div className={hasReadState ? "true-status" : "false-status"}></div>)}  </span>
                   </div>
                   {/* <p className='date'>{` ${new Date(time).getHours()>10 ? new Date(time).getHours() : "0"+new Date(time).getHours()}
                         : ${new Date(time).getMinutes()>10 ? new Date(time).getMinutes() : "0"+new Date(time).getMinutes()}`}</p> */}

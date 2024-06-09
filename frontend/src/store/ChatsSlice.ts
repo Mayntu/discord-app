@@ -16,7 +16,8 @@ type TChats = {
     usersConnect : string[]
     newChatid: string,
     message : IMessage,
-    message_count: number
+    message_count: number,
+    newMessage: { [key: string]: IMessage[]}
 }
 
 const initialState: TChats= {
@@ -29,7 +30,8 @@ const initialState: TChats= {
     usersConnect:[],
     newChatid: "",
     message: {} as IMessage,
-    message_count : 0
+    message_count : 0,
+    newMessage: {}
 }
 
 
@@ -60,6 +62,7 @@ const chatsSlice = createSlice({
         addMessage(state,{payload}:PayloadAction<any>){
             state.message.uuid = payload.uuid
             state.message.content = payload.content
+            state.message.from_user_id = payload.blockId
         },
         addUsersConnectState(state,{payload}:PayloadAction<string | string[]>){
          if(state.usersConnect.length === 0){
@@ -78,6 +81,52 @@ const chatsSlice = createSlice({
                 // console.log( state.usersConnect.splice(state.usersConnect.indexOf(payload),1))
                 state.usersConnect.splice(state.usersConnect.indexOf(payload),1)
             }
+        },addNewMessage(state,{payload}:PayloadAction<any>){
+            if(state.newMessage[payload.id]){
+                state.newMessage[payload.id].push(payload.ms)
+            }else{
+                state.newMessage[payload.id] = [payload.ms]
+            }
+         
+            // console.log( state.newMessage)
+        },addNewMessageStatus(state,{payload}:PayloadAction<any>){
+
+                state.newMessage[payload.id].map((item)=>{
+                                if(item.has_read == false){
+                                console.log(item.has_read)
+                                item.has_read = true
+                                }
+                                
+                            })
+            // let keys = Object.keys(state.newMessage)
+            // keys.map(i=>{
+            //     if(state.newMessage[i].find((i)=>i.has_read == false)){
+            //         state.newMessage[i].map((item)=>{
+            //             if(item.has_read == false){
+            //             console.log(item.has_read)
+            //             dispatch(fetchReadMessage(item.uuid))
+            //             return {...item,has_read : true}
+            //     }
+            //          return item
+            //         })
+            //     }
+            // })
+            //   let str = MessageInBlock
+            //   keys.map(i=>{
+            //     if(str[i].find((i)=>i.has_read == false)){
+            //       str[i] = str[i].map((item)=>{
+            //               if(item.has_read == false){
+            //                 console.log(item.has_read)
+            //                 dispatch(fetchReadMessage(item.uuid))
+            //                 return {...item,has_read : true}
+            //               }
+            //               return item
+            //           })
+            //     }
+                
+            //   })
+            //   console.log(str)
+            //   setMessageInBlock(str)
         },
        
     },
@@ -101,11 +150,14 @@ const chatsSlice = createSlice({
         })
         .addCase(fetchCreateChat.fulfilled,(state,{payload}:PayloadAction<any>)=>{
             state.newChatid = payload.chat_id
+            
         })
        
     }
 })
 
-export const {addUsersChat, addUsersConnect,stateNull, addMessage,addUsersConnectState,userOnline, userOffline} = chatsSlice.actions
+export const {addUsersChat, addUsersConnect,stateNull,
+                addMessage,addUsersConnectState,userOnline,
+                 userOffline,addNewMessage,addNewMessageStatus} = chatsSlice.actions
 
 export default chatsSlice.reducer

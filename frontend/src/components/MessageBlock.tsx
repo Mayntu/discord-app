@@ -18,12 +18,12 @@ interface MessageProps{
 const  MessageBlock: FC<MessageProps>=({messageBlock,messages,Blockid})=> {
   const me = useAppSelector(state=>state.auth.user)
   const NoMe = useAppSelector(state=>state.chats.users)
- 
+ const newMesage= useAppSelector(state=>state.chats.newMessage)
 
 
-  useEffect(()=>{
-    console.log(messages)
-  },[messages])
+  // useEffect(()=>{
+  //   console.log(messages)
+  // },[messages])
 
 
   return (
@@ -49,8 +49,9 @@ const  MessageBlock: FC<MessageProps>=({messageBlock,messages,Blockid})=> {
 
 
     
-      { messages[Blockid] &&   messages[Blockid].map(message=>( 
+      { newMesage[Blockid] &&   newMesage[Blockid].map(message=>( 
       <NewMessage 
+            blockId={Blockid}
             uuid={message.uuid} 
             key={message.uuid} 
             content={message.content}
