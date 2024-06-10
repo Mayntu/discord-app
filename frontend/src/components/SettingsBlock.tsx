@@ -3,18 +3,18 @@ import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock'
 import icon from "../assets/s.png"
 import iconEdit from "../assets/pencil.png"
 import iconCamera from "../assets/camera.png"
-import { useNavigate } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
 import { setIsAuth } from '../store/AuthSlice'
 import {fetchUser,fetchMedia, fetchChangeUsersLogin } from '../store/acthion'
 import avatar from "../assets/sonic.jpg"
 import ModuleTest from './Module'
 
-interface SettingsBlockProps{
-    setIsSettings:  React.Dispatch<React.SetStateAction<boolean>>
-}
+// interface SettingsBlockProps{
+//     setIsSettings:  React.Dispatch<React.SetStateAction<boolean>>
+// }
 
 
-const  SettingsBlock:FC<SettingsBlockProps>=({setIsSettings})=> {
+const  SettingsBlock:FC=()=> {
   const navigate = useNavigate()
   const user = useAppSelector(state=>state.auth.user)
   const dispatch = useAppDispatch()
@@ -64,11 +64,12 @@ const  SettingsBlock:FC<SettingsBlockProps>=({setIsSettings})=> {
 
 
   return (
+    <>
     <div className='settings-container'>
       {isEditUser ?
        <>
       <div className="settting-icon">
-        <img src={icon} alt=""  onClick={()=>(setIsSettings(true))}/>
+        
         <p>Настройки</p>
         <img src={iconEdit} alt="" onClick={()=>{setIsEditUser(!isEditUser)}}/>
       </div>
@@ -107,7 +108,8 @@ const  SettingsBlock:FC<SettingsBlockProps>=({setIsSettings})=> {
         // <Module newFile={newFile} isModule={setIsModule}/>
         }
     </div>
-    
+    <Outlet></Outlet>
+  </>
   )
 }
 

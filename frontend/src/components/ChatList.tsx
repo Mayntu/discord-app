@@ -39,9 +39,6 @@ const ChatList:FC=()=> {
       {isSettings &&
       <div className='chat-list-container'>
         <div className="search">
-          <img src={icon} alt=""  className='icon' onClick={()=>{
-            setIsSettings(false)
-            }}/>
           <input type="search" placeholder='serch' onChange={(e)=>{seacrhChat(e.target.value)}}/>
        </div>
             {/* блок поиск по условию */}

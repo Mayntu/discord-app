@@ -13,7 +13,7 @@ const LoginForm:FC=()=> {
     const [error,setError] = useState<string>("")
     const [isLog, setIsLog] = useState<boolean>(true)
     const dispatch = useAppDispatch()
-    const {isAuth} = useAppSelector(state=>state.auth)
+    const isAuth = useAppSelector(state=>state.auth.isAuth)
     const navigate = useNavigate()
 
 

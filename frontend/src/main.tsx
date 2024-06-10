@@ -10,6 +10,7 @@ import LoginForm from './components/LoginForm.tsx'
 import Test from './components/Test.tsx'
 import ChatList from './components/ChatList.tsx'
 import ServerChatList from './components/ServerChatList.tsx'
+import SettingsBlock from './components/SettingsBlock.tsx'
 
 
 
@@ -23,6 +24,12 @@ const router = createBrowserRouter([
         {index: true,element: <MessageContainer/>},
         {path: ":chatid",element: <MessageContainer/>}
        
+      ]},
+      {path: "/invite/:id",},
+      {path:"/set",element:<SettingsBlock/>,children:[
+        {index: true,element: <MessageContainer/>},
+        {path: ":chatid",element: <MessageContainer/>},
+        {path: ":chatserverid",element: <MessageContainer/>}
       ]},
       {path: "/server/:serverid",element: <ServerChatList/>,children:[
         {index: true,element: <MessageContainer/>},

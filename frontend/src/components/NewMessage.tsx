@@ -7,6 +7,9 @@ import { useNavigate } from 'react-router-dom'
 import { fetchReadMessage } from '../store/acthionChat'
 import { addMessage } from '../store/ChatsSlice'
 import ModuleTest from './Module'
+import $api from '../http'
+import { fetchGetServer } from '../store/actionServer'
+import AudioMy from './Audio'
 
 interface MessageProps{
     content : string
@@ -14,7 +17,7 @@ interface MessageProps{
     time: string,
     media : string 
     uuid: string
-    hasRead?: boolean
+    hasRead: boolean
     blockId: string;
 }
 const NewMessage:FC<MessageProps>=({media,content,hasRead,classUser,uuid,time,blockId})=> {
@@ -30,7 +33,12 @@ const NewMessage:FC<MessageProps>=({media,content,hasRead,classUser,uuid,time,bl
     const [audio,setAudio] = useState<boolean>(false)
     const [hasReadState,sethasReadState]  = useState<boolean>(hasRead || false)
    
-   
+    const fetchMessage=async(str:string)=>{
+      const res = await $api.get(str)
+      if(res.data.result){
+        dispatch(fetchGetServer()).then(()=>{navigate(`/server/${res.data.server_id}`)})
+      }
+    }
     const isMeduleSet=()=>{
         if(messageUser.uuid){
           dispatch(addMessage(""))
@@ -46,6 +54,10 @@ const NewMessage:FC<MessageProps>=({media,content,hasRead,classUser,uuid,time,bl
               setURLdomen(str)
           }else if(str.includes("https://media.tenor.com/")){
             setGif(str)
+          }
+          else if(str.includes("localhost:5173/invite/")){
+            console.log(str.substring(15,str.length))
+            setURLdomen(`http://127.0.0.1:8000/${str.substring(15,str.length)}`)
           }
         } catch {
     
@@ -63,14 +75,30 @@ const NewMessage:FC<MessageProps>=({media,content,hasRead,classUser,uuid,time,bl
       sethasReadState(hasRead)
     }
   },[hasRead])
-
+  
+  useEffect(()=>{
+    // console.log(media.split(".").splice(-1,1)[0])
+    if(media.split(".").splice(-1,1)[0] == "mp3" || media.split(".").splice(-1,1)[0] == "wav" ){
+      // dispatch(fetchRecognizeAudio(uuid))
+      setAudio(true)
+    }
+    // if(media.split(".").splice(-1,1)[0] == "п" || media.split(".").splice(-1,1)[0] == "wav" ){
+    //   // dispatch(fetchRecognizeAudio(uuid))
+    //   setAudio(true)
+    // }
+  },[])
   return (
     <>
        <div className="row" key={uuid} onClick={isMeduleSet}>
+                  {audio ?  media && (
+                  <> 
+                  <AudioMy link={"http://localhost:5173/public/"+media} time={time} status={hasReadState} me={classUser == me.uuid}></AudioMy>
+                  </>
+                ) :
                   <div className="row-con">
-                   
+                  
                       {isUrl ? URLdomen ? 
-                      <a >{content}</a> 
+                     <a onClick={()=>{fetchMessage(URLdomen)}}>{content}</a> 
                       : 
                       gif ? null: (<a href={content}>{content}</a>) 
                       : 
@@ -80,14 +108,16 @@ const NewMessage:FC<MessageProps>=({media,content,hasRead,classUser,uuid,time,bl
                       <span className='date'>   {` ${new Date(time).getHours()>10 ? new Date(time).getHours() : "0"+new Date(time).getHours()}
                         : ${new Date(time).getMinutes()>10 ? new Date(time).getMinutes() : "0"+new Date(time).getMinutes()}`} {classUser == me.uuid && (<div className={hasReadState ? "true-status" : "false-status"}></div>)}  </span>
                   </div>
-                  {/* <p className='date'>{` ${new Date(time).getHours()>10 ? new Date(time).getHours() : "0"+new Date(time).getHours()}
-                        : ${new Date(time).getMinutes()>10 ? new Date(time).getMinutes() : "0"+new Date(time).getMinutes()}`}</p> */}
-                 
+                  
+                  }
+                      
                 </div>
-                <div className='image-message' onClick={()=>setIsModule(true)}>
-                {gif && (<img src={gif} alt="" />)}
-                {media && <img src={"http://localhost:5173/public/"+media} alt="" />}
-              </div>
+                {!audio && 
+                ( <div className='image-message' onClick={()=>setIsModule(true)}>
+                    {gif && (<img src={gif} alt="" />)}
+                    {media && <img src={"http://localhost:5173/public/"+media} alt="" />}
+                  </div>)}
+               
               {isModule && <ModuleTest isModule={setIsModule}>
         {gif && (<img src={gif} alt="" />)}
         <img src={"http://localhost:5173/public/"+media} alt="" />

@@ -32,7 +32,8 @@ const  Message: FC<MessageProps>=({classUser,children,time,media,uuid,hasRead})=
   const navigate = useNavigate()
   const [audio,setAudio] = useState<boolean>(false)
  const [hasReadState,sethasReadState]  = useState<boolean>(hasRead || false)
-  const isMeduleSet=()=>{
+  
+ const isMeduleSet=()=>{
     if(messageUser.uuid){
       dispatch(addMessage(""))
     }else{

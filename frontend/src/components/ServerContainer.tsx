@@ -5,6 +5,7 @@ import { fetchCreateServer, fetchGetServer} from '../store/actionServer'
 import iconCamera from "../assets/camera.png"
 import chatIcon from "../assets/chat-group.png"
 import addServer from "../assets/addServer.png"
+import icon from "../assets/menu.png"
 
 import "../css/server.css"
 
@@ -39,9 +40,21 @@ const ServerContainer=()=> {
   return (
     <>
     <div className="container-server">
-    <NavLink to={"/chat"}>
-      <div className="block-server-chat">
-        <img src={chatIcon} alt="" />
+    <NavLink to={"/set"}
+    className={({ isActive, isPending }) =>
+      isPending ? "pending-link block-server-link" : isActive ? "active block-server-link" : "active-link block-server-link"
+  }
+    >
+      <div className="block-server">
+      <img src={icon} alt="" className='set-Icon-small'  onClick={()=>{}}/>
+      </div>
+    </NavLink>
+    <NavLink to={"/chat"}  
+    className={({ isActive, isPending }) =>
+        isPending ? "pending-link block-server-link" : isActive ? "active block-server-link" : "active-link block-server-link"
+    }>
+      <div className="block-server">
+        <img src={chatIcon} alt="" className='set-Icon' />
       </div>
     </NavLink>
     <div className=" addblockserver" onClick={()=>{setIsCreateSreverM(true)}}>

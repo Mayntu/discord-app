@@ -119,6 +119,7 @@ const ServerChatList:FC=()=> {
           setIsModuleInvite(false)
         }}>copy</button>
         <p>http://127.0.0.1:8000/{link}</p>
+        <p>localhost:5173/{link}</p>
         </ModuleTest>}
         {isModuleAvatar && <ModuleTest isModule={setIsModuleAvatar}>
         <input ref={refImage} type="file" accept='image/*,.png,.web,.jpg,.gif' onChange={(e)=>{if(e.target.files) setFile(e.target.files[0])}} className='none'/>

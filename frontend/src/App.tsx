@@ -9,6 +9,7 @@ import { socket } from './socket'
 import $api from './http'
 import { addUsersConnect, addUsersConnectState, userOffline, userOnline } from './store/ChatsSlice'
 import { fetchGetUserChats } from './store/acthionChat'
+import { fetchGetServer } from './store/actionServer'
 
 function App() {
   const {isAuth,error,isLoading} = useAppSelector(state=> state.auth)
@@ -80,9 +81,20 @@ function App() {
      
     })
   },[socket])
-
+  const fetchMessage=async(str:string)=>{
+    const res = await $api.get(str)
+    if(res.data.result){
+      dispatch(fetchGetServer()).then(()=>{navigate(`/server/${res.data.server_id}`)})
+    }
+  }
   
-
+  useEffect(()=>{
+    console.log(navigate)
+    console.log(pathname)
+    if(pathname.includes("/invite/")){
+      fetchMessage(`http://127.0.0.1:8000${pathname}`)
+    }
+  },[navigate])
 
   useEffect(()=>{
     // localStorage.removeItem("token")
