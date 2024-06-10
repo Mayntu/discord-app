@@ -97,7 +97,11 @@ const chatsSlice = createSlice({
                                 item.has_read = true
                                 }  
                             })
-        },
+        },addNewMessagNull(state){
+          state.newMessage = {}
+         
+            // console.log( state.newMessage)
+        }
        
     },
     extraReducers: (builder:  ActionReducerMapBuilder<TChats>)=>{
@@ -128,6 +132,7 @@ const chatsSlice = createSlice({
 
 export const {addUsersChat, addUsersConnect,stateNull,
                 addMessage,addUsersConnectState,userOnline,
-                 userOffline,addNewMessage,addNewMessageStatus} = chatsSlice.actions
+                 userOffline,addNewMessage,addNewMessageStatus,
+                 addNewMessagNull} = chatsSlice.actions
 
 export default chatsSlice.reducer

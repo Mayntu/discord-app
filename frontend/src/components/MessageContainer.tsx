@@ -3,7 +3,6 @@ import { useNavigate, useParams, } from 'react-router-dom'
 import { socket } from '../socket';
 import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock';
 import { fetchDeleteUser } from '../store/acthion';
-import Message from './Message';
 import avatar from "../assets/sonic.jpg"
 import callIcon from "../assets/Mask group.png"
 import { IMessage, IUserChatT } from '../models/IUserChat';
@@ -12,9 +11,9 @@ import {  fetchDeleteChatMessage, fetchGetChatMessage, fetchGetUserChats, fetchR
 import InputMessage from './InputMessage';
 import ServerUsersList from './ServerUsersList';
 import VideoCallBlock from './VideoCallBlock';
-import { addMessage, addNewMessage, addNewMessageStatus, addUsersChat} from '../store/ChatsSlice';
+import { addMessage, addNewMessagNull, addNewMessage, addNewMessageStatus, addUsersChat} from '../store/ChatsSlice';
 import "../css/message_container.css"
-import { changeMessage, changeMessageN } from '../hooks/changeMessage';
+import {  changeMessageN } from '../hooks/changeMessage';
 import ModuleTest from './Module';
 import MessageBlock from './MessageBlock';
 import { v4 as uuidv4 } from 'uuid';
@@ -28,7 +27,6 @@ const  MessageContainer : FC=()=> {
   const [limit, setLimit] = useState<number>(30)
   const [isCallBlock,setIsCallBlock] = useState<boolean>(false)
   const [messageText,setMessageText] = useState<string>("")
-  const [messageArray,setMessageArray] = useState<any[]>([])
   const dispatch = useAppDispatch()
   const message = useAppSelector(state=>state.chats.getMessage)
   const messageUser = useAppSelector(state=>state.chats.message)
@@ -47,7 +45,6 @@ const  MessageContainer : FC=()=> {
   const [newContent,setNewContent] = useState<string>("")
   const [usersInChate,setusersInChate] = useState<string[]>([])
   const [BlockMessage,setBlockMessage] = useState<TmessageBlocks[]>([])
-  const [MessageInBlock,setMessageInBlock] = useState<{ [key: string]: IMessage[]}>({})
   const joinRoom = (room:any) => {
     console.log("join","username",userMe.login,"chat_id",room,"uuid",userMe.uuid)
     socket.emit("join", {"username" : userMe.login, "chat_id" : room,uuid:userMe.uuid});
@@ -70,6 +67,7 @@ const  MessageContainer : FC=()=> {
         if(chatid ){
          console.log("ok  c","na",chatid,"выход","uuid",userMe.uuid)
          socket.emit("leave",{"chat_id" : chatid, uuid:userMe.uuid})
+         dispatch(addNewMessagNull())
         }
        }
   },[chatid,userMe])
@@ -98,8 +96,9 @@ useEffect(()=>{
   }
   return ()=>{
     socket.off("join")
+    socket.off("join_server_chat")
   }
-  },[userMe,chatid])
+  },[userMe,chatid,chatserverid])
 
   useEffect(()=>{
     {message &&  createMeassageBlock(message)}  
@@ -150,14 +149,14 @@ useEffect(()=>{
 
   useEffect(()=>{
     console.log(newMessage,"newMessage")
-  },[newMessage])
+    console.log(BlockMessage,"BlockMessage")
+  },[newMessage,BlockMessage])
 
 
 
   const createMeassageBlock=(message:any)=>{
     if(message.length !==0 ){
       let newMessageBlock:TmessageBlocks[]  = []
-     
       for(let i=0;i<message.length;i++){
         if(newMessageBlock[newMessageBlock.length-1] == undefined){
           let idBlock = uuidv4()
@@ -177,6 +176,11 @@ useEffect(()=>{
       setBlockMessage(newMessageBlock)
     }  else{
       setBlockMessage([])
+    }
+
+    if(BlockMessage.length == 0){
+      let idBlock=uuidv4()
+      setBlockMessage([{idBlock,userBlock:userMe.login}])
     }
   }
 
@@ -246,16 +250,24 @@ const updateBlockOrMesasage=async(datan:any)=>{
     console.log("sssssssssssss")
     data =  s(data)
   }
-  if(BlockMessage[BlockMessage.length-1] == undefined){
+  
+  if(BlockMessage[0] == undefined && Object.keys(newMessage).length ==0){
+    console.log(BlockMessage[0],"BlockMessage[0]1")
+    console.log(newMessage,"newMessage1")
     let idBlock = uuidv4()
     let block = [{idBlock:idBlock,userBlock:data.from_user_id}]
+    console.log(1)
      setBlockMessage(block)
      dispatch(addNewMessage({id: idBlock,ms:data}))
-  }else if(BlockMessage[BlockMessage.length-1].userBlock == data.from_user_id){
+  }else if(BlockMessage[BlockMessage.length-1].userBlock == data.from_user_id ){
+    console.log(2)
+    console.log(BlockMessage[BlockMessage.length-1].userBlock,"=BlockMessage[0]1   data.from_user_id =",data.from_user_id)
+    console.log(newMessage,"newMessage1")
     dispatch(addNewMessage({id: BlockMessage[BlockMessage.length-1].idBlock,ms:data}))
   }else{
     let idBlock = uuidv4()
     let block = BlockMessage
+    console.log(3)
     block.push({idBlock:idBlock,userBlock:data.from_user_id})
     setBlockMessage(block)
     dispatch(addNewMessage({id: idBlock,ms:data}))
@@ -289,7 +301,7 @@ const updateBlockOrMesasage=async(datan:any)=>{
       socket.emit("join_server_chat",{chat_id:chatserverid})
       dispatch(fetchGetServerChatRoomMessages(chatserverid))
     }
-    
+
   },[chatserverid])
 
 
@@ -315,13 +327,13 @@ const updateBlockOrMesasage=async(datan:any)=>{
 
   useEffect(()=>{ 
     // получаю сообщения
-      if(chatserverid){
+      if(chatserverid ){
         socket.on("server_chat_message", updateBlockOrMesasage);
       }
         return ()=>{
           socket.off("server_chat_message")
         }
-  },[chatserverid])
+  },[chatserverid,BlockMessage])
 
 
 
@@ -374,9 +386,8 @@ const isChangemessage=()=>{
                 <>
                   <input type="text" onChange={(e)=>{setNewContent(e.target.value)}} value={newContent}/>
                   <button onClick={()=>{
-                    // chatid && changeMessage(messageArray,setMessageArray,messageUser,dispatch,{chatid},newContent)
-                    chatid && changeMessageN(newMessage,setMessageInBlock,messageUser,dispatch,{chatid},newContent)
-                    chatserverid && changeMessage(messageArray,setMessageArray,messageUser,dispatch,{chatserverid},newContent)
+                    chatid && changeMessageN(newMessage,messageUser,dispatch,{chatid},newContent)
+                    chatserverid && changeMessageN(newMessage,messageUser,dispatch,{chatserverid},newContent)
                     setIsModule(false)
                     setNewContent("")
                     }}>сохранить</button>
@@ -419,7 +430,6 @@ const isChangemessage=()=>{
                 }
               }
             }}>
-              {/* {messageArray.length !==0 ? messageArray.map((ms,index)=><Message key={index} uuid={ms.uuid} classUser={ms.from_user_id} media={ms.media}  time={ms.timestamp} children={ms.content} hasRead={ms.has_read}/>): null} */}
                 {BlockMessage.length !==0 ? BlockMessage.map((messageBlock)=><MessageBlock key={messageBlock.idBlock} messageBlock={messageBlock.userBlock} Blockid={messageBlock.idBlock}></MessageBlock>) : null}  
             </div>
             <div className="file-input">

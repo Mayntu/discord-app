@@ -105,7 +105,10 @@ const NewMessage:FC<MessageProps>=({media,content,hasRead,classUser,uuid,time,bl
                     {gif && (<img src={gif} alt="" />)}
                     {media && <img src={"http://localhost:5173/public/"+media} alt="" />}
                   </div>} 
-            
+                  {gif && <div className='image-message' onClick={()=>setIsModule(true)}>
+                    {gif && (<img src={gif} alt="" />)}
+                    {media && <img src={"http://localhost:5173/public/"+media} alt="" />}
+                  </div>} 
                  
               {isModule && <ModuleTest isModule={setIsModule}>
                 {gif && (<img src={gif} alt="" />)}
