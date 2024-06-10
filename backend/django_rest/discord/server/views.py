@@ -21,7 +21,10 @@ from server.models import (
     ServerMessage,
     InvitationLink,
     ROLES,
-    PERMISSIONS
+    PERMISSIONS,
+)
+from server.settings import (
+    STRING_PERMISSIONS,
 )
 from server.serializers import (
     ServerSerializer,
@@ -330,7 +333,7 @@ def api_get_server_chat_rooms(request):
         print(server_chat_rooms)
         result : list = []
         for server_chat_room in server_chat_rooms:
-            temp : dict = {"uuid" : str(server_chat_room.uuid), "title" : server_chat_room.title}
+            temp : dict = {"uuid" : str(server_chat_room.uuid), "title" : server_chat_room.title, "is_private" : server_chat_room.is_private}
             result.append(temp)
         
         print(result)
@@ -380,17 +383,39 @@ def api_create_server_audio_chat(request):
     user_uuid : str = token_content.get("uuid")
     server_uuid : str = data.get("uuid")
     chat_room_title : str = data.get("title")
+    is_private : bool = data.get("is_private") == "true"
 
     user : User = User.objects.get(pk=user_uuid)
 
     server : Server = Server.objects.get(pk=server_uuid)
-    print(str(user.uuid), str(server.owner_id))
+    server_member : ServerMember = server.members.filter(user_uuid=user_uuid).first()
+    # print(str(user.uuid), str(server.owner_id))
 
-    if not str(user.uuid) == server.owner_id:
-        return JsonResponse(data={"result" : False, "message" : "you must be server owner"})
+    # if not str(user.uuid) == server.owner_id:
+    #     return JsonResponse(data={"result" : False, "message" : "you must be server owner"})
+
+
+    has_create_chat_permission : bool = server_member.role.has_perm(
+        permission=PERMISSIONS.CREATE_CHAT,
+    )
+    has_create_private_chat_permission : bool = server_member.role.has_perm(
+        permission=PERMISSIONS.CREATE_PRIVATE_CHAT,
+    )
+    
+    if is_private:
+        if not has_create_private_chat_permission:
+            return JsonResponse(data={"result" : False, "content" : "user has no permission"})
+    
+    if not is_private:
+        if not has_create_chat_permission:
+            return JsonResponse(data={"result" : False, "content" : "user has no permission"})
     
 
-    server_audio_room : ServerAudioRoom = ServerAudioRoom.objects.create(title=chat_room_title, server_object=server)
+    server_audio_room : ServerAudioRoom = ServerAudioRoom.objects.create(
+        title=chat_room_title,
+        server_object=server,
+        is_private=is_private,
+    )
     server.audio_rooms.add(server_audio_room)
 
 
@@ -405,22 +430,41 @@ def api_get_server_audio_chat_rooms(request):
     token_content = get_token(token=token)
     if not token_content:
         return JsonResponse(data={"result" : False, "message" : "not valid token"})
+    
+    print("2")
 
 
     data : dict = json.loads(request.body)
 
-
+    user_uuid : str = token_content.get("uuid")
     server_uuid : str = data.get("server_uuid")
 
 
+    print("3")
     try:
         server : Server = Server.objects.get(uuid=server_uuid)
-        server_audio_rooms = server.audio_rooms.all()
-        serializer : ServerAudioRoomSerializer = ServerAudioRoomSerializer(server_audio_rooms, many=True)
-        data : dict = serializer.data
+        print("4")
+        server_member : ServerMember = server.members.filter(user_uuid=str(user_uuid)).first()
+        print(server_member)
+        print(PERMISSIONS.SEE_PRIVATE)
+        print(server_member.role.has_perm(PERMISSIONS.SEE_PRIVATE))
         
+        if server_member.role.has_perm(PERMISSIONS.SEE_PRIVATE):
+            print("5")
+            server_audio_rooms = server.audio_rooms.all()
+        else:
+            print("5")
+            server_audio_rooms = server.audio_rooms.filter(is_private=False)
+        
+        print(server_audio_rooms)
+        result : list = []
+        for server_audio_room in server_audio_rooms:
+            temp : dict = {"uuid" : str(server_audio_room.uuid), "title" : server_audio_room.title, "is_private" : server_audio_room.is_private}
+            result.append(temp)
+        
+        print(result)
 
-        return JsonResponse(data={"result" : True, "data" : data}, safe=False)
+        return JsonResponse(data={"result" : True, "data" : result}, safe=False)
     except Exception as e:
         return JsonResponse(data={"result" : False, "error" : f"user not found {e}"})
 
@@ -551,9 +595,10 @@ def api_delete_server(request):
 
         user : User = User.objects.get(uuid=user_id)
         server : Server = Server.objects.get(uuid=server_id)
+        server_member : ServerMember = server.members.get(user_uuid=str(user.uuid))
 
         
-        if str(user.uuid) == server.owner_id:
+        if server_member.role.has_perm(permission=PERMISSIONS.DELETE):
             server.delete()
             
             return JsonResponse(data={"result" : True, "message" : "chat delete successfully"})
@@ -575,15 +620,28 @@ def api_delete_servers_message(request):
     if token_content:
         data : dict = json.loads(request.body)
 
-        server_message_uuid : str = data.get("server_message_uuid")
+        user_uuid : str = token_content.get("uuid")
+
         
-        server_message : ServerMessage = ServerMessage.objects.get(uuid=server_message_uuid)
+        server_message_uuid : str = data.get("server_message_uuid")
+        server_id : str = data.get("server_id")
+        
+        try:
+            server : Server = Server.objects.get(uuid=server_id)
+            server_member : ServerMember = server.members.get(user_uuid=user_uuid)
+
+            if server_member.role.has_perm(permission=PERMISSIONS.DELETE_MSGS):
+                server_message : ServerMessage = ServerMessage.objects.get(uuid=server_message_uuid)
 
 
-        server_message.delete()
+                server_message.delete()
 
 
-        return JsonResponse(data={"result" : True, "message" : "server message was deleted successfully"})
+                return JsonResponse(data={"result" : True, "message" : "server message was deleted successfully"})
+            
+            return JsonResponse(data={"result" : False, "message" : "user has no perms"})
+        except Exception as e:
+            return JsonResponse(data={"result" : False, "message" : "something not found"})
     
     
     return JsonResponse(data={"result" : False, "message" : "not valid token"})
@@ -608,10 +666,15 @@ def api_delete_server_chat_room(request):
         user : User = User.objects.get(uuid=user_id)
         server : Server = Server.objects.get(uuid=server_id)
         server_chat_room : ServerChatRoom = ServerChatRoom.objects.get(uuid=server_chat_room_id)
+        server_member : ServerMember = server.members.filter(user_uuid=str(user.uuid)).first()
 
-        server_chat_room.delete()
+        
+        if server_member.role.has_perm(PERMISSIONS.DELETE_CHAT):
+            server_chat_room.delete()
             
-        return JsonResponse(data={"result" : True, "message" : "chat delete successfully"})
+            return JsonResponse(data={"result" : True, "message" : "chat delete successfully"})
+        
+        return JsonResponse(data={"result" : False, "message" : "user has no permissions"})
         
     return JsonResponse(data={"result" : False, "message" : "not valid token"})
 
@@ -635,9 +698,15 @@ def api_delete_server_audio_room(request):
         user : User = User.objects.get(uuid=user_id)
         server : Server = Server.objects.get(uuid=server_id)
         server_audio_chat_room : ServerAudioRoom = ServerAudioRoom.objects.get(uuid=server_audio_chat_room_id)
+        server_member : ServerMember = server.members.filter(user_uuid=str(user.uuid)).first()
 
+
+        if not server_member.role.has_perm(permission=PERMISSIONS.DELETE_CHAT):
+            return JsonResponse(data={"result" : False, "message" : "user has not permissions"})
+        
+        
         server_audio_chat_room.delete()
-            
+
         return JsonResponse(data={"result" : True, "message" : "chat delete successfully"})
         
     return JsonResponse(data={"result" : False, "message" : "not valid token"})
@@ -658,23 +727,25 @@ def api_change_servers_title(request):
     try:
         data : dict = json.loads(request.body)
 
+        user_uuid : str = token_content.get("uuid")
         server_uuid : str = data.get("server_uuid")
         title : str = data.get("title")
 
         
         server : Server = Server.objects.get(uuid=server_uuid)
+        server_member : ServerMember = server.members.get(user_uuid=user_uuid)
 
-        server.title = title
+        if server_member.role.has_perm(PERMISSIONS.RENAME):
+            server.title = title
+            
+            server.save()
+
+            return JsonResponse(data={"result" : True, "message" : "successfully renamed server", "new_title" : server.title})
         
-        server.save()
-
-
+        return JsonResponse(data={"result" : False, "message" : "user has no permissions(нет прав)"})
+    
     except Exception as e:
         return JsonResponse(data={"result" : False, "message" : "failed to change server title"})
-
-
-
-    return JsonResponse(data={"result" : True, "message" : "saved to files"})
 
 
 
@@ -702,10 +773,9 @@ def api_change_servers_avatar(request):
 
     filename : str = ""
     server : Server = Server.objects.get(uuid=server_uuid)
+    server_member : ServerMember = server.members.get(user_uuid=owner_user_id)
 
-    user : User = User.objects.get(uuid=owner_user_id)
-
-    if not str(user.uuid) == str(server.owner_id):
+    if not server_member.role.has_perm(permission=PERMISSIONS.REAVTR):
         return JsonResponse({"result" : False, "message" : "user must be server owner to change"})
     
     
@@ -819,5 +889,135 @@ def api_check_user(request):
         return JsonResponse({"result" : True, "is_owner" : user_uuid == server.owner_id})
     
     return JsonResponse({"result" : False, "message" : "not valid token"})
+
+
+
+def api_create_role(request):
+    headers : dict = request.headers
+
     
+    token : str = headers.get("Authorization").replace('"', "")
+    token_content : dict = get_token(token=token)
+
+    
+    if not token_content:
+        return JsonResponse(data={"result" : False, "message" : "not valid token"})
+    
+    try:
+        data : dict = json.loads(request.body)
+
+        user_uuid : str = data.get("uuid")
+        server_uuid : str = data.get("server_uuid")
+        role_name : str = data.get("role_name")
+        role_color : str = data.get("role_color")
+        permissions : list = data.get("permissions")
+
+        server : Server = Server.objects.get(uuid=server_uuid)
+        server_member : ServerMember = server.members.get(user_uuid=user_uuid)
+
+        if server_member.role.has_perm(permission=PERMISSIONS.CREATE_ROLE):
+            server_role : ServerRole = ServerRole.objects.create(
+                name=role_name,
+                color=role_color,
+            )
+
+            for permission in permissions:
+                perm = STRING_PERMISSIONS.get(permission)
+
+                if perm:
+                    server_role.permissions.add(perm)
+            
+
+            return JsonResponse(data={"result" : True, "message" : "role was created", "role_uuid" : server_role.uuid})
+        
+        return JsonResponse(data={"result" : False, "message" : "user has no permissions"})
+
+    except Exception as e:
+        return JsonResponse(data={"result" : False, "message" : "failed to change server's message"})
+
+
+
+def api_check_user_permission(request):
+    headers : dict = request.headers
+
+    token : str = headers.get("Authorization").replace('"', "")
+    token_content : dict = get_token(token=token)
+
+    
+    if not token_content:
+        return JsonResponse(data={"result" : False, "message" : "not valid token"})
+    
+
+    data : dict = json.loads(request.body)
+
+    user_uuid : str = str(token_content.get("uuid"))
+
+    server_uuid : str = data.get("server_uuid")
+    permission : str = data.get("permission")
+
+    if not permission in STRING_PERMISSIONS.keys():
+        return JsonResponse(data={"result" : False, "message" : "permission not found"})
+    
+    
+    server : Server = Server.objects.get(uuid=server_uuid)
+    server_member : ServerMember = server.members.filter(user_uuid=user_uuid).first()
+
+    has_permission : bool = server_member.role.has_perm(
+        permission=STRING_PERMISSIONS[permission],
+    )
+
+    return JsonResponse(data={"result" : True, "has_permission" : has_permission})
+
+
+
+def api_add_user_role(request):
+    headers : dict = request.headers
+    
+    token : str = headers.get("Authorization").replace('"', "")
+    token_content : dict = get_token(token=token)
+
+    if token_content:
+
+
+        data : dict = json.loads(request.body)
+
+
+        user_uuid : str = token_content.get("uuid")
+        server_uuid : str = data.get("server_uuid")
+        role_uuid : str = data.get("role_uuid")
+
+        try:
+            server : Server = Server.objects.get(uuid=server_uuid)
+            server_member : ServerMember = server.members.get(user_uuid=user_uuid)
+
+            has_permission : bool = server_member.role.has_perm(
+                permission=PERMISSIONS.CREATE_ROLE,
+            )
+
+            if not has_permission:
+                return JsonResponse(data={"result" : True, "message" : "user not permission"})
+
+            role : ServerRole = ServerRole.objects.get(uuid=role_uuid)
+            server_member.role = role
+            server_member.save()
+
+            return JsonResponse(data={"result" : True, "message" : "role was added"})
+        except Exception as e:
+            return JsonResponse(data={"result" : False, "message" : "something not found"})
+
+
+
+def api_get_all_permissions(request):
+    headers : dict = request.headers
+
+    token : str = headers.get("Authorization").replace('"', "")
+    token_content : dict = get_token(token=token)
+
+    
+    if not token_content:
+        return JsonResponse(data={"result" : False, "message" : "not valid token"})
+    
+
+    return JsonResponse(data={"result" : True, "permissions" : STRING_PERMISSIONS.keys()})
+
 

@@ -133,7 +133,7 @@ def api_save_message(request):
     data_type : str = "text"
     
     if img:
-        if not str(img) == "mp3":
+        if not str(img) == "wav":
             media : str = handle_upload_file(file=img)
             data_type : str = "media"
         else:

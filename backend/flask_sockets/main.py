@@ -189,7 +189,7 @@ def save_message(token : str, text : str, from_user_id : str, chat_id : str, med
         file_name : file,
     }
     result = requests.post("http://127.0.0.1:8000/api/v1/saveMessage", data=data, files=files)
-    print(result)
+    # print(result)
     return result.json()
 
 
