@@ -1,29 +1,27 @@
-import  { FC, useEffect  } from 'react'
+import  { FC  } from 'react'
 import avatar from "../assets/sonic.jpg"
 import { useAppSelector } from '../hooks/redux-hoock'
 
 import "../css/message_container.css"
 import NewMessage from './NewMessage'
-import { IMessage } from '../models/IUserChat'
+
 
 interface MessageProps{
     children? : React.ReactNode
     Blockid:string,
     messageBlock:string,
-    messages: { [key: string]: IMessage[]}
+   
 }
 
 
 
-const  MessageBlock: FC<MessageProps>=({messageBlock,messages,Blockid})=> {
+const  MessageBlock: FC<MessageProps>=({messageBlock,Blockid})=> {
   const me = useAppSelector(state=>state.auth.user)
   const NoMe = useAppSelector(state=>state.chats.users)
  const newMesage= useAppSelector(state=>state.chats.newMessage)
 
 
-  // useEffect(()=>{
-  //   console.log(messages)
-  // },[messages])
+  
 
 
   return (

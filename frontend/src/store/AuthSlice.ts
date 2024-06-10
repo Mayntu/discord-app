@@ -40,15 +40,15 @@ const authSlice = createSlice({
     },
     extraReducers:(builder: ActionReducerMapBuilder<TAuth>)=>{
         builder.addCase(fetchLogin.fulfilled,(state : TAuth,action : PayloadAction<any>)=>{
-            console.log(action.payload)
+        console.log(action.payload)
            state.user = action.payload
-           state.isAuth = true
+           state.isAuth = action.payload.result
            state.isLoading = false
            state.error = ""
         }).addCase(fetchRegistration.fulfilled,(state : TAuth,action : PayloadAction<any>)=>{
-            console.log(action.payload)
+            console.log(action.payload.result)
             state.user = action.payload.user
-            state.isAuth = true
+            state.isAuth = action.payload.result
             state.isLoading = false
             state.error = ""
         }).addCase(fetchLogin.pending,(state : TAuth,action : PayloadAction<any>)=>{

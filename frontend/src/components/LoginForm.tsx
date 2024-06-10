@@ -19,20 +19,20 @@ const LoginForm:FC=()=> {
 
     useEffect(()=>{
       console.log(localStorage.getItem("token"),"token",1)
-      if(isAuth && localStorage.getItem("token")){
+      if(isAuth && localStorage.getItem("token") && localStorage.getItem("token")!== null && localStorage.getItem("token")!==undefined){
         console.log(localStorage.getItem("token"),"token",2)
         navigate("/chat")
       }
    
     },[isAuth])
 
-    useEffect(()=>{
-      if(localStorage.getItem("token")){
-        console.log(localStorage.getItem("token"),"token")
-        navigate("/chat")
-      }
+    // useEffect(()=>{
+    //   if(localStorage.getItem("token")){
+    //     console.log(localStorage.getItem("token"),"token")
+    //     navigate("/chat")
+    //   }
    
-    },[])
+    // },[])
    useEffect(()=>{
       login.notValid()
       email.notValid()

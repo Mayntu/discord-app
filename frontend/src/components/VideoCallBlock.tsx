@@ -8,7 +8,7 @@ import mic2 from "../assets/mic3.png"
 import camera from "../assets/nomuted.png"
 import cameraMuted from "../assets/muted.png"
 import freeice from "freeice"
-
+import "../css/video.css"
 interface newPeer{
     peerID : string,
     createOffer? : boolean
@@ -140,17 +140,19 @@ const VideoCallBlock:FC<IVideoCallBlock>=({user,setIsCallBlock})=> {
         socketWebRTC.on("user-disconnect",(data)=>{
           console.log("user-disconnect=",data)
         })
-        return () => {
-          socketWebRTC.off("add-peer");
-          socketWebRTC.emit("leave-room");
-        }
+
         // socketWebRTC.on("user-connect",data=>{
-        //   handleNewPeer({peerId:data.sid,createOffer:true})
+        //   // handleNewPeer({peerId:data.sid,createOffer:true})
         //   console.log(data,"user-connect")
         // })
         // socketWebRTC.on("user-list",data=>{
         //   console.log(data,"user-list")
         // })
+        return () => {
+          socketWebRTC.off("add-peer");
+          socketWebRTC.emit("leave-room");
+        }
+    
       },[])
       useEffect(()=>{
 
@@ -229,7 +231,7 @@ const VideoCallBlock:FC<IVideoCallBlock>=({user,setIsCallBlock})=> {
             {clients.map((i)=>
                     (<div key={i}>
                         <video
-                            className={i == "LOCAL_VIDEO" ? "local-video": ""}
+                            className={i == "LOCAL_VIDEO" ? "local-video": "no-local-video"}
                             autoPlay
                             playsInline
                             muted={i === "LOCAL_VIDEO"}
@@ -243,7 +245,6 @@ const VideoCallBlock:FC<IVideoCallBlock>=({user,setIsCallBlock})=> {
                 )}
         </div>
         <div className="icon-call">
-                <p>lksockwo</p>
                 <img src={redCall} alt="" onClick={()=>{setIsCallBlock(false)}}/>
                 <img src={audioMuted ? mic : mic2} alt="" onClick={()=>{
                     setAudioMuted(!audioMuted)

@@ -95,38 +95,8 @@ const chatsSlice = createSlice({
                                 if(item.has_read == false){
                                 console.log(item.has_read)
                                 item.has_read = true
-                                }
-                                
+                                }  
                             })
-            // let keys = Object.keys(state.newMessage)
-            // keys.map(i=>{
-            //     if(state.newMessage[i].find((i)=>i.has_read == false)){
-            //         state.newMessage[i].map((item)=>{
-            //             if(item.has_read == false){
-            //             console.log(item.has_read)
-            //             dispatch(fetchReadMessage(item.uuid))
-            //             return {...item,has_read : true}
-            //     }
-            //          return item
-            //         })
-            //     }
-            // })
-            //   let str = MessageInBlock
-            //   keys.map(i=>{
-            //     if(str[i].find((i)=>i.has_read == false)){
-            //       str[i] = str[i].map((item)=>{
-            //               if(item.has_read == false){
-            //                 console.log(item.has_read)
-            //                 dispatch(fetchReadMessage(item.uuid))
-            //                 return {...item,has_read : true}
-            //               }
-            //               return item
-            //           })
-            //     }
-                
-            //   })
-            //   console.log(str)
-            //   setMessageInBlock(str)
         },
        
     },

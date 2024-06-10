@@ -95,7 +95,7 @@ function App() {
   },[navigate])
 
   useEffect(()=>{
-    localStorage.removeItem("token")
+    // localStorage.removeItem("token")
     if(localStorage.getItem("token")){
       dispatch(setIsAuth(true))
       if(pathname == "/"){

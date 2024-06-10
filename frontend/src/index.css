@@ -319,7 +319,7 @@ input{
   width: 100%;
   background-color: #a39d9d;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   gap: 5px;
   overflow: auto;
 
@@ -330,16 +330,45 @@ input{
 }
 
 .find-container-user{
-  padding: 2px;
-  border:1px solid #1059FF;
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  color: var(--font-color-1);
+  background-color: var(--back-color-2);
+  border-radius: 10px;
 }
 .find-container-user:hover{
-  border:1px solid #38ff10;
+ background-color: var(--back-color-3);
 }
 
 .find-container-user img{
   width: 40px;
   height: 40px;
+
+}
+.find-container-inUser{
+  min-height: 130px;
+  padding: 10px;
+  width: 100%;
+  background-color: #a39d9d;
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  overflow: auto;
+}
+.find-container-inUser>.find-container-user{
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  color: var(--font-color-1);
+  background-color: var(--back-color-2);
+  border-radius: 10px;
 }
 /* find container end */
 
@@ -383,43 +412,3 @@ input{
 
 
 
-/*     VideoCallBlock start */
-
-.VideoCallBlock{
-  margin-top: 20px;
-  position: absolute;
-  width: 100%;
-  height: 80%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color: #141613;
-}
-
-.videoUsers{
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-
-}
-.videoUsers video{
-  z-index: 100;
-}
-.local-video{
-  position: absolute;
-  bottom: 20px;
-  right: 100px;
-  width: 400px;
-  z-index: 0;
-}
-
-.icon-call img{
-  margin-left: 20px;
-  width: 45px;
-  cursor: pointer;
-  background-color: #38ff10;
-  border-radius: 100px;
-
-}
-/*     VideoCallBlock end */
