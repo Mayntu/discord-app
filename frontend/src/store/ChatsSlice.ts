@@ -1,6 +1,7 @@
 import { ActionReducerMapBuilder, PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { IMessage, IUserChat, IUserChatT, IUserChatTSearch } from "../models/IUserChat";
 import { fetchCreateChat, fetchFindChat, fetchGetChatMessage, fetchGetUserChats } from "./acthionChat";
+import { TmessageBlocks } from "../hooks/useCreateMessageBlock";
 
 
 
@@ -17,7 +18,8 @@ type TChats = {
     newChatid: string,
     message : IMessage,
     message_count: number,
-    newMessage: { [key: string]: IMessage[]}
+    newMessage: { [key: string]: IMessage[]},
+    BlockMessage: TmessageBlocks[]
 }
 
 const initialState: TChats= {
@@ -31,7 +33,8 @@ const initialState: TChats= {
     newChatid: "",
     message: {} as IMessage,
     message_count : 0,
-    newMessage: {}
+    newMessage: {},
+    BlockMessage: []
 }
 
 
@@ -101,7 +104,17 @@ const chatsSlice = createSlice({
           state.newMessage = {}
          
             // console.log( state.newMessage)
-        }
+        },
+        addNewBlockMessage(state,{payload}:PayloadAction<any>){
+            if(payload.array){
+                state.BlockMessage = payload.array
+            }else{
+                state.BlockMessage.push({idBlock:payload.id,userBlock: payload.user})
+            }
+         
+         
+            // console.log( state.newMessage)
+        },
        
     },
     extraReducers: (builder:  ActionReducerMapBuilder<TChats>)=>{
@@ -133,6 +146,6 @@ const chatsSlice = createSlice({
 export const {addUsersChat, addUsersConnect,stateNull,
                 addMessage,addUsersConnectState,userOnline,
                  userOffline,addNewMessage,addNewMessageStatus,
-                 addNewMessagNull} = chatsSlice.actions
+                 addNewMessagNull,addNewBlockMessage} = chatsSlice.actions
 
 export default chatsSlice.reducer

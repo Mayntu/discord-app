@@ -11,7 +11,7 @@ import {  fetchDeleteChatMessage, fetchGetChatMessage, fetchGetUserChats, fetchR
 import InputMessage from './InputMessage';
 import ServerUsersList from './ServerUsersList';
 import VideoCallBlock from './VideoCallBlock';
-import { addMessage, addNewMessagNull, addNewMessage, addNewMessageStatus, addUsersChat} from '../store/ChatsSlice';
+import { addMessage, addNewBlockMessage, addNewMessagNull, addNewMessage, addNewMessageStatus, addUsersChat} from '../store/ChatsSlice';
 import "../css/message_container.css"
 import {  changeMessageN } from '../hooks/changeMessage';
 import ModuleTest from './Module';
@@ -34,6 +34,7 @@ const  MessageContainer : FC=()=> {
   const message_count = useAppSelector(state=>state.chats.message_count)
   const usersConnect = useAppSelector(state=>state.chats.usersConnect)
   const newMessage = useAppSelector(state=>state.chats.newMessage)
+  const BlockNewMessage = useAppSelector(state=>state.chats.BlockMessage)
   const userMe = useAppSelector(state=>state.auth.user)
   const [isModule,setIsModule] = useState<boolean>(false)
   const [file,setFile] = useState<File>()
@@ -68,6 +69,7 @@ const  MessageContainer : FC=()=> {
          console.log("ok  c","na",chatid,"выход","uuid",userMe.uuid)
          socket.emit("leave",{"chat_id" : chatid, uuid:userMe.uuid})
          dispatch(addNewMessagNull())
+         dispatch(addNewBlockMessage({array:[]}))
         }
        }
   },[chatid,userMe])
@@ -161,27 +163,31 @@ useEffect(()=>{
         if(newMessageBlock[newMessageBlock.length-1] == undefined){
           let idBlock = uuidv4()
           newMessageBlock.push({idBlock:idBlock,userBlock:message[i].from_user_id})
+          dispatch(addNewBlockMessage({id:idBlock,user:message[i].from_user_id}))
           dispatch(addNewMessage({id:idBlock,ms:message[i]}))
         }else if(newMessageBlock[newMessageBlock.length-1].userBlock == message[i].from_user_id){
           let idBlock = newMessageBlock[newMessageBlock.length-1].idBlock
-       
-        dispatch(addNewMessage({id:idBlock,ms:message[i]}))
+          dispatch(addNewMessage({id:idBlock,ms:message[i]}))
         }else{
           let idBlock = uuidv4()
           newMessageBlock.push({idBlock:idBlock,userBlock:message[i].from_user_id})
+          dispatch(addNewBlockMessage({id:idBlock,user:message[i].from_user_id}))
           dispatch(addNewMessage({id:idBlock,ms:message[i]}))
         }
       }
       console.log(newMessage,"newMessage")
       setBlockMessage(newMessageBlock)
     }  else{
+      dispatch(addNewBlockMessage({array: []}))
+      dispatch(addNewMessagNull())
       setBlockMessage([])
     }
 
-    if(BlockMessage.length == 0){
-      let idBlock=uuidv4()
-      setBlockMessage([{idBlock,userBlock:userMe.login}])
-    }
+    // if(BlockNewMessage.length == 0){
+    //   let idBlock=uuidv4()
+    //   setBlockMessage([{idBlock,userBlock:userMe.uuid}])
+    //   dispatch(addNewBlockMessage({id:idBlock,user:userMe.uuid}))
+    // }
   }
 
   useEffect(()=>{
@@ -251,24 +257,26 @@ const updateBlockOrMesasage=async(datan:any)=>{
     data =  s(data)
   }
   
-  if(BlockMessage[0] == undefined && Object.keys(newMessage).length ==0){
-    console.log(BlockMessage[0],"BlockMessage[0]1")
+  if(BlockNewMessage[0] == undefined && Object.keys(newMessage).length ==0){
+    console.log(BlockNewMessage[0],"BlockMessage[0]1")
     console.log(newMessage,"newMessage1")
     let idBlock = uuidv4()
     let block = [{idBlock:idBlock,userBlock:data.from_user_id}]
     console.log(1)
+    dispatch(addNewBlockMessage({id:idBlock,user:data.from_user_id}))
      setBlockMessage(block)
      dispatch(addNewMessage({id: idBlock,ms:data}))
-  }else if(BlockMessage[BlockMessage.length-1].userBlock == data.from_user_id ){
+  }else if(BlockNewMessage[BlockNewMessage.length-1].userBlock == data.from_user_id ){
     console.log(2)
-    console.log(BlockMessage[BlockMessage.length-1].userBlock,"=BlockMessage[0]1   data.from_user_id =",data.from_user_id)
+    console.log(BlockNewMessage[BlockNewMessage.length-1].userBlock,"=BlockMessage[0]1   data.from_user_id =",data.from_user_id)
     console.log(newMessage,"newMessage1")
-    dispatch(addNewMessage({id: BlockMessage[BlockMessage.length-1].idBlock,ms:data}))
+    dispatch(addNewMessage({id: BlockNewMessage[BlockNewMessage.length-1].idBlock,ms:data}))
   }else{
     let idBlock = uuidv4()
-    let block = BlockMessage
+    let block = BlockNewMessage
     console.log(3)
     block.push({idBlock:idBlock,userBlock:data.from_user_id})
+    dispatch(addNewBlockMessage({id:idBlock,user:data.from_user_id}))
     setBlockMessage(block)
     dispatch(addNewMessage({id: idBlock,ms:data}))
   }
@@ -302,6 +310,11 @@ const updateBlockOrMesasage=async(datan:any)=>{
       dispatch(fetchGetServerChatRoomMessages(chatserverid))
     }
 
+    return()=>{
+      dispatch(addNewMessagNull())
+      dispatch(addNewBlockMessage({array:[]}))
+    }
+
   },[chatserverid])
 
 
@@ -333,7 +346,7 @@ const updateBlockOrMesasage=async(datan:any)=>{
         return ()=>{
           socket.off("server_chat_message")
         }
-  },[chatserverid,BlockMessage])
+  },[chatserverid,BlockNewMessage])
 
 
 
@@ -430,7 +443,7 @@ const isChangemessage=()=>{
                 }
               }
             }}>
-                {BlockMessage.length !==0 ? BlockMessage.map((messageBlock)=><MessageBlock key={messageBlock.idBlock} messageBlock={messageBlock.userBlock} Blockid={messageBlock.idBlock}></MessageBlock>) : null}  
+                {BlockNewMessage.length !==0 ? BlockNewMessage.map((messageBlock)=><MessageBlock key={messageBlock.idBlock} messageBlock={messageBlock.userBlock} Blockid={messageBlock.idBlock}></MessageBlock>) : null}  
             </div>
             <div className="file-input">
               {file &&  arrayURL.map(i=>(<img src={i} key={i}/>)) }
@@ -481,7 +494,7 @@ const isChangemessage=()=>{
                       <img/>
               </div>
                 <div className="get-message-cantainer" ref={messageContainer} >
-                {BlockMessage.length !==0 ? BlockMessage.map((messageBlock)=><MessageBlock key={messageBlock.idBlock} messageBlock={messageBlock.userBlock}  Blockid={messageBlock.idBlock}></MessageBlock>) : null}  
+                {BlockNewMessage.length !==0 ? BlockNewMessage.map((messageBlock)=><MessageBlock key={messageBlock.idBlock} messageBlock={messageBlock.userBlock}  Blockid={messageBlock.idBlock}></MessageBlock>) : null}  
                
                 </div>
                 <div className="file-input">
