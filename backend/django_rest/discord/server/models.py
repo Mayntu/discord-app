@@ -26,6 +26,7 @@ class ServerAudioRoom(models.Model):
     uuid = models.UUIDField(default=uuid4, primary_key=True, verbose_name="UUID")
     server_object = models.ForeignKey("Server", on_delete=models.CASCADE)
     title = models.CharField(max_length=256, verbose_name="title")
+    is_private = models.BooleanField(default=False, verbose_name="is private?")
 
 
 

@@ -23,6 +23,10 @@ from server.views import (
     api_save_audio_message,
     api_recognize_audio_server,
     api_check_user,
+    api_create_role,
+    api_check_user_permission,
+    api_add_user_role,
+    api_get_all_permissions,
 )
 
 
@@ -50,4 +54,8 @@ urlpatterns : list = [
     path("api/v1/saveAudioMessage", api_save_audio_message, name="api_save_audio_message"),
     path("api/v1/recognizeAudioServer", api_recognize_audio_server, name="api_recognize_audio_server"),
     path("api/v1/checkServerUser", api_check_user, name="api_check_user"),
+    path("api/v1/createRole", api_create_role, name="api_create_role"),
+    path("api/v1/checkUserPermission", api_check_user_permission, name="api_check_user_permission"),
+    path("api/v1/addUserRole", api_add_user_role, name="api_add_user_role"),
+    path("api/v1/getAllPermissions", api_get_all_permissions, name="api_get_all_permissions"),
 ]
