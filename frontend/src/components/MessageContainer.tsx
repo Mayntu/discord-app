@@ -273,11 +273,7 @@ const updateBlockOrMesasage=async(datan:any)=>{
     dispatch(addNewMessage({id: BlockNewMessage[BlockNewMessage.length-1].idBlock,ms:data}))
   }else{
     let idBlock = uuidv4()
-    let block = BlockNewMessage
-    console.log(3)
-    block.push({idBlock:idBlock,userBlock:data.from_user_id})
     dispatch(addNewBlockMessage({id:idBlock,user:data.from_user_id}))
-    setBlockMessage(block)
     dispatch(addNewMessage({id: idBlock,ms:data}))
   }
   scroll()
