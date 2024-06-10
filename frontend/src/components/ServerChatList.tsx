@@ -115,10 +115,10 @@ const ServerChatList:FC=()=> {
       {isModuleInvite && <ModuleTest isModule={setIsModuleInvite}>
         <h1>Скопируйте ссылку</h1>
         <button onClick={()=>{
-          navigator.clipboard.writeText("http://127.0.0.1:8000/"+link).then(()=>{console.log(true)})
+          navigator.clipboard.writeText("localhost:5173/"+link).then(()=>{console.log(true)})
           setIsModuleInvite(false)
         }}>copy</button>
-        <p>http://127.0.0.1:8000/{link}</p>
+        {/* <p>http://127.0.0.1:8000/{link}</p> */}
         <p>localhost:5173/{link}</p>
         </ModuleTest>}
         {isModuleAvatar && <ModuleTest isModule={setIsModuleAvatar}>
