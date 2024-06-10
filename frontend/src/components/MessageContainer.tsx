@@ -423,7 +423,10 @@ const isChangemessage=()=>{
               {usersChat && (<>
               {usersChat.avatar== ""  ? <img src={"http://localhost:5173/"+avatar} alt="" />: <img src={"http://localhost:5173/"+usersChat.avatar} alt="" /> }
               <p>{usersChat.login}</p>
+           
               </>)}
+              {true ? <div className="status-ch"></div> : <div className="status-red-ch"></div>}
+            
             </div>
                 <button onClick={()=>{
                   dispatch(fetchDeleteUser(chatid))

@@ -1,10 +1,6 @@
-
-
-
 import  { FC, useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock'
 import { useNavigate } from 'react-router-dom'
-import { fetchReadMessage } from '../store/acthionChat'
 import { addMessage } from '../store/ChatsSlice'
 import ModuleTest from './Module'
 import $api from '../http'
@@ -22,7 +18,7 @@ interface MessageProps{
 }
 const NewMessage:FC<MessageProps>=({media,content,hasRead,classUser,uuid,time,blockId})=> {
     const me = useAppSelector(state=>state.auth.user)
-    const NoMe = useAppSelector(state=>state.chats.users)
+   
     const [isModule,setIsModule] = useState<boolean>(false)
     const dispatch = useAppDispatch()
     const messageUser = useAppSelector(state=>state.chats.message)
@@ -32,7 +28,7 @@ const NewMessage:FC<MessageProps>=({media,content,hasRead,classUser,uuid,time,bl
     const navigate = useNavigate()
     const [audio,setAudio] = useState<boolean>(false)
     const [hasReadState,sethasReadState]  = useState<boolean>(hasRead || false)
-   
+ 
     const fetchMessage=async(str:string)=>{
       const res = await $api.get(str)
       if(res.data.result){
@@ -71,21 +67,15 @@ const NewMessage:FC<MessageProps>=({media,content,hasRead,classUser,uuid,time,bl
 
   useEffect(()=>{
     if(hasRead ==true){
-      console.log("true")
       sethasReadState(hasRead)
     }
   },[hasRead])
   
   useEffect(()=>{
-    // console.log(media.split(".").splice(-1,1)[0])
+
     if(media.split(".").splice(-1,1)[0] == "mp3" || media.split(".").splice(-1,1)[0] == "wav" ){
-      // dispatch(fetchRecognizeAudio(uuid))
       setAudio(true)
     }
-    // if(media.split(".").splice(-1,1)[0] == "п" || media.split(".").splice(-1,1)[0] == "wav" ){
-    //   // dispatch(fetchRecognizeAudio(uuid))
-    //   setAudio(true)
-    // }
   },[])
   return (
     <>
@@ -102,25 +92,24 @@ const NewMessage:FC<MessageProps>=({media,content,hasRead,classUser,uuid,time,bl
                       : 
                       gif ? null: (<a href={content}>{content}</a>) 
                       : 
-                      ( <p>{content} 
-                              
-                      </p>)}
-                      <span className='date'>   {` ${new Date(time).getHours()>10 ? new Date(time).getHours() : "0"+new Date(time).getHours()}
-                        : ${new Date(time).getMinutes()>10 ? new Date(time).getMinutes() : "0"+new Date(time).getMinutes()}`} {classUser == me.uuid && (<div className={hasReadState ? "true-status" : "false-status"}></div>)}  </span>
+                      ( <p>{content}</p>)}
+                      { media == "" && <span className='date'>   {` ${new Date(time).getHours()>10 ? new Date(time).getHours() : "0"+new Date(time).getHours()}
+                        : ${new Date(time).getMinutes()>10 ? new Date(time).getMinutes() : "0"+new Date(time).getMinutes()}`} {classUser == me.uuid && (<div className={hasReadState ? "true-status" : "false-status"}></div>)}  </span>}
+                      
                   </div>
                   
                   }
                       
                 </div>
-                {!audio && 
-                ( <div className='image-message' onClick={()=>setIsModule(true)}>
+                {media !== "" && <div className='image-message' onClick={()=>setIsModule(true)}>
                     {gif && (<img src={gif} alt="" />)}
                     {media && <img src={"http://localhost:5173/public/"+media} alt="" />}
-                  </div>)}
-               
+                  </div>} 
+            
+                 
               {isModule && <ModuleTest isModule={setIsModule}>
-        {gif && (<img src={gif} alt="" />)}
-        <img src={"http://localhost:5173/public/"+media} alt="" />
+                {gif && (<img src={gif} alt="" />)}
+                <img src={"http://localhost:5173/public/"+media} alt="" />
           </ModuleTest>}
     </>
   )

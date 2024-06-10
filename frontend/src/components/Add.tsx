@@ -4,7 +4,7 @@
 
 const add=({onClick})=>{
     return (
-        <svg onClick={onClick} fill="#000000" height="30px" width="30px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"  
+        <svg onClick={onClick} fill="white" height="30px" width="30px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"  
 	 viewBox="0 0 490 490">
 <g>
 	<g>

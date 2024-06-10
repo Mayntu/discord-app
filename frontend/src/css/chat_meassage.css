@@ -33,8 +33,8 @@
     flex-grow: 2;
     flex-direction: column;
     position: relative;
-    text-align: start;
-    padding-left: 10px;
+  
+    align-items: center;
         
   }
   
@@ -98,7 +98,9 @@
   
   
   
- 
+  .row-content-chat{
+    margin-left: -10px;
+  }
   
    .search{
     margin-top: 10px;
@@ -128,6 +130,7 @@
   .container-chat,.container-chat-message{
     display: flex;
     flex-direction: row;
+
     height: 100vh;
     width: 100vw;
   }

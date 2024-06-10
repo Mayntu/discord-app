@@ -196,10 +196,11 @@ input{
   /* overflow-x: hidden */
 }
 .container-server::-webkit-scrollbar-track{
-  background-color: none;
+  background-color: var(--background-color);
 
 }
 .container-server::-webkit-scrollbar{
+  background-color: none !important;
   width: 7px;
  }
  .container-server::-webkit-scrollbar-thumb {

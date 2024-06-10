@@ -1,11 +1,13 @@
 import { ChangeEvent, FC,  useEffect,  useRef, useState } from "react"
 import Add from "./Add"
 import InputEmoji from "react-input-emoji";
-import micImage from "../assets/microphone.png"
+import micImage from "../assets/micF.png"
 import { socket } from "../socket";
 import { useParams } from "react-router-dom";
 import GIfBlock from "./GIfBlock";
-
+import gifIcon from "../assets/gif.png"
+import imageIcon from "../assets/addIm.png"
+import smile from "../assets/snail.png"
 interface  IInputMessage{
   
   dropImage : (e:React.DragEvent<HTMLDivElement>)=>void,
@@ -32,7 +34,7 @@ const InputMessage:FC<IInputMessage>=({dropImage,sendMessage,setFile,setMessageT
   // const [timer, setTimer] = useState("00.00.00");
   const [gif,setGif] = useState<string>("")
   const mediaRecorder = useRef<MediaRecorder>();
- 
+ const refSmile = useRef<HTMLImageElement>(null)
 
 
   const getMicrophonePermission =async ()=>{
@@ -161,16 +163,45 @@ const InputMessage:FC<IInputMessage>=({dropImage,sendMessage,setFile,setMessageT
     <div className="message-input-container" 
     onDrop={(e)=>{dropImage(e)}} 
     onDragOver={e=>e.preventDefault()}>
-      <Add onClick={()=>refImage.current?.click()}/>
-      <InputEmoji shouldConvertEmojiToImage={false} shouldReturn={true} inputClass='emoji' onEnter={sendMessage} cleanOnEnter  onChange={setMessageText} value={messageText}    placeholder="Введите сообщение"/>
-      <div className={recordingStatus === "inactive" ? "img-block inactive" : "img-block recording"}>
-       <img src={micImage} className="btn-image" onClick={micClick}/>
-      </div>
-      
+      {/* <Add onClick={()=>refImage.current?.click()}/> */}
+     
+      <img src={imageIcon} alt="" style={{cursor:"pointer"}} onClick={()=>refImage.current?.click()}/>
+      {/* <img src={smile} alt=""  ref={refSmile} onClick={()=>{
+        console.log(refSmile.current)
+        refSmile.current?.querySelector(".react-imput-emoji--button")
+        console.log(refSmile.current?.querySelector(".react-imput-emoji--button"))
+        refSmile.current?.click()}}/> */}
+    
+     <InputEmoji 
+      color="#ACACAC"
+      borderColor={"#333333"} 
+      background={"#333333"}
+      shouldConvertEmojiToImage={false} 
+      shouldReturn={true} inputClass='emoji' 
+      onEnter={sendMessage} 
+      cleanOnEnter  
+      onChange={setMessageText} 
+      value={messageText}    
+      placeholder="Введите сообщение"
+      borderRadius={10}
+      placeholderColor="#ACACAC"
+      fontFamily="Inter"
+      height={70}
+      // buttonRef={refSmile}
+     
+      />
+     
+    
+     
+                
     
     
       {/* {timer} */}
-      <input ref={refImage} type="file" multiple accept='image/*,.png,.web,.jpg,.gif' onChange={(e:ChangeEvent<HTMLInputElement>)=>{
+      <div className="com-icon">
+              <div className={recordingStatus === "inactive" ? "img-block inactive" : "img-block recording"}>
+                 <img src={micImage} onClick={micClick} style={{cursor:"pointer"}}/>
+              </div>
+              <input ref={refImage} type="file" multiple accept='image/*,.png,.web,.jpg,.gif' onChange={(e:ChangeEvent<HTMLInputElement>)=>{
             if(e.currentTarget.files){
               setArrayURL([])
               console.log(e.currentTarget.files,"conFiles")
@@ -182,10 +213,11 @@ const InputMessage:FC<IInputMessage>=({dropImage,sendMessage,setFile,setMessageT
             }
           }
         } className='none'/>
-      <button onClick={()=>setISGifBlock(!isGifBlock)}>gif</button>
-     
-    </div>
-       {isGifBlock && <GIfBlock setGif={setGif} setisGifBlock={setISGifBlock}/>}
+              <img src={gifIcon} onClick={()=>setISGifBlock(!isGifBlock)} alt="" style={{cursor:"pointer"}} />
+          </div>
+            
+      </div>
+      {isGifBlock && <GIfBlock setGif={setGif} setisGifBlock={setISGifBlock}/>}
     </>
   )
 }

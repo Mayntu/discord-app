@@ -24,10 +24,10 @@
     overflow-y: scroll;
 }
 .block-gif-search::-webkit-scrollbar-track{
-    width: 1px;
+    width: 0px;
    }
 .block-gif-search ::-webkit-scrollbar{
-    width: 1px;
+    width: 0px;
    }
 .block-gif > img{
     width: 200px;

@@ -30,19 +30,22 @@ const  MessageBlock: FC<MessageProps>=({messageBlock,messages,Blockid})=> {
     <>
      <div className={messageBlock == me.uuid || me.uuid == "" || undefined ? 'message my-message'  : 'message'}>
       <div className={messageBlock == me.uuid || me.uuid == "" || undefined ? 'chat-message-new'  : 'chat-message-new'}>
-      <div className="avatar avatar-message">
+      <div className="avatar-message">
         {
         messageBlock== me.uuid  ? 
           me.avatar == "" ? (<img src={"http://localhost:5173/"+avatar} alt="" />) :   (<img src={"http://localhost:5173/public/"+me.avatar} alt="" />) 
           :  
           NoMe.avatar == "" ? (<img src={"http://localhost:5173/"+avatar} alt="" />) :   (<img src={"http://localhost:5173/public/"+NoMe.avatar} alt="" />)
         }
-           { 
+        <div className="login-message">
+        {  
                      messageBlock == me.uuid  ? 
                     <p className='title'>{me.login}</p>
                       :  
                     <p className='title'>{NoMe.login}</p>
                     }
+        </div>
+                   
       </div>
 
                 

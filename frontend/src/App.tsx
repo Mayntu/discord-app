@@ -89,15 +89,13 @@ function App() {
   }
   
   useEffect(()=>{
-    console.log(navigate)
-    console.log(pathname)
     if(pathname.includes("/invite/")){
       fetchMessage(`http://127.0.0.1:8000${pathname}`)
     }
   },[navigate])
 
   useEffect(()=>{
-    // localStorage.removeItem("token")
+    localStorage.removeItem("token")
     if(localStorage.getItem("token")){
       dispatch(setIsAuth(true))
       if(pathname == "/"){
