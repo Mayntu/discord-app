@@ -999,7 +999,7 @@ def api_create_role(request):
     try:
         data : dict = json.loads(request.body)
 
-        user_uuid : str = data.get("uuid")
+        user_uuid : str = token_content.get("uuid")
         server_uuid : str = data.get("server_uuid")
         role_name : str = data.get("role_name")
         role_color : str = data.get("role_color")
@@ -1045,7 +1045,7 @@ def api_delete_role(request):
     try:
         data : dict = json.loads(request.body)
 
-        user_uuid : str = data.get("uuid")
+        user_uuid : str = token_content.get("uuid")
         server_uuid : str = data.get("server_uuid")
         role_uuid : str = data.get("role_uuid")
 
@@ -1197,6 +1197,23 @@ def api_get_all_permissions(request):
         return JsonResponse(data={"result" : False, "message" : "not valid token"})
     
 
+    """
+        [
+            {
+                "key" : "DELETE",
+                "title" : "Удалить этот сервер",
+                "is_owner" : True,
+            },
+            {
+                "key" : "DELETS_MSGS",
+                "title" : "Удалить сообщение чата",
+                "is_owner" : False,
+            },
+        ]
+    """
+
+
+    
     return JsonResponse(data={"result" : True, "permissions" : list(STRING_PERMISSIONS.keys())})
 
 
