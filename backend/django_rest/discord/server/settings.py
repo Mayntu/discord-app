@@ -51,17 +51,39 @@ class Permission(models.Model):
 class Permissions:
     def __init__(self) -> None:
         self.DELETE : Permission = Permission.objects.get_or_create(title="delete server", is_owner_perm=True)[0]
+        self.DELETE.description = "Удалить этот сервер"
+        self.DELETE.save()
         self.RENAME : Permission = Permission.objects.get_or_create(title="rename server", is_owner_perm=True)[0]
+        self.RENAME.description = "Переименовать этот сервер"
+        self.RENAME.save()
         self.REAVTR : Permission = Permission.objects.get_or_create(title="reavatar server", is_owner_perm=True)[0]
+        self.REAVTR.description = "Изменить аватарку сервера"
+        self.REAVTR.save()
 
         self.CREATE_CHAT : Permission = Permission.objects.get_or_create(title="create server chat")[0]
+        self.CREATE_CHAT.description = "Создать чат на сервере"
+        self.CREATE_CHAT.save()
         self.DELETE_CHAT : Permission = Permission.objects.get_or_create(title="delete server chat")[0]
+        self.DELETE_CHAT.description = "Удалить чат на сервере"
+        self.DELETE_CHAT.save()
         self.INVITE_USER : Permission = Permission.objects.get_or_create(title="invite server user")[0]
+        self.INVITE_USER.description = "Получить ссылку приглашения"
+        self.INVITE_USER.save()
         self.DELETE_USER : Permission = Permission.objects.get_or_create(title="delete server user")[0]
+        self.DELETE_USER.description = "Удалять пользователей сервера"
+        self.DELETE_USER.save()
         self.SEE_PRIVATE : Permission = Permission.objects.get_or_create(title="view private chats")[0]
+        self.SEE_PRIVATE.description = "Просматривать частные чаты"
+        self.SEE_PRIVATE.save()
         self.DELETE_MSGS : Permission = Permission.objects.get_or_create(title="delete any message")[0]
+        self.DELETE_MSGS.description = "Удалять разные сообщения"
+        self.DELETE_MSGS.save()
         self.CREATE_ROLE : Permission = Permission.objects.get_or_create(title="create custom role")[0]
+        self.CREATE_ROLE.description = "Создавать кастомные роли"
+        self.CREATE_ROLE.save()
         self.CREATE_PRIVATE_CHAT : Permission = Permission.objects.get_or_create(title="create server private chat")[0]
+        self.CREATE_PRIVATE_CHAT.description = "Создавать частные чаты"
+        self.CREATE_PRIVATE_CHAT.save()
 
 
     def all(self) -> list:
