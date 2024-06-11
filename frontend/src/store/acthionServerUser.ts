@@ -140,3 +140,18 @@ export const fetchGetAllPermissions = createAsyncThunk(
       }
     },
   )
+//getServersRoles
+
+
+export const fetchgetServersRoles = createAsyncThunk(
+  'server/fetchgetServersRoles',
+  async (payload:string, thunkAPI) => {
+    try {
+      const response = await  ServerUsersService.getServersRoles(payload)
+      console.log(response.data,"fetchgetServersRoles")
+      return response.data
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error?.message)
+    }
+  },
+)

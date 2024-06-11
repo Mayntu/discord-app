@@ -61,5 +61,8 @@ export class ServerUsersService{
     static async postDeleteRole({server_uuid,role_uuid}:IDeleteRole):Promise<AxiosResponse<IDeleteRole>>{
         return $api.post<any>("api/v1/deleteRole",{server_uuid,role_uuid})
     }
-
+        //api/v1/getServersRoles
+        static async getServersRoles(server_uuid:string):Promise<AxiosResponse<any>>{
+            return $api.post<any>("api/v1/getServersRoles",{server_uuid})
+        }
 }  

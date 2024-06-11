@@ -6,7 +6,7 @@ import ModuleTest from './Module'
 import avatar from "../assets/sonic.jpg"
 import "../css/chat_meassage.css"
 import ServerRolePanel from './ServerRolePanel'
-import { fetchPostGetServersMembers } from '../store/acthionServerUser'
+import { fetchPostCheckUserPermission, fetchPostGetServersMembers, fetchgetServersRoles } from '../store/acthionServerUser'
 
 
 
@@ -38,6 +38,8 @@ const ServerChatList:FC=()=> {
         dispatch(fetchgetServerAudioChatRooms(serverid))
         dispatch(fetchCheckServerUser(serverid)).then(res=>{setIsAdmin(res.payload.is_owner)})
         dispatch(fetchPostGetServersMembers(serverid))
+        dispatch(fetchPostCheckUserPermission({server_uuid:serverid,permission:"CREATE_PRIVATE_CHAT"}))
+        dispatch(fetchgetServersRoles(serverid))
       }
     },[serverid])
    
@@ -78,6 +80,9 @@ const ServerChatList:FC=()=> {
         <button onClick={()=>setIsModule(true)}>изменить имя сервера</button>
         <button onClick={()=>{setIsModuleAvatar(true)}}>изменить аватар сервера</button> */}
         <button onClick={()=>{setIsPer(true)}}>permession</button>
+        <button onClick={()=>{
+          navigate(`/server/${serverid}/set`)
+        }}>setting</button>
       </> 
       : 
       <button onClick={()=>{serverid && dispatch(fetchDejoinServer(serverid)).then(()=>navigate("/chat")).then(()=>{dispatch(fetchGetServer())})}}>exit server</button>}

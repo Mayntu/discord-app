@@ -1,27 +1,48 @@
 
 
 
-import  { FC, useEffect } from 'react'
+import  { FC, useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock'
-import { fetchGetAllPermissions } from '../store/acthionServerUser'
-
+import { fetchGetAllPermissions, fetchPostAddUserRole, fetchPostCreateRole, fetchPostDeleteRole, fetchPostinsertModerator, fetchgetServersRoles } from '../store/acthionServerUser'
+import "../css/serverRole.css"
+import { useParams } from 'react-router-dom'
 const ServerRolePanel:FC=()=> {
-
+    const {serverid}= useParams()
     const dispatch = useAppDispatch()
     const {permession}= useAppSelector((state)=>state.server)
+    const {ServersRoles}= useAppSelector((state)=>state.server)
+    const [changePermession,setChangePermession]= useState<string[]>([])
     // const {serversUser}= useAppSelector((state)=>{state.server})
 
     useEffect(()=>{
+      if(serverid){
         dispatch(fetchGetAllPermissions())
+      
         console.log(permession)
+      }
+      
+
+      
+       
     },[])
+    
     useEffect(()=>{
         console.log(permession)
     },[permession])
   return (
     <div className='server-role-panel'>
         {/* {permesion.map} */}
-        {permession.map((i)=><p>{i}</p>)}
+        <input type="checkbox"></input>
+        <input type="radio"></input>
+        <button onClick={()=>{dispatch(fetchPostinsertModerator({server_uuid:serverid,user_uuid:" 45e20e79-50d3-4252-81b3-8f49af9a8b50"}))}}>Создать модератора</button>
+        <button onClick={()=>{serverid && dispatch(fetchPostCreateRole({server_uuid:serverid,role_color:"blue",role_name:"sonic",permissions:["DELETE_MSGS"]}))}}></button>
+        {permession.map((i)=><p key={i.key}>{i.key}</p>)}
+        {ServersRoles.map((i)=><p key={i.uuid}>{i.name} 
+        <button onClick={()=>{dispatch(fetchPostDeleteRole({server_uuid:serverid,role_uuid:i.uuid}))}}>удалить
+        </button>
+        {/* 45e20e79-50d3-4252-81b3-8f49af9a8b50 */}
+        {/* <button onClick={()=>{dispatch(fetchPostAddUserRole())}}> дать роль</button> */}
+        </p>)}
     </div>
   )
 }
