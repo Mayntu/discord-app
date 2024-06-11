@@ -476,12 +476,12 @@ const isChangemessage=()=>{
             <div className="server-message-container ">
               <div className="message-container">
                 <div className="status-bar">
-                <div className="user-chat avatar">
+                {/* <div className="user-chat avatar">
                   {usersChat && (<>
                   {usersChat.avatar !== "." ? <img src={avatar} alt="" />: <img src={usersChat?.avatar} alt="" /> }
                   <p>{usersChat.login}</p>
                   </>)}
-                </div>
+                </div> */}
                     <button onClick={()=>{
                       dispatch(fetchDeleteServerChatRoom({server_chat_room_id: chatserverid, server_id: serverid}))
                       .then(()=>navigate(`/server/${serverid}`))

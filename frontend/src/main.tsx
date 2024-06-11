@@ -12,6 +12,7 @@ import ChatList from './components/ChatList.tsx'
 import ServerChatList from './components/ServerChatList.tsx'
 import SettingsBlock from './components/SettingsBlock.tsx'
 import ServerVideoBlock from './components/ServerVIdeoBlock.tsx'
+import ServerRolePanel from './components/ServerRolePanel.tsx'
 
 
 
@@ -34,6 +35,7 @@ const router = createBrowserRouter([
       ]},
       {path: "/server/:serverid",element: <ServerChatList/>,children:[
         {index: true,element: <MessageContainer/>},
+        {path: "set",element: <ServerRolePanel/>},
         {path: ":chatserverid",element: <MessageContainer/>},
         {path: "voice/:idVoiceChst",element: <ServerVideoBlock/>}
       ]},

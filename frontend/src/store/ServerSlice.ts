@@ -1,6 +1,6 @@
 import {  ActionReducerMapBuilder, PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { fetchGetServer, fetchGetServerChatRoomMessages, fetchGetServerChatRooms, fetchGetServersUsers, fetchgetServerAudioChatRooms } from "./actionServer";
-import { fetchGetAllPermissions } from "./acthionServerUser";
+import { fetchGetAllPermissions, fetchgetServersRoles } from "./acthionServerUser";
 
 
 
@@ -10,7 +10,8 @@ type TServerSlice = {
     serverChatMessages: IServerChatNessage[],
     UserInServer : any[]
     serverChatSRoomsVoice : any[],
-    permession : string[]
+    permession : string[],
+    ServersRoles : any[]
 }
 
 const initialState: TServerSlice= {
@@ -19,8 +20,8 @@ const initialState: TServerSlice= {
     serverChatSRooms: [],
     serverChatMessages: [],
     serverChatSRoomsVoice:[],
-    permession: []
-    
+    permession: [],
+    ServersRoles: []
 }
 
 
@@ -46,6 +47,10 @@ const serverSlice = createSlice({
         }).addCase(fetchGetAllPermissions.fulfilled,(state,{payload}: PayloadAction<any>)=>{
             console.log(payload.permissions)
             state.permession = payload.permissions
+        }).addCase(fetchgetServersRoles.fulfilled,(state,{payload}: PayloadAction<any>)=>{
+            console.log(payload,"role")
+            state.ServersRoles = payload.server_roles
+
         })
     }
 })
