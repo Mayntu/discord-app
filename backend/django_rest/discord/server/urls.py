@@ -31,6 +31,7 @@ from server.views import (
     api_check_user_permission,
     api_add_user_role,
     api_get_all_permissions,
+    api_get_servers_roles,
 )
 
 
@@ -66,4 +67,5 @@ urlpatterns : list = [
     path("api/v1/checkUserPermission", api_check_user_permission, name="api_check_user_permission"),
     path("api/v1/addUserRole", api_add_user_role, name="api_add_user_role"),
     path("api/v1/getAllPermissions", api_get_all_permissions, name="api_get_all_permissions"),
+    path("api/v1/getServersRoles", api_get_servers_roles, name="api_get_servers_roles"),
 ]

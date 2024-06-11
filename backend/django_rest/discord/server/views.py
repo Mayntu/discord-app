@@ -1215,14 +1215,28 @@ def api_get_all_permissions(request):
             },
         ]
     """
+    string_permissions_keys : list = list(STRING_PERMISSIONS.keys())
+
+    permissions : list = []
+    for string_permission_key in string_permissions_keys:
+        permission : dict = {}
+
+        key : str = string_permission_key
+        description : str = STRING_PERMISSIONS[string_permission_key].description
+        is_owner : bool = STRING_PERMISSIONS[string_permission_key].is_owner_perm
+        permission["key"] = key
+        permission["description"] = description
+        permission["is_owner"] = is_owner
+
+        permissions.append(permission)
 
 
     
-    return JsonResponse(data={"result" : True, "permissions" : list(STRING_PERMISSIONS.keys())})
+    return JsonResponse(data={"result" : True, "permissions" : permissions})
 
 
 
-def api_get_roles(request):
+def api_get_servers_roles(request):
     headers : dict = request.headers
 
     token : str = headers.get("Authorization").replace('"', "")
