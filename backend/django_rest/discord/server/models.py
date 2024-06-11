@@ -50,6 +50,7 @@ class Server(models.Model):
     users = models.ManyToManyField(User, blank=True, verbose_name="users", related_name="users")
     members = models.ManyToManyField(ServerMember, blank=True, verbose_name="members", related_name="members")
     moderators = models.ManyToManyField(User, blank=True, verbose_name="moderators", related_name="moderators")
+    roles = models.ManyToManyField(ServerRole, blank=True, verbose_name="roles", related_name="roles")
     chat_rooms = models.ManyToManyField(ServerChatRoom, blank=True, verbose_name="chat_rooms")
     audio_rooms = models.ManyToManyField(ServerAudioRoom, blank=True, verbose_name="audio_rooms")
     avatar = models.CharField(max_length=256, verbose_name="avatar")

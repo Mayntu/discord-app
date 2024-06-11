@@ -227,7 +227,18 @@ def api_get_server_members(request):
         role["uuid"] = server_member.role.uuid
         role["name"] = server_member.role.name
         role["color"] = server_member.role.color
-        role["permissions"] = server_member.role.permissions
+        permissions = server_member.role.permissions.all()
+        permissions_ : list = []
+        for permission in permissions:
+            permission_ : dict = {
+                "uuid" : permission.uuid,
+                "title" : permission.title,
+                "description" : permission.description,
+                "is_owner_permission" : permission.is_owner_perm,
+            }
+            permissions_.append(permission_)
+        
+        member["permissions"] = permissions_
         member["role"] = role
 
         member["avatar"] = server_member.avatar
@@ -892,6 +903,88 @@ def api_check_user(request):
 
 
 
+def api_insert_moderator(request):
+    headers : dict = request.headers
+
+    
+    token : str = headers.get("Authorization").replace('"', "")
+    token_content : dict = get_token(token=token)
+
+    
+    if not token_content:
+        return JsonResponse(data={"result" : False, "message" : "not valid token"})
+    
+
+    
+    try:
+        data : dict = json.loads(request.body)
+
+        user_uuid : str = token_content.get("uuid")
+        server_uuid : str = data.get("server_uuid")
+        new_user_uuid : str = data.get("user_uuid")
+
+
+        server : Server = Server.objects.get(uuid=server_uuid)
+        server_member : ServerMember = server.members.get(user_uuid=user_uuid)
+        
+        has_perm : bool = server_member.role.has_perm(
+            permission=PERMISSIONS.DELETE
+        )
+
+        if has_perm:
+            moderator : ServerMember = server.members.get(user_uuid=new_user_uuid)
+            moderator.role = ROLES.moderator
+            moderator.save()
+
+            return JsonResponse(data={"result" : True, "message" : "moderator added successfully"})
+        
+        return JsonResponse(data={"result" : False, "message" : "user has no permissions to add moderator"})
+    except Exception as e:
+        return JsonResponse(data={"result" : False, "message" : "failed to change server's message"})
+
+
+
+def api_delete_moderator(request):
+    headers : dict = request.headers
+
+    
+    token : str = headers.get("Authorization").replace('"', "")
+    token_content : dict = get_token(token=token)
+
+    
+    if not token_content:
+        return JsonResponse(data={"result" : False, "message" : "not valid token"})
+    
+
+    
+    try:
+        data : dict = json.loads(request.body)
+
+        user_uuid : str = token_content.get("uuid")
+        server_uuid : str = data.get("server_uuid")
+        new_user_uuid : str = data.get("user_uuid")
+
+
+        server : Server = Server.objects.get(uuid=server_uuid)
+        server_member : ServerMember = server.members.get(user_uuid=user_uuid)
+        
+        has_perm : bool = server_member.role.has_perm(
+            permission=PERMISSIONS.DELETE
+        )
+
+        if has_perm:
+            delete_moderator : ServerMember = server.members.get(user_uuid=new_user_uuid)
+            delete_moderator.role = ROLES.user
+            delete_moderator.save()
+
+            return JsonResponse(data={"result" : True, "message" : "moderator deleted successfully"})
+        
+        return JsonResponse(data={"result" : False, "message" : "user does not have permissions to delete"})
+    except Exception as e:
+        return JsonResponse(data={"result" : False, "message" : "failed to change server's message"})
+
+
+
 def api_create_role(request):
     headers : dict = request.headers
 
@@ -927,13 +1020,99 @@ def api_create_role(request):
                 if perm:
                     server_role.permissions.add(perm)
             
-
+            
+            server.roles.add(server_role)
             return JsonResponse(data={"result" : True, "message" : "role was created", "role_uuid" : server_role.uuid})
         
         return JsonResponse(data={"result" : False, "message" : "user has no permissions"})
 
     except Exception as e:
         return JsonResponse(data={"result" : False, "message" : "failed to change server's message"})
+
+
+
+def api_delete_role(request):
+    headers : dict = request.headers
+
+    
+    token : str = headers.get("Authorization").replace('"', "")
+    token_content : dict = get_token(token=token)
+
+    
+    if not token_content:
+        return JsonResponse(data={"result" : False, "message" : "not valid token"})
+    
+    try:
+        data : dict = json.loads(request.body)
+
+        user_uuid : str = data.get("uuid")
+        server_uuid : str = data.get("server_uuid")
+        role_uuid : str = data.get("role_uuid")
+
+        server : Server = Server.objects.get(uuid=server_uuid)
+        server_member : ServerMember = server.members.get(user_uuid=user_uuid)
+
+        if server_member.role.has_perm(permission=PERMISSIONS.CREATE_ROLE):
+            server_role : ServerRole = ServerRole.objects.get(
+                uuid=role_uuid,
+            )
+            members_with_role : list = server.members.filter(role=server_role)
+
+            for member_with_role in members_with_role:
+                member_with_role.role = ROLES.user
+                member_with_role.save()
+            
+            server_role.delete()
+            
+
+            return JsonResponse(data={"result" : True, "message" : "role was created"})
+        
+        return JsonResponse(data={"result" : False, "message" : "user has no permissions"})
+
+    except Exception as e:
+        return JsonResponse(data={"result" : False, "message" : "failed to change server's message"})
+
+
+
+def api_remove_role(request):
+    headers : dict = request.headers
+
+
+    token : str = headers.get("Authorization").replace('"', '')
+    token_content : dict = get_token(
+        token=token,
+    )
+
+
+    if not token_content:
+        return JsonResponse(data={"result" : False, "message" : "token is not valid and not decrypted"})
+    
+
+    try:
+        data : dict = json.loads(request.body)
+
+
+        user_uuid : str = token_content.get("uuid")
+        server_uuid : str = data.get("server_uuid")
+        user_to_remove_uuid : str = data.get("user_to_remove_uuid")
+
+        server : Server = Server.objects.get(uuid=server_uuid)
+        server_member : ServerMember = server.members.get(user_uuid=user_uuid)
+
+        has_perm : bool = server_member.role.has_perm(
+            permission=PERMISSIONS.CREATE_ROLE,
+        )
+
+        if has_perm:
+            server_member_to_remove : ServerMember = server.members.get(user_uuid=user_to_remove_uuid)
+            server_member_to_remove.role = ROLES.user
+            server_member_to_remove.save()
+
+            return JsonResponse(data={"result" : True, "message" : "role removed successfully from user server member"})
+        return JsonResponse(data={"result" : False, "message" : "user has no permissions to remove role"})
+    except Exception as e:
+        print(e)
+        return JsonResponse(data={"result" : False, "message" : "could not find requested data by data"})
 
 
 
@@ -1018,6 +1197,49 @@ def api_get_all_permissions(request):
         return JsonResponse(data={"result" : False, "message" : "not valid token"})
     
 
-    return JsonResponse(data={"result" : True, "permissions" : STRING_PERMISSIONS.keys()})
+    return JsonResponse(data={"result" : True, "permissions" : list(STRING_PERMISSIONS.keys())})
+
+
+
+def api_get_roles(request):
+    headers : dict = request.headers
+
+    token : str = headers.get("Authorization").replace('"', "")
+    token_content : dict = get_token(token=token)
+
+    if token_content:
+        data : dict = json.loads(request.body)
+
+        user_uuid : str = token_content.get("uuid")
+        server_uuid : str = data.get("server_uuid")
+
+        user : User = User.objects.get(uuid=user_uuid)
+        server : Server = Server.objects.get(uuid=server_uuid)
+        server_member : Server = server.members.get(user_uuid=str(user.uuid))
+        server_roles : list = server.roles.all()
+        roles : list = []
+
+        for server_role in server_roles:
+            server_role_dict : dict = {
+                "uuid" : server_role.uuid,
+                "name" : server_role.name,
+                "color" : server_role.color,
+            }
+            permissions = server_role.permissions.all()
+            permissions_ : list = []
+
+            for permission in permissions:
+                permission_dict : dict = {
+                    "uuid" : permission.uuid,
+                    "title" : permission.title,
+                    "description" : permission.description,
+                    "is_owner_permission" : permission.is_owner_perm,
+                }
+                permissions_.append(permission_dict)
+            
+            server_role_dict["permissions"] = permissions_
+            roles.append(server_role_dict)
+        
+        return JsonResponse(data={"result" : True, "server_roles" : roles})
 
 
