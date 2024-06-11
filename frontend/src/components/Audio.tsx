@@ -2,18 +2,19 @@ import { FC, SyntheticEvent, useEffect, useRef, useState } from "react"
 import Play from "../assets/uadioPlay.png"
 import Pause from "../assets/audioPause.png"
 import "../css/slider.css"
+import { useParams } from "react-router-dom"
 
 
 interface IAudio{
     link : string,
     time : string,
-    status : boolean
+    status? : boolean
     me:boolean
 }
 
 
 
-function Slider({ percentage = 0, onChange }) {
+function Slider({ percentage = 0, onChange }:any) {
     const [position, setPosition] = useState(0)
     const [marginLeft, setMarginLeft] = useState(0)
     const [progressBarWidth, setProgressBarWidth] = useState(10)
@@ -71,7 +72,7 @@ const  AudioMy:FC<IAudio>=({link,time,status,me})=> {
     const audioRef = useRef<HTMLAudioElement>(null)
     const [percentage, setPercentage] = useState(0)
     const [isPlaying, setIsPlaying] = useState(false)
-   
+    const {chatid} = useParams()
     
    
     const onChange = (e:React.ChangeEvent<HTMLInputElement>) => {
@@ -113,7 +114,7 @@ const  AudioMy:FC<IAudio>=({link,time,status,me})=> {
             
             <div className="absolute">
             <span className='date'>   {` ${new Date(time).getHours()>10 ? new Date(time).getHours() : "0"+new Date(time).getHours()}
-                        : ${new Date(time).getMinutes()>10 ? new Date(time).getMinutes() : "0"+new Date(time).getMinutes()}`} {me && (<div className={status ? "true-status" : "false-status"}></div>)}  </span>
+                        : ${new Date(time).getMinutes()>10 ? new Date(time).getMinutes() : "0"+new Date(time).getMinutes()}`} {me &&   chatid &&(<div className={status ? "true-status" : "false-status"}></div>)}  </span>
             </div>
         </div>
      

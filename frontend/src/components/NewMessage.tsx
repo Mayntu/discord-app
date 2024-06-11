@@ -88,6 +88,7 @@ const NewMessage:FC<MessageProps>=({media,content,hasRead,classUser,uuid,time,bl
        <div className="row" key={uuid} onClick={isMeduleSet}>
                   {audio ?  media && (
                   <> 
+                  
                   <AudioMy link={"http://localhost:5173/public/"+media} time={time} status={hasReadState} me={classUser == me.uuid}></AudioMy>
                   </>
                 ) :
@@ -98,22 +99,35 @@ const NewMessage:FC<MessageProps>=({media,content,hasRead,classUser,uuid,time,bl
                       : 
                       gif ? null: (<a href={content}>{content}</a>) 
                       : 
-                      ( <p>{content}</p>)}
-                      { media == " " && <span className='date'>   {` ${new Date(time).getHours()>10 ? new Date(time).getHours() : "0"+new Date(time).getHours()}
-                        : ${new Date(time).getMinutes()>10 ? new Date(time).getMinutes() : "0"+new Date(time).getMinutes()}`} {classUser == me.uuid && chatid  && (<div className={hasReadState ? "true-status" : "false-status"}></div>)}  </span>}
+
+                      (
+                        <>
+                        <p>{content}</p>
+                    
+                      <span className='date'>   {` ${new Date(time).getHours()>10 ? new Date(time).getHours() : "0"+new Date(time).getHours()}
+                      : ${new Date(time).getMinutes()>10 ? new Date(time).getMinutes() : "0"+new Date(time).getMinutes()}`} {classUser == me.uuid && chatid  && (<div className={hasReadState ? "true-status" : "false-status"}></div>)}  </span>
+                    </>
+                    )
+                      
+                      }
+                      {/* { media == "" &&  */}
                       
                   </div>
                   
                   }
                       
                 </div>
-                {media !== "" && <div className='image-message' onClick={()=>setIsModule(true)}>
-                    {gif && (<img src={gif} alt="" />)}
+                {media !== "" && !audio && <div className='image-message' onClick={()=>setIsModule(true)}>
                     {media && <img src={"http://localhost:5173/public/"+media} alt="" />}
+                    <span className='date'>   {` ${new Date(time).getHours()>10 ? new Date(time).getHours() : "0"+new Date(time).getHours()}
+                      : ${new Date(time).getMinutes()>10 ? new Date(time).getMinutes() : "0"+new Date(time).getMinutes()}`} {classUser == me.uuid && chatid  && (<div className={hasReadState ? "true-status" : "false-status"}></div>)}  </span>
+                    
                   </div>} 
                   {gif && <div className='image-message' onClick={()=>setIsModule(true)}>
                     {gif && (<img src={gif} alt="" />)}
-                    {media && <img src={"http://localhost:5173/public/"+media} alt="" />}
+                    <span className='date'>   {` ${new Date(time).getHours()>10 ? new Date(time).getHours() : "0"+new Date(time).getHours()}
+                      : ${new Date(time).getMinutes()>10 ? new Date(time).getMinutes() : "0"+new Date(time).getMinutes()}`} {classUser == me.uuid && chatid  && (<div className={hasReadState ? "true-status" : "false-status"}></div>)}  </span>
+                    
                   </div>} 
                  
               {isModule && <ModuleTest isModule={setIsModule}>

@@ -40,3 +40,8 @@
     border-radius: 100px;
   
   }
+
+  .server-message-container >.VideoCallBlock{
+    height: 100vh;
+    background-color: #211f1f;
+  }

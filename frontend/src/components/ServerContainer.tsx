@@ -49,8 +49,7 @@ const ServerContainer=()=> {
       <img src={icon} alt="" className='set-Icon-small'  onClick={()=>{}}/>
       </div>
     </NavLink>
-    <NavLink to={"/chat"}  
-    className={({ isActive, isPending }) =>
+    <NavLink to={"/chat"}   className={({ isActive, isPending }) =>
         isPending ? "pending-link block-server-link" : isActive ? "active block-server-link" : "active-link block-server-link"
     }>
       <div className="block-server">
