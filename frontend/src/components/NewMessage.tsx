@@ -1,6 +1,6 @@
 import  { FC, useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { addMessage } from '../store/ChatsSlice'
 import ModuleTest from './Module'
 import $api from '../http'
@@ -13,12 +13,12 @@ interface MessageProps{
     time: string,
     media : string 
     uuid: string
-    hasRead: boolean
+    hasRead?: boolean
     blockId: string;
 }
 const NewMessage:FC<MessageProps>=({media,content,hasRead,classUser,uuid,time,blockId})=> {
     const me = useAppSelector(state=>state.auth.user)
-   
+    const NoMe = useAppSelector(state=>state.chats.users)
     const [isModule,setIsModule] = useState<boolean>(false)
     const dispatch = useAppDispatch()
     const messageUser = useAppSelector(state=>state.chats.message)
@@ -28,7 +28,7 @@ const NewMessage:FC<MessageProps>=({media,content,hasRead,classUser,uuid,time,bl
     const navigate = useNavigate()
     const [audio,setAudio] = useState<boolean>(false)
     const [hasReadState,sethasReadState]  = useState<boolean>(hasRead || false)
- 
+    const {chatid} = useParams()
     const fetchMessage=async(str:string)=>{
       const res = await $api.get(str)
       if(res.data.result){
@@ -36,11 +36,17 @@ const NewMessage:FC<MessageProps>=({media,content,hasRead,classUser,uuid,time,bl
       }
     }
     const isMeduleSet=()=>{
-        if(messageUser.uuid){
-          dispatch(addMessage(""))
+       
+        if(NoMe.uuid ==classUser ){
+          console.log(NoMe)
         }else{
-          dispatch(addMessage({uuid,content,blockId}))
+          if(messageUser.uuid){
+            dispatch(addMessage(""))
+          }else{
+            dispatch(addMessage({uuid,content,blockId}))
+          }
         }
+     
       }
     function isURL(str:string) {
         try {
@@ -93,8 +99,8 @@ const NewMessage:FC<MessageProps>=({media,content,hasRead,classUser,uuid,time,bl
                       gif ? null: (<a href={content}>{content}</a>) 
                       : 
                       ( <p>{content}</p>)}
-                      { media == "" && <span className='date'>   {` ${new Date(time).getHours()>10 ? new Date(time).getHours() : "0"+new Date(time).getHours()}
-                        : ${new Date(time).getMinutes()>10 ? new Date(time).getMinutes() : "0"+new Date(time).getMinutes()}`} {classUser == me.uuid && (<div className={hasReadState ? "true-status" : "false-status"}></div>)}  </span>}
+                      { media == " " && <span className='date'>   {` ${new Date(time).getHours()>10 ? new Date(time).getHours() : "0"+new Date(time).getHours()}
+                        : ${new Date(time).getMinutes()>10 ? new Date(time).getMinutes() : "0"+new Date(time).getMinutes()}`} {classUser == me.uuid && chatid  && (<div className={hasReadState ? "true-status" : "false-status"}></div>)}  </span>}
                       
                   </div>
                   
