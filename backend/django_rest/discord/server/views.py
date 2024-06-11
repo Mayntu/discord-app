@@ -226,7 +226,7 @@ def api_get_server_members(request):
         role : dict = {}
         
         member["uuid"] = server_member.uuid
-        member["name"] = server_member.role
+        member["name"] = server_member.name
 
         role["uuid"] = server_member.role.uuid
         role["name"] = server_member.role.name
