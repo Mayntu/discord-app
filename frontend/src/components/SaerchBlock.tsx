@@ -51,7 +51,7 @@ const SaerchBlockUser:FC<SaerchBlockUserProps>=({user})=> {
 
       }}>
           <img src={user.avatar ?  "http://localhost:5173/public/"+user.avatar : "http://localhost:5173/"+avatar} alt="" />
-          {user.is_online ? <div className="status"></div> : <div className="status-red"></div>}
+          {/* {user.is_online ? <div className="status"></div> : <div className="status-red"></div>} */}
           <p>{user.login}</p>
       </div>
   )

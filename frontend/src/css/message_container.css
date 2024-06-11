@@ -5,10 +5,14 @@
    ::-webkit-scrollbar{
     width: 7px;
     background-color: #333333;
+    border-radius: 17px;
    }
    ::-webkit-scrollbar-thumb {
     background: #D5D5D5;
     border-radius: 10px;
+  }
+  .status-bar > .avatar{
+    margin-left: 0px;
   }
   .message-container{
     position: relative;
@@ -66,6 +70,7 @@
     flex-direction: row;
     align-items: center;
     position: relative;
+    gap: 4px;
     /* padding: 2px; */
   }
   .user-chat p{
@@ -426,7 +431,7 @@
     right: 0px;
     top: 0px;
     border-radius: 100%;
-    margin-left: 10px;
+    margin-left: 5px;
   }
   
   .user-chat >.status-red-ch{

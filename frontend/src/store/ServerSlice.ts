@@ -44,7 +44,8 @@ const serverSlice = createSlice({
         }).addCase(fetchgetServerAudioChatRooms.fulfilled,(state,{payload}: PayloadAction<any>)=>{
             state.serverChatSRoomsVoice = payload
         }).addCase(fetchGetAllPermissions.fulfilled,(state,{payload}: PayloadAction<any>)=>{
-            state.permession= payload
+            console.log(payload.permissions)
+            state.permession = payload.permissions
         })
     }
 })

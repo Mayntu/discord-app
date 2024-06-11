@@ -1,11 +1,11 @@
 
 
 export interface IRoleCreate{
-    uuid : string,
+   
     server_uuid: string,
     role_name:string,
     role_color: string,
-    permissions : string
+    permissions : string[]
 }
 
 export interface ICheckUserPermission{
@@ -14,7 +14,16 @@ export interface ICheckUserPermission{
 }
 
 export interface IAddUserRole{
-    uuid : string,
+    server_uuid: string,
+    role_uuid:string
+}
+
+export interface IAddModerator{
+    server_uuid: string,
+    user_uuid:string
+}
+
+export interface IDeleteRole{
     server_uuid: string,
     role_uuid:string
 }

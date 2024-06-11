@@ -223,7 +223,7 @@ export const fetchCreateServerChat = createAsyncThunk(
     async (payload:string, thunkAPI) => {
       try {
         const response = await ServerService.getServerAudioChatRooms(payload)
-        console.log(response.data.data,"fetchgetServerAudioChatRooms")
+        console.log(response.data,"fetchgetServerAudioChatRooms")
         return response.data.data
       } catch (error: any) {
         return thunkAPI.rejectWithValue(error?.message)

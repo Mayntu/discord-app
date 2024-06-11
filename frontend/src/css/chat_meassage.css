@@ -19,7 +19,7 @@
   }
   .avatar{
     border-radius: 100px;
-    margin-left: 15px;
+    margin-left: 10px;
   }
   .avatar img{
     width: 50px;
@@ -31,20 +31,29 @@
   .content-chat{
     display: flex;
     flex-grow: 2;
-    flex-direction: column;
+    flex-direction: row;
     position: relative;
-  
+  justify-content: space-around;
     align-items: center;
+    padding: 0px 4px;
         
+  }
+
+  .content{
+    flex-grow: 2;
+    display: flex;
+    justify-content: center;
+    margin-left: -25px;
   }
   
   .status,.status-red {
     width: 17px;
     height: 17px;
     background-color: #318A6A;
-    position: absolute;
-    right: 7px;
-    top: 4px;
+    /* position: absolute; */
+    /* right: 7px; */
+    /* top: 4px; */
+    margin-right: 5px;
     border-radius: 100%;
   }
   
