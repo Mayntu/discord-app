@@ -9,7 +9,11 @@ from users.serializers import (
 )
 from server.models import (
     Server,
+    ServerMember,
     InvitationLink,
+)
+from server.settings import (
+    ROLES,
 )
 
 from users.utils import (
@@ -222,6 +226,17 @@ def api_join_server(request, link_data : str):
 
         user.servers.add(server)
 
+        server_member : ServerMember = ServerMember.objects.create(
+            login=user.login,
+            email=user.email,
+            password=user.password,
+            avatar=user.avatar,
+            user_uuid=str(user.uuid),
+            name=user.login,
+            role=ROLES.user,
+        )
+        server.members.add(server_member)
+
         return JsonResponse(data={"result" : True, "message" : "successfully joined server", "server_id" : server_uuid})
     except Exception as e:
         print(e)
@@ -249,6 +264,9 @@ def api_dejoin_server(request):
         user_uuid : str = token_content.get("uuid")
 
         user : User = User.objects.get(uuid=user_uuid)
+        server_member : ServerMember = server.members.get(user_uuid=user_uuid)
+        server.members.remove(server_member)
+        server_member.delete()
         
         server.users.remove(user)
 

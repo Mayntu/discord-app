@@ -144,6 +144,10 @@ def api_create_server(request):
     owner_user : User = User.objects.get(uuid=owner_user_id)
     owner_user.servers.add(server)
     server_member : ServerMember = ServerMember.objects.create(
+        login=owner_user.login,
+        email=owner_user.email,
+        password=owner_user.password,
+        avatar=owner_user.avatar,
         user_uuid=str(owner_user.uuid),
         name=owner_user.login,
         role=ROLES.owner,
