@@ -121,15 +121,23 @@ const NewMessage:FC<MessageProps>=({media,content,hasRead,classUser,uuid,time,bl
                   }
                       
                 </div>
-                {media !== "" && !audio && <div className='image-message'>
-                    {media && <img src={"http://localhost:5173/public/"+media} alt=""  onClick={()=>setIsModule(true)}/>}
-                    <span className='date' onClick={isMeduleSet}>   {` ${new Date(time).getHours()>10 ? new Date(time).getHours() : "0"+new Date(time).getHours()}
+                {media !== "" && !audio && <div className='image-message' onClick={isMeduleSet}>
+                    {media && <img src={"http://localhost:5173/public/"+media} alt=""  onClick={
+                      (e)=>{setIsModule(true)
+                      e.stopPropagation()
+                      }
+                    }/>}
+                    <span className='date' >   {` ${new Date(time).getHours()>10 ? new Date(time).getHours() : "0"+new Date(time).getHours()}
                       : ${new Date(time).getMinutes()>10 ? new Date(time).getMinutes() : "0"+new Date(time).getMinutes()}`} {classUser == me.uuid && chatid  && (<div className={hasReadState ? "true-status" : "false-status"}></div>)}  </span>
                     
                   </div>} 
-                  {gif && <div className='image-message' >
-                    {gif && (<img src={gif} alt=""  onClick={()=>setIsModule(true)}/>)}
-                    <span className='date' onClick={isMeduleSet}>   {` ${new Date(time).getHours()>10 ? new Date(time).getHours() : "0"+new Date(time).getHours()}
+                  {gif && <div className='image-message' onClick={isMeduleSet}>
+                    {gif && (<img src={gif} alt=""   onClick={
+                      (e)=>{setIsModule(true)
+                      e.stopPropagation()
+                      }
+                    }/>)}
+                    <span className='date' >   {` ${new Date(time).getHours()>10 ? new Date(time).getHours() : "0"+new Date(time).getHours()}
                       : ${new Date(time).getMinutes()>10 ? new Date(time).getMinutes() : "0"+new Date(time).getMinutes()}`} {classUser == me.uuid && chatid  && (<div className={hasReadState ? "true-status" : "false-status"}></div>)}  </span>
                     
                   </div>} 
