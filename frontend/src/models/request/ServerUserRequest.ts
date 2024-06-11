@@ -15,7 +15,8 @@ export interface ICheckUserPermission{
 
 export interface IAddUserRole{
     server_uuid: string,
-    role_uuid:string
+    role_uuid:string,
+    user_uuid_to_add:string
 }
 
 export interface IAddModerator{

@@ -26,8 +26,8 @@ export class ServerUsersService{
 
     //"api/v1/addUserRole"
 
-    static async postAddUserRole({server_uuid,role_uuid}:IAddUserRole):Promise<AxiosResponse<IAddUserRole>>{
-        return $api.post<any>("api/v1/addUserRole",{server_uuid,role_uuid})
+    static async postAddUserRole({server_uuid,role_uuid,user_uuid_to_add}:IAddUserRole):Promise<AxiosResponse<IAddUserRole>>{
+        return $api.post<any>("api/v1/addUserRole",{server_uuid,role_uuid,user_uuid_to_add})
     }
     //////////////////
     //"api/v1/insertModerator"
