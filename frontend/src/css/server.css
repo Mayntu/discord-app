@@ -78,7 +78,7 @@
   }
 
   .container-server> .active > .block-server {
-     background-color: rgb(255, 21, 0);
+     background-color: #585858;
   }
   .container-server> .active{
     /* border-left: 1px solid gray; */

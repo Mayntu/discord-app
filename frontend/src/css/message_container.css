@@ -48,6 +48,7 @@
 }
  
   .server-message-container{
+    position: relative;
     max-width: 100%;
     width: 100%;
     height: 100vh;
@@ -218,8 +219,8 @@
     align-items: flex-start;
     flex-direction: column;
     align-self: flex-start;
-    max-width: 400px;
-    width: 400px;
+    max-width: 450px;
+    width: 450px;
     color: black;
     flex-wrap: wrap;
     position: relative;
@@ -283,6 +284,7 @@
     margin-left: 10px;
     display: flex;
     align-items: center;
+    margin-right: 10px
   }
   .date{
     display: flex;
@@ -296,7 +298,8 @@
     
     align-items: center;
     color: var( --font-color-1);
-    font-size: 12px;
+    font-size: 13px;
+    font-weight: 500;
     
   }
   .row{
@@ -311,9 +314,18 @@
     margin-left: 34px;
   }
   .my-message > .chat-message-new> .row,.image-message{
-    margin-right: 30px;
+    margin-right: 50px;
     margin-left: 0px;
     text-align: right;
+  }
+
+  .my-message > .chat-message-new> .image-message{
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+  }
+  .message>.chat-message-new> .image-message{
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
   }
   .row a{
     cursor: pointer;
@@ -331,7 +343,7 @@
     border-bottom: 3px solid  var(--font-color-1);
   }
   .row-con{
-    padding: 2px;
+    /* padding: 2px; */
      border-radius: 10px;
     padding-left: 10px;
     width: 100%;
@@ -363,10 +375,10 @@
     width: 14px;
     height: 14px;
     border-radius: 100%;
-    background-color: red;
+    background-color: #8A3131;
   }
   .true-status{
-    background-color: aqua;
+    background-color: #318A6A;
   }
   .column{
     display: flex;
@@ -379,14 +391,25 @@
   
 
   .image-message{
-    display: block;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-end;
+    position: relative;
     max-width: 100%;
-   
+    background-color: #383838;
+    padding: 10px;
+    padding-bottom: 4px;
   }
   
   .image-message img{
     max-width: 100%;
    
+  }
+
+  .image-message > .date{
+    /* position: absolute; */
+    margin-right: 0px;
   }
 
 

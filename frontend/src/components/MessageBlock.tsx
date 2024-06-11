@@ -4,6 +4,7 @@ import { useAppSelector } from '../hooks/redux-hoock'
 
 import "../css/message_container.css"
 import NewMessage from './NewMessage'
+import { useParams } from 'react-router-dom'
 
 
 interface MessageProps{
@@ -20,7 +21,7 @@ const  MessageBlock: FC<MessageProps>=({messageBlock,Blockid})=> {
   const NoMe = useAppSelector(state=>state.chats.users)
  const newMesage= useAppSelector(state=>state.chats.newMessage)
 
-
+ const {chatserverid} = useParams()
   
 
 
@@ -51,6 +52,7 @@ const  MessageBlock: FC<MessageProps>=({messageBlock,Blockid})=> {
 
     
       { newMesage[Blockid] &&   newMesage[Blockid].map(message=>( 
+        
       <NewMessage 
             blockId={Blockid}
             uuid={message.uuid} 

@@ -45,7 +45,7 @@ const  MessageContainer : FC=()=> {
   const [doMs,setDoMs]= useState<number>(0)
   const [newContent,setNewContent] = useState<string>("")
   const [usersInChate,setusersInChate] = useState<string[]>([])
-  const [BlockMessage,setBlockMessage] = useState<TmessageBlocks[]>([])
+
   const joinRoom = (room:any) => {
     console.log("join","username",userMe.login,"chat_id",room,"uuid",userMe.uuid)
     socket.emit("join", {"username" : userMe.login, "chat_id" : room,uuid:userMe.uuid});
@@ -146,17 +146,16 @@ useEffect(()=>{
     }
     return data
   }
-
-
-
   useEffect(()=>{
     console.log(newMessage,"newMessage")
-    console.log(BlockMessage,"BlockMessage")
-  },[newMessage,BlockMessage])
+    console.log(BlockNewMessage,"BlockNewMessage123")
+  },[newMessage])
 
 
 
   const createMeassageBlock=(message:any)=>{
+    dispatch(addNewBlockMessage({array: []}))
+    dispatch(addNewMessagNull())
     if(message.length !==0 ){
       let newMessageBlock:TmessageBlocks[]  = []
       for(let i=0;i<message.length;i++){
@@ -175,19 +174,13 @@ useEffect(()=>{
           dispatch(addNewMessage({id:idBlock,ms:message[i]}))
         }
       }
+      console.log(BlockNewMessage,"newMessage123")
       console.log(newMessage,"newMessage")
-      setBlockMessage(newMessageBlock)
     }  else{
       dispatch(addNewBlockMessage({array: []}))
       dispatch(addNewMessagNull())
-      setBlockMessage([])
+     
     }
-
-    // if(BlockNewMessage.length == 0){
-    //   let idBlock=uuidv4()
-    //   setBlockMessage([{idBlock,userBlock:userMe.uuid}])
-    //   dispatch(addNewBlockMessage({id:idBlock,user:userMe.uuid}))
-    // }
   }
 
   useEffect(()=>{
@@ -261,11 +254,9 @@ const updateBlockOrMesasage=async(datan:any)=>{
     console.log(BlockNewMessage[0],"BlockMessage[0]1")
     console.log(newMessage,"newMessage1")
     let idBlock = uuidv4()
-    let block = [{idBlock:idBlock,userBlock:data.from_user_id}]
     console.log(1)
     dispatch(addNewBlockMessage({id:idBlock,user:data.from_user_id}))
-     setBlockMessage(block)
-     dispatch(addNewMessage({id: idBlock,ms:data}))
+    dispatch(addNewMessage({id: idBlock,ms:data}))
   }else if(BlockNewMessage[BlockNewMessage.length-1].userBlock == data.from_user_id ){
     console.log(2)
     console.log(BlockNewMessage[BlockNewMessage.length-1].userBlock,"=BlockMessage[0]1   data.from_user_id =",data.from_user_id)

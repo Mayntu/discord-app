@@ -96,7 +96,7 @@ const ServerChatList:FC=()=> {
           {isAdmin && <span onClick={()=>{setIsCreateServerRoomVOice(true)}} className='add-server-room'>+</span>}
         </p>
         {serverRoomsVoice.map(room=>(
-        <NavLink to={`/server/${serverid}/${room.uuid}`} key={room.uuid}
+        <NavLink to={`/server/${serverid}/voice/${room.uuid}`} key={room.uuid}
         className={({ isActive, isPending }) =>
           isPending ? "pending-link" : isActive ? "active " : "active-link"
         }
