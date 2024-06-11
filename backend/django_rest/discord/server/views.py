@@ -1168,6 +1168,7 @@ def api_add_user_role(request):
         user_uuid : str = token_content.get("uuid")
         server_uuid : str = data.get("server_uuid")
         role_uuid : str = data.get("role_uuid")
+        user_uuid_to_add : str = data.get("user_uuid_to_add")
 
         try:
             server : Server = Server.objects.get(uuid=server_uuid)
@@ -1181,8 +1182,9 @@ def api_add_user_role(request):
                 return JsonResponse(data={"result" : True, "message" : "user not permission"})
 
             role : ServerRole = ServerRole.objects.get(uuid=role_uuid)
-            server_member.role = role
-            server_member.save()
+            server_member_to_add_role : ServerMember = ServerMember.objects.get(user_uuid=user_uuid_to_add)
+            server_member_to_add_role.role = role
+            server_member_to_add_role.save()
 
             return JsonResponse(data={"result" : True, "message" : "role was added"})
         except Exception as e:
@@ -1250,7 +1252,7 @@ def api_get_servers_roles(request):
 
         user : User = User.objects.get(uuid=user_uuid)
         server : Server = Server.objects.get(uuid=server_uuid)
-        server_member : Server = server.members.get(user_uuid=str(user.uuid))
+        server_member : ServerMember = server.members.get(user_uuid=str(user.uuid))
         server_roles : list = server.roles.all()
         roles : list = []
 
@@ -1276,5 +1278,40 @@ def api_get_servers_roles(request):
             roles.append(server_role_dict)
         
         return JsonResponse(data={"result" : True, "server_roles" : roles})
+
+
+
+def api_get_server_members_role_permissions_is_available(request):
+    headers : dict = request.headers
+
+    token : str = headers.get("Authorization").replace('"', "")
+    token_content : dict = get_token(token=token)
+
+    if token_content:
+        data : dict = json.loads(request.body)
+
+        user_uuid : str = token_content.get("uuid")
+        server_uuid : str = data.get("server_uuid")
+
+        user : User = User.objects.get(uuid=user_uuid)
+        server : Server = Server.objects.get(uuid=server_uuid)
+        server_member : ServerMember = server.members.get(user_uuid=str(user.uuid))
+
+        server_member_permissions = server_member.role.permissions.all()
+        string_permissions_keys : list = list(STRING_PERMISSIONS.keys())
+
+        permissions : list = []
+        for string_permission_key in string_permissions_keys:
+            permission : dict = {}
+
+            key : str = string_permission_key
+            is_available : bool = STRING_PERMISSIONS[string_permission_key] in server_member_permissions
+
+            permission["key"] = key
+            permission["is_available"] = is_available
+
+            permissions.append(permission)
+        
+        return JsonResponse(data={"result" : True, "permissions" : permissions})
 
 
