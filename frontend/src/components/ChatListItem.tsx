@@ -44,17 +44,19 @@ const ChatListItem: FC<ChatListItemProps>=({chatId,chatsUser})=> {
         isPending ? "pending-link chat-container" : isActive ? "active chat-container" : "active-link chat-container"
       }
      >
+        
+        <div className="content-chat" title={noMe?.login}>
         <div className="avatar">
             <img src={noMe?.avatar ? "http://localhost:5173/public/"+ noMe.avatar : avatar} alt="" title={noMe?.login} />
         </div>
-        <div className="content-chat" title={noMe?.login}>
+        <div className="content">
+          {noMe?.login}
+        </div>
+       
           {noMe?.status ? <div className="status"></div> : <div className="status-red"></div>}
-            <div className="row-content-chat">
-                {noMe?.login} {noMe?.status}
-            </div>
-            <div className="row-content-chat">
-                {noMe?.text}
-            </div>
+           
+               
+            
         </div>
     </NavLink>
     </>

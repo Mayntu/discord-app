@@ -8,18 +8,20 @@ import { fetchGetAllPermissions } from '../store/acthionServerUser'
 const ServerRolePanel:FC=()=> {
 
     const dispatch = useAppDispatch()
-    const permesion = useAppSelector((state)=>{state.server.permession})
+    const {permession}= useAppSelector((state)=>state.server)
+    // const {serversUser}= useAppSelector((state)=>{state.server})
 
     useEffect(()=>{
         dispatch(fetchGetAllPermissions())
-        console.log(permesion)
+        console.log(permession)
     },[])
     useEffect(()=>{
-        console.log(permesion)
-    },[permesion])
+        console.log(permession)
+    },[permession])
   return (
     <div className='server-role-panel'>
         {/* {permesion.map} */}
+        {permession.map((i)=><p>{i}</p>)}
     </div>
   )
 }

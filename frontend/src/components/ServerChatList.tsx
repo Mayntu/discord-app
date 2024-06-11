@@ -6,6 +6,7 @@ import ModuleTest from './Module'
 import avatar from "../assets/sonic.jpg"
 import "../css/chat_meassage.css"
 import ServerRolePanel from './ServerRolePanel'
+import { fetchPostGetServersMembers } from '../store/acthionServerUser'
 
 
 
@@ -32,9 +33,11 @@ const ServerChatList:FC=()=> {
 
     useEffect(()=>{
       if(serverid){
+        console.log(serverid)
         dispatch(fetchGetServerChatRooms(serverid)) 
         dispatch(fetchgetServerAudioChatRooms(serverid))
         dispatch(fetchCheckServerUser(serverid)).then(res=>{setIsAdmin(res.payload.is_owner)})
+        dispatch(fetchPostGetServersMembers(serverid))
       }
     },[serverid])
    
@@ -71,9 +74,9 @@ const ServerChatList:FC=()=> {
      <div className='chat-list-container'>
       {isAdmin ? 
        <>
-        <button onClick={deleteServer}>dalete server</button>
+        {/* <button onClick={deleteServer}>dalete server</button>
         <button onClick={()=>setIsModule(true)}>изменить имя сервера</button>
-        <button onClick={()=>{setIsModuleAvatar(true)}}>изменить аватар сервера</button>
+        <button onClick={()=>{setIsModuleAvatar(true)}}>изменить аватар сервера</button> */}
         <button onClick={()=>{setIsPer(true)}}>permession</button>
       </> 
       : 
@@ -84,7 +87,7 @@ const ServerChatList:FC=()=> {
           {isAdmin && <span onClick={()=>{setIsCreateServerRoom(true)}} className='add-server-room'>+</span>}
         </p>
        
-        {serverRooms.map(room=>(
+        {serverRooms && serverRooms.length && serverRooms.map(room=>(
         <NavLink to={`/server/${serverid}/${room.uuid}`} key={room.uuid}
         className={({ isActive, isPending }) =>
           isPending ? "pending-link" : isActive ? "active " : "active-link"
@@ -98,7 +101,7 @@ const ServerChatList:FC=()=> {
         <p>ГОЛОСОВЫЕ КАНАЛЫ 
           {isAdmin && <span onClick={()=>{setIsCreateServerRoomVOice(true)}} className='add-server-room'>+</span>}
         </p>
-        {serverRoomsVoice.map(room=>(
+        {serverRoomsVoice && serverRoomsVoice.length && serverRoomsVoice.map(room=>(
         <NavLink to={`/server/${serverid}/voice/${room.uuid}`} key={room.uuid}
         className={({ isActive, isPending }) =>
           isPending ? "pending-link" : isActive ? "active " : "active-link"
@@ -121,7 +124,6 @@ const ServerChatList:FC=()=> {
           navigator.clipboard.writeText("localhost:5173/"+link).then(()=>{console.log(true)})
           setIsModuleInvite(false)
         }}>copy</button>
-        {/* <p>http://127.0.0.1:8000/{link}</p> */}
         <p>localhost:5173/{link}</p>
         </ModuleTest>}
         {isModuleAvatar && <ModuleTest isModule={setIsModuleAvatar}>
