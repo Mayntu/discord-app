@@ -30,6 +30,9 @@
     height: 100%;
     border-radius: 100px;
   }
+  .block-server:nth-child(1),.block-server:nth-child(2){
+    box-shadow: 0px 4px 4px rgb(23, 23, 23);
+  }
   .server-chat-block:hover{
     background-color: #404249;
     

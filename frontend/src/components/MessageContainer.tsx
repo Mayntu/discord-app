@@ -45,7 +45,8 @@ const  MessageContainer : FC=()=> {
   const [doMs,setDoMs]= useState<number>(0)
   const [newContent,setNewContent] = useState<string>("")
   const [usersInChate,setusersInChate] = useState<string[]>([])
-
+  const [userInStatus,setUserInStatus]  = useState<boolean>(false)
+  
   const joinRoom = (room:any) => {
     console.log("join","username",userMe.login,"chat_id",room,"uuid",userMe.uuid)
     socket.emit("join", {"username" : userMe.login, "chat_id" : room,uuid:userMe.uuid});
@@ -377,7 +378,15 @@ const updateBlockOrMesasage=async(datan:any)=>{
   
   },[newMessage])
 
-
+  useEffect(()=>{
+   if(usersChat && usersChat.uuid){
+    if(usersConnect.find((i)=>i==usersChat.uuid)){
+      setUserInStatus(true)
+    }else{
+      setUserInStatus(false)
+    }
+   }
+},[usersConnect,usersChat])
 
 const isChangemessage=()=>{
   return(
@@ -411,7 +420,7 @@ const isChangemessage=()=>{
               <p>{usersChat.login}</p>
            
               </>)}
-              {true ? <div className="status-ch"></div> : <div className="status-red-ch"></div>}
+              {userInStatus ? <div className="status-ch"></div> : <div className="status-red-ch"></div>}
             
             </div>
                 <button onClick={()=>{

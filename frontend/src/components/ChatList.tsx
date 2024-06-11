@@ -51,7 +51,7 @@ const ChatList:FC=()=> {
    
       <div className='chat-list-container'>
         <div className="search">
-          <input type="search" placeholder='serch' onChange={(e)=>{seacrhChat(e.target.value)}}/>
+          <input type="search" placeholder='Поиск' onChange={(e)=>{seacrhChat(e.target.value)}}/>
        </div>
             {/* блок поиск по условию */}
         {findUsers?.length !== 0  && findUsers ? 

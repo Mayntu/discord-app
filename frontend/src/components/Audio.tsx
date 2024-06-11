@@ -93,6 +93,7 @@ const  AudioMy:FC<IAudio>=({link,time,status,me})=> {
   
   return (
     <>
+    <div className="row-con">
        
         <audio 
         src={link} 
@@ -117,7 +118,7 @@ const  AudioMy:FC<IAudio>=({link,time,status,me})=> {
                         : ${new Date(time).getMinutes()>10 ? new Date(time).getMinutes() : "0"+new Date(time).getMinutes()}`} {me &&   chatid &&(<div className={status ? "true-status" : "false-status"}></div>)}  </span>
             </div>
         </div>
-     
+        </div>
     </>
 
   )

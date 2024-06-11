@@ -45,7 +45,7 @@ const NewMessage:FC<MessageProps>=({media,content,hasRead,classUser,uuid,time,bl
           }else if(gif){
             dispatch(addMessage({uuid,content,blockId,media:gif}))
           }else{
-            console.log("dadadadadadadda")
+            
             dispatch(addMessage({uuid,content,blockId,media}))
           }
         }

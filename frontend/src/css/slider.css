@@ -5,7 +5,7 @@
 .slider-container {
   position: relative;
   margin-top: -3px;
-  /* width: 100%; */
+  width: 70%
 }
 .audio {
   position: relative;
@@ -44,8 +44,8 @@ display: block;
   color: var( --font-color-1);
   position: absolute;
   font-size: 12px;
-  right: 10px;
-  bottom: 5px;
+  right: -25px;
+  bottom: 3px;
 
 }
 

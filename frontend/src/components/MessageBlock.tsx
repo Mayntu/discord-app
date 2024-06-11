@@ -39,10 +39,11 @@ const  MessageBlock: FC<MessageProps>=({messageBlock,Blockid})=> {
         <div className="login-message">
         {  
                      messageBlock == me.uuid  ? 
-                    <p className='title'>{me.login}</p>
+                     <p className='title'>{me.login}</p>
                       :  
-                    <p className='title'>{NoMe.login}</p>
+                      <p className='title'>{NoMe.login}</p>
                     }
+                    <div className="boreder"></div>
         </div>
                    
       </div>

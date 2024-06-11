@@ -84,6 +84,7 @@
     justify-content: space-between;
     padding: 10px 30px;
     width: 95%;
+    font-weight: 500;
     margin-top: 18px;
     background-color:#333333;
     border-radius: 10px;
@@ -100,7 +101,7 @@
     display: flex;
     flex-direction: column;
     padding: 10px;
-    width: 80%;
+    width: 97%;
     flex-grow: 2;
     justify-content: flex-start;
     align-items: flex-start;
@@ -285,7 +286,9 @@
     margin-left: 10px;
     display: flex;
     align-items: center;
-    margin-right: 10px
+    flex-direction: column;
+    margin-right: 10px;
+    flex-wrap: wrap;
   }
   .date{
     display: flex;
@@ -312,11 +315,11 @@
      align-items: flex-end;
   }
   .message>.chat-message-new> .row,.image-message{
-    margin-left: 34px;
+    margin-left: 50px;
   }
   .my-message > .chat-message-new> .row,.image-message{
     margin-right: 50px;
-    margin-left: 0px;
+    /* margin-left: 0px; */
     text-align: right;
   }
 
@@ -341,7 +344,7 @@
   .title{
     font-size: 20px;
     font-weight: 600;
-    border-bottom: 3px solid  var(--font-color-1);
+    /* border-bottom: 3px solid  var(--font-color-1); */
   }
   .row-con{
     /* padding: 2px; */
@@ -428,4 +431,12 @@
   
   .user-chat >.status-red-ch{
     background-color: #8A3131;
+  }
+
+  .boreder{
+    height: 5px;
+    background-color: var(--font-color-1);
+    width: 100%;
+    border-radius: 17px;
+    /* 3px solid  var(--font-color-1) */
   }
