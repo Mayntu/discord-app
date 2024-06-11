@@ -83,7 +83,7 @@
     flex-direction: row;
     justify-content: space-between;
     padding: 10px 30px;
-    width: 80%;
+    width: 95%;
     margin-top: 18px;
     background-color:#333333;
     border-radius: 10px;
@@ -262,6 +262,7 @@
     text-align: start;
     /* min-width: 100%; */
     min-width: 80%;
+    padding: 4px
     
   }
   .my-message > .chat-message-new{
@@ -409,6 +410,7 @@
 
   .image-message > .date{
     /* position: absolute; */
+    cursor: pointer;
     margin-right: 0px;
   }
 

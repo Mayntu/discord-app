@@ -44,17 +44,14 @@ const chatsSlice = createSlice({
     reducers:{
         addUsersChat(state,{payload}: PayloadAction<any>){
             state.users = payload
-        },
-        addUsersConnect(state,{payload}:PayloadAction<string[]>){
+        },addUsersConnect(state,{payload}:PayloadAction<string[]>){
             for(let i=0;i<state.socketChat.length;i++){
                     state.socketChat[i].users.map(user=>{
                         if(payload.includes(user.uuid)){
-                            // console.log(true)
                             user.status = true
                         }else{
                             user.status = false
                         }
-                        
              })
                 
             }
@@ -66,22 +63,19 @@ const chatsSlice = createSlice({
             state.message.uuid = payload.uuid
             state.message.content = payload.content
             state.message.from_user_id = payload.blockId
+            state.message.media = payload.media
         },
         addUsersConnectState(state,{payload}:PayloadAction<string | string[]>){
          if(state.usersConnect.length === 0){
                 state.usersConnect.push(...payload)
             } 
-        },
-        userOnline(state,{payload}:PayloadAction<string>){
+        },userOnline(state,{payload}:PayloadAction<string>){
             if( !Array.isArray(payload)  && !state.usersConnect.includes(payload)){
-                // console.log("online")
                 state.usersConnect.push(payload)
             }
         },
         userOffline(state,{payload}:PayloadAction<string>){
             if( state.usersConnect.includes(payload)){
-                // console.log("offline")
-                // console.log( state.usersConnect.splice(state.usersConnect.indexOf(payload),1))
                 state.usersConnect.splice(state.usersConnect.indexOf(payload),1)
             }
         },addNewMessage(state,{payload}:PayloadAction<any>){
@@ -91,30 +85,45 @@ const chatsSlice = createSlice({
                 state.newMessage[payload.id] = [payload.ms]
             }
          
-            // console.log( state.newMessage)
         },addNewMessageStatus(state,{payload}:PayloadAction<any>){
-
                 state.newMessage[payload.id].map((item)=>{
                                 if(item.has_read == false){
-                                console.log(item.has_read)
-                                item.has_read = true
+                                    console.log(item.has_read)
+                                    item.has_read = true
                                 }  
                             })
+
         },addNewMessagNull(state){
           state.newMessage = {}
-         
-            // console.log( state.newMessage)
-        },
-        addNewBlockMessage(state,{payload}:PayloadAction<any>){
+        },addNewBlockMessage(state,{payload}:PayloadAction<any>){
             if(payload.array){
                 state.BlockMessage = payload.array
             }else{
                 state.BlockMessage.push({idBlock:payload.id,userBlock: payload.user})
             }
-         
-         
-            // console.log( state.newMessage)
-        },
+        },ChangeNewMessage(state,{payload}:PayloadAction<any>){
+
+
+                state.newMessage[payload.id].map((item)=>{
+                    if(item.uuid == payload.uuid){
+                        console.log("findm")
+                        item.content = payload.content
+                    }
+                })
+               // if(res.payload.result){
+              //  const str = messageArray[messageUser.from_user_id].map((item)=>{
+              //    if(item.uuid == messageUser.uuid){
+              //     console.log("findm")
+              //      return {...item,content :newContent}
+              //    }
+              //    return item
+              //    } )          
+              //    console.log(str)
+              //    messageArray[messageUser.from_user_id] = str
+              //    setMessageArray(messageArray)
+              //    dispatch(addMessage(""))
+              //   }
+        }
        
     },
     extraReducers: (builder:  ActionReducerMapBuilder<TChats>)=>{
@@ -146,6 +155,6 @@ const chatsSlice = createSlice({
 export const {addUsersChat, addUsersConnect,stateNull,
                 addMessage,addUsersConnectState,userOnline,
                  userOffline,addNewMessage,addNewMessageStatus,
-                 addNewMessagNull,addNewBlockMessage} = chatsSlice.actions
+                 addNewMessagNull,addNewBlockMessage,ChangeNewMessage} = chatsSlice.actions
 
 export default chatsSlice.reducer

@@ -6,6 +6,7 @@ import ModuleTest from './Module'
 import $api from '../http'
 import { fetchGetServer } from '../store/actionServer'
 import AudioMy from './Audio'
+import { fetchRecognizeAudio } from '../store/acthionChat'
 
 interface MessageProps{
     content : string
@@ -36,14 +37,16 @@ const NewMessage:FC<MessageProps>=({media,content,hasRead,classUser,uuid,time,bl
       }
     }
     const isMeduleSet=()=>{
-       
         if(NoMe.uuid ==classUser ){
           console.log(NoMe)
         }else{
           if(messageUser.uuid){
             dispatch(addMessage(""))
+          }else if(gif){
+            dispatch(addMessage({uuid,content,blockId,media:gif}))
           }else{
-            dispatch(addMessage({uuid,content,blockId}))
+            console.log("dadadadadadadda")
+            dispatch(addMessage({uuid,content,blockId,media}))
           }
         }
      
@@ -81,6 +84,7 @@ const NewMessage:FC<MessageProps>=({media,content,hasRead,classUser,uuid,time,bl
 
     if(media.split(".").splice(-1,1)[0] == "mp3" || media.split(".").splice(-1,1)[0] == "wav" ){
       setAudio(true)
+       dispatch(fetchRecognizeAudio(uuid))
     }
   },[])
   return (
@@ -117,15 +121,15 @@ const NewMessage:FC<MessageProps>=({media,content,hasRead,classUser,uuid,time,bl
                   }
                       
                 </div>
-                {media !== "" && !audio && <div className='image-message' onClick={()=>setIsModule(true)}>
-                    {media && <img src={"http://localhost:5173/public/"+media} alt="" />}
-                    <span className='date'>   {` ${new Date(time).getHours()>10 ? new Date(time).getHours() : "0"+new Date(time).getHours()}
+                {media !== "" && !audio && <div className='image-message'>
+                    {media && <img src={"http://localhost:5173/public/"+media} alt=""  onClick={()=>setIsModule(true)}/>}
+                    <span className='date' onClick={isMeduleSet}>   {` ${new Date(time).getHours()>10 ? new Date(time).getHours() : "0"+new Date(time).getHours()}
                       : ${new Date(time).getMinutes()>10 ? new Date(time).getMinutes() : "0"+new Date(time).getMinutes()}`} {classUser == me.uuid && chatid  && (<div className={hasReadState ? "true-status" : "false-status"}></div>)}  </span>
                     
                   </div>} 
-                  {gif && <div className='image-message' onClick={()=>setIsModule(true)}>
-                    {gif && (<img src={gif} alt="" />)}
-                    <span className='date'>   {` ${new Date(time).getHours()>10 ? new Date(time).getHours() : "0"+new Date(time).getHours()}
+                  {gif && <div className='image-message' >
+                    {gif && (<img src={gif} alt=""  onClick={()=>setIsModule(true)}/>)}
+                    <span className='date' onClick={isMeduleSet}>   {` ${new Date(time).getHours()>10 ? new Date(time).getHours() : "0"+new Date(time).getHours()}
                       : ${new Date(time).getMinutes()>10 ? new Date(time).getMinutes() : "0"+new Date(time).getMinutes()}`} {classUser == me.uuid && chatid  && (<div className={hasReadState ? "true-status" : "false-status"}></div>)}  </span>
                     
                   </div>} 

@@ -403,7 +403,7 @@ const isChangemessage=()=>{
       
           {chatid  &&
           <>   
-          <div className='message-container'>
+          <div className='message-container' >
           <div className="status-bar">
             <div className="user-chat avatar">
               {usersChat && (<>
@@ -421,7 +421,8 @@ const isChangemessage=()=>{
                   }}>удалить</button>
                   <img src={callIcon} className='icon-message icon-call' onClick={()=>{setIsCallBlock(true)}}/>
           </div>
-            <div className="get-message-cantainer" ref={messageContainer} onScroll={()=>{
+            <div className="get-message-cantainer" ref={messageContainer} 
+            onScroll={()=>{
               if(messageContainer.current?.scrollTop == 0){
                 if(limit >= message_count+10){
                 }else{
@@ -442,7 +443,7 @@ const isChangemessage=()=>{
                 chatid &&  dispatch(fetchDeleteChatMessage(messageUser.uuid)).then(()=>{dispatch(fetchGetChatMessage({chat_id:chatid,count:limit}))}).then(()=>dispatch(addMessage("")))
                 }}>удалить
               </button>
-              {messageUser.content &&  <button onClick={()=>setIsModule(true)}>изменить</button>}
+              {messageUser.media.length == 0  &&  <button onClick={()=>setIsModule(true)}>изменить</button>}
                 {isModule && isChangemessage()}
               <button>Ответ</button>
               

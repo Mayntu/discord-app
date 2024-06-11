@@ -5,6 +5,7 @@ import { fetchCheckServerUser, fetchCreateServerAudioChatRoom, fetchCreateServer
 import ModuleTest from './Module'
 import avatar from "../assets/sonic.jpg"
 import "../css/chat_meassage.css"
+import ServerRolePanel from './ServerRolePanel'
 
 
 
@@ -27,6 +28,7 @@ const ServerChatList:FC=()=> {
     const [file,setFile] = useState<File | undefined>(undefined)
     const [isCreateServerRoom, setIsCreateServerRoom] = useState<boolean>(false)
     const [isCreateServerRoomVoice, setIsCreateServerRoomVOice] = useState<boolean>(false)
+    const [isPer,setIsPer] = useState<boolean>(false)
 
     useEffect(()=>{
       if(serverid){
@@ -72,6 +74,7 @@ const ServerChatList:FC=()=> {
         <button onClick={deleteServer}>dalete server</button>
         <button onClick={()=>setIsModule(true)}>изменить имя сервера</button>
         <button onClick={()=>{setIsModuleAvatar(true)}}>изменить аватар сервера</button>
+        <button onClick={()=>{setIsPer(true)}}>permession</button>
       </> 
       : 
       <button onClick={()=>{serverid && dispatch(fetchDejoinServer(serverid)).then(()=>navigate("/chat")).then(()=>{dispatch(fetchGetServer())})}}>exit server</button>}
@@ -154,6 +157,12 @@ const ServerChatList:FC=()=> {
             setIsCreateServerRoomVOice(false)
         }}}>создать чат</button>
         </ModuleTest>}
+
+        {isPer  && 
+          <ModuleTest isModule={setIsPer}>
+            <ServerRolePanel></ServerRolePanel>
+          </ModuleTest>
+        }
       <Outlet></Outlet>
   
     </>

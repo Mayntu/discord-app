@@ -1,5 +1,4 @@
 import { ChangeEvent, FC,  useEffect,  useRef, useState } from "react"
-import Add from "./Add"
 import InputEmoji from "react-input-emoji";
 import micImage from "../assets/micF.png"
 import { socket } from "../socket";
@@ -7,7 +6,8 @@ import { useParams } from "react-router-dom";
 import GIfBlock from "./GIfBlock";
 import gifIcon from "../assets/gif.png"
 import imageIcon from "../assets/addIm.png"
-import smile from "../assets/snail.png"
+import { addMessage } from "../store/ChatsSlice";
+import { useAppDispatch } from "../hooks/redux-hoock";
 interface  IInputMessage{
   
   dropImage : (e:React.DragEvent<HTMLDivElement>)=>void,
@@ -15,9 +15,7 @@ interface  IInputMessage{
   setFile:  React.Dispatch<React.SetStateAction<File | undefined>>,
   setMessageText : React.Dispatch<React.SetStateAction<string>>,
   messageText :string,
-  setArrayURL : React.Dispatch<React.SetStateAction<string[]>>
-
-  // setAudioBlob:React.Dispatch<React.SetStateAction<Blob| undefined>> 
+  setArrayURL : React.Dispatch<React.SetStateAction<string[]>> 
 }
 
 
@@ -34,8 +32,7 @@ const InputMessage:FC<IInputMessage>=({dropImage,sendMessage,setFile,setMessageT
   // const [timer, setTimer] = useState("00.00.00");
   const [gif,setGif] = useState<string>("")
   const mediaRecorder = useRef<MediaRecorder>();
- const refSmile = useRef<HTMLImageElement>(null)
-
+ const dispatch = useAppDispatch()
 
   const getMicrophonePermission =async ()=>{
     if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
@@ -163,14 +160,9 @@ const InputMessage:FC<IInputMessage>=({dropImage,sendMessage,setFile,setMessageT
     <div className="message-input-container" 
     onDrop={(e)=>{dropImage(e)}} 
     onDragOver={e=>e.preventDefault()}>
-      {/* <Add onClick={()=>refImage.current?.click()}/> */}
      
       <img src={imageIcon} alt="" style={{cursor:"pointer"}} onClick={()=>refImage.current?.click()}/>
-      {/* <img src={smile} alt=""  ref={refSmile} onClick={()=>{
-        console.log(refSmile.current)
-        refSmile.current?.querySelector(".react-imput-emoji--button")
-        console.log(refSmile.current?.querySelector(".react-imput-emoji--button"))
-        refSmile.current?.click()}}/> */}
+    
     
      <InputEmoji 
       color="#ACACAC"
@@ -187,7 +179,7 @@ const InputMessage:FC<IInputMessage>=({dropImage,sendMessage,setFile,setMessageT
       placeholderColor="#ACACAC"
       fontFamily="Inter"
       height={70}
-      // buttonRef={refSmile}
+     
      
       />
      
@@ -210,6 +202,7 @@ const InputMessage:FC<IInputMessage>=({dropImage,sendMessage,setFile,setMessageT
                  setArrayURL(prev=>[...prev,window.URL.createObjectURL(files[i])])
               }
               setFile(e.currentTarget.files[0])
+              dispatch(addMessage(""))
             }
           }
         } className='none'/>
