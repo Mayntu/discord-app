@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock'
 import { useParams } from 'react-router-dom'
 import serveruserImg from "../assets/server-user.png"
 import avatar from "../assets/sonic.jpg"
-import { fetchPostGetServersMembers } from '../store/acthionServerUser'
+import { fetchPostAddUserRole, fetchPostGetServersMembers } from '../store/acthionServerUser'
 
 
 const ServerUsersList:FC=()=> {
@@ -13,6 +13,7 @@ const ServerUsersList:FC=()=> {
   const usersServer = useAppSelector(state=>state.server.UserInServer)
   const roles = useAppSelector(state=>state.server.ServersRoles)
   const [isRole,setIsRole] = useState<boolean>(false)
+  const [user,setUser] = useState()
   
   
   useEffect(()=>{
@@ -20,6 +21,7 @@ const ServerUsersList:FC=()=> {
   },[])
 
   return (
+    <>
     <div className="message-container-server-user">
       <div className="server-users">
         <img src={serveruserImg} alt="" />
@@ -27,7 +29,17 @@ const ServerUsersList:FC=()=> {
       </div>
      
       {usersServer.map((i)=>(
-      <div className='chat-container-server' key={i.uuid} onClick={()=>setIsRole(!isRole)} >
+      <div className='chat-container-server' key={i.uuid} onClick={()=>{
+        console.log(i.role.name)
+        if(i.role.name !== 'owner'){
+          setIsRole(!isRole)
+          setUser(i)
+        }
+        
+      }
+      }
+     
+       >
         <div className="avatar">
             <img src={i?.avatar ? "http://localhost:5173/public/"+ i.avatar : avatar} alt="" title={i?.login} />
         </div>
@@ -39,18 +51,31 @@ const ServerUsersList:FC=()=> {
                 
           
             {i?.status ? <div className="status"></div> : <div className="status-red"></div>}
-            {isRole && <div className='role-list'>
+           
+        </div>
+
+     
+    </div>))}
+
+    {isRole && 
+            <div className='role-list'>
+              <p className='tit3'>Роль</p>
               {roles.map((i)=>(
-                <>
-                <p>{i.name} <div className="status" style={{backgroundColor: `${i.color}`}}></div></p>
+              <>
+                <p key={i.uuid} style={{color: `${i.color}`}} className='role' onClick={()=>{
+                  console.log(user)
+                  dispatch(fetchPostAddUserRole({server_uuid:serverid,role_uuid :i.uuid,user_uuid_to_add:user.user_uuid})).then(()=>{ dispatch(fetchPostGetServersMembers(serverid))})
+                  
+                  
+                  }}> <div className="status" style={{backgroundColor: `${i.color}`}}/> {i.name} </p>
                 
                </>
               ))}
            
               </div>}
-        </div>
-    </div>))}
     </div>
+    
+    </>
   )
 }
 
