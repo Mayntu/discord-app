@@ -1183,7 +1183,7 @@ def api_add_user_role(request):
                 return JsonResponse(data={"result" : True, "message" : "user not permission"})
 
             role : ServerRole = ServerRole.objects.get(uuid=role_uuid)
-            server_member_to_add_role : ServerMember = ServerMember.objects.get(user_uuid=user_uuid_to_add)
+            server_member_to_add_role : ServerMember = server.members.get(user_uuid=user_uuid_to_add)
             server_member_to_add_role.role = role
             server_member_to_add_role.save()
 
@@ -1314,5 +1314,54 @@ def api_get_server_members_role_permissions_is_available(request):
             permissions.append(permission)
         
         return JsonResponse(data={"result" : True, "permissions" : permissions})
+
+
+
+def api_get_server_members_role(request):
+    headers : dict = request.headers
+
+
+    token : str = headers.get("Authorization").replace('"', "")
+    token_content : dict = get_token(token=token)
+
+
+    if not token_content:
+        return JsonResponse(data={"result" : False, "message" : "token is not valid not enough segments"})
+    
+
+    data : dict = json.loads(request.body)
+
+
+    user_uuid : str = token_content.get("uuid")
+    server_uuid : str = data.get("server_uuid")
+
+
+    user : User = User.objects.get(uuid=user_uuid)
+    server : Server = Server.objects.get(uuid=server_uuid)
+    server_member : ServerMember = server.members.filter(user_uuid=str(user.uuid)).first()
+
+    server_member_role : ServerRole = server_member.role
+
+    server_member_role_dict : dict = {
+        "uuid" : server_member_role.uuid,
+        "name" : server_member_role.name,
+        "color" : server_member_role.color,
+    }
+    permissions = server_member_role.permissions.all()
+    permissions_ : list = []
+
+    for permission in permissions:
+        permission_dict : dict = {
+            "uuid" : permission.uuid,
+            "title" : permission.title,
+            "description" : permission.description,
+            "is_owner_permission" : permission.is_owner_perm,
+        }
+        permissions_.append(permission_dict)
+    
+    server_member_role_dict["permissions"] = permissions_
+
+
+    return JsonResponse(data={"result" : True, "role" : server_member_role_dict})
 
 

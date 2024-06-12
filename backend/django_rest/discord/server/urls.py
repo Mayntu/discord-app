@@ -33,6 +33,7 @@ from server.views import (
     api_get_all_permissions,
     api_get_servers_roles,
     api_get_server_members_role_permissions_is_available,
+    api_get_server_members_role,
 )
 
 
@@ -70,4 +71,5 @@ urlpatterns : list = [
     path("api/v1/getAllPermissions", api_get_all_permissions, name="api_get_all_permissions"),
     path("api/v1/getServersRoles", api_get_servers_roles, name="api_get_servers_roles"),
     path("api/v1/getServerMembersRolePermissionsIsAvailable", api_get_server_members_role_permissions_is_available, name="api_get_server_members_role_permissions_is_available"),
+    path("api/v1/getServerMembersRole", api_get_server_members_role, name="api_get_server_members_role"),
 ]
