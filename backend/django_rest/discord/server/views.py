@@ -360,6 +360,32 @@ def api_get_server_chat_rooms(request):
 
 
 
+def api_get_server_chat_room_title(request):
+    headers : dict = request.headers
+
+
+    token : str = headers.get("Authorization").replace('"', "")
+    token_content : dict = get_token(
+        token=token,
+    )
+
+
+    if token_content:
+        data : dict = json.loads(request.body)
+
+        server_chat_uuid : str = data.get("server_chat_uuid")
+
+        server_chat_room : ServerChatRoom = ServerChatRoom.objects.get(
+            uuid=server_chat_uuid,
+        )
+        server_chat_room_title : str = server_chat_room.title
+
+        return JsonResponse(data={"result" : True, "message" : "found successfully chat", "title" : server_chat_room_title})
+    
+    return JsonResponse(data={"result" : False, "message" : "token is not valid not really good"})
+
+
+
 def api_get_users_server_chat(request):
     data : dict = request.POST
 
