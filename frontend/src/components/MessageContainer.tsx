@@ -18,13 +18,13 @@ import ModuleTest from './Module';
 import MessageBlock from './MessageBlock';
 import { v4 as uuidv4 } from 'uuid';
 import { TmessageBlocks } from '../hooks/useCreateMessageBlock';
-
-
+import deletepmg from "../assets/delete.png"
 
 
 const  MessageContainer : FC=()=> {
   const {chatid,chatserverid,serverid} = useParams()
   const [limit, setLimit] = useState<number>(30)
+  const {userPerm}= useAppSelector((state)=>state.server)
   const [isCallBlock,setIsCallBlock] = useState<boolean>(false)
   const [messageText,setMessageText] = useState<string>("")
   const dispatch = useAppDispatch()
@@ -418,17 +418,20 @@ const isChangemessage=()=>{
               {usersChat && (<>
               {usersChat.avatar== ""  ? <img src={"http://localhost:5173/"+avatar} alt="" />: <img src={"http://localhost:5173/"+usersChat.avatar} alt="" /> }
               <p>{usersChat.login}</p>
-           
               </>)}
               {userInStatus ? <div className="status-ch"></div> : <div className="status-red-ch"></div>}
             
             </div>
-                <button onClick={()=>{
-                  dispatch(fetchDeleteUser(chatid))
-                  .then(()=>{navigate("/chat")})
-                  .then(()=>{dispatch(fetchGetUserChats())})
-                  }}>удалить</button>
+            
+            <div className="con-sh">
+            <img src={deletepmg} alt="" onClick={()=>{
+                        dispatch(fetchDeleteUser(chatid))
+                        .then(()=>{navigate("/chat")})
+                        .then(()=>{dispatch(fetchGetUserChats())})
+                        }}/>
                   <img src={callIcon} className='icon-message icon-call' onClick={()=>{setIsCallBlock(true)}}/>
+            </div>
+               
           </div>
             <div className="get-message-cantainer" ref={messageContainer} 
             onScroll={()=>{
@@ -447,14 +450,14 @@ const isChangemessage=()=>{
             </div>
             {messageUser.uuid &&   
             <div> 
-              <button onClick={()=>dispatch(addMessage(""))}>X</button>
+              <button onClick={()=>dispatch(addMessage(""))}>закрыть</button>
               <button onClick={()=>{
                 chatid &&  dispatch(fetchDeleteChatMessage(messageUser.uuid)).then(()=>{dispatch(fetchGetChatMessage({chat_id:chatid,count:limit}))}).then(()=>dispatch(addMessage("")))
                 }}>удалить
               </button>
               {messageUser.media.length == 0  &&  <button onClick={()=>setIsModule(true)}>изменить</button>}
                 {isModule && isChangemessage()}
-              <button>Ответ</button>
+            
               
             </div>
         }
@@ -476,17 +479,13 @@ const isChangemessage=()=>{
             <div className="server-message-container ">
               <div className="message-container">
                 <div className="status-bar">
-                {/* <div className="user-chat avatar">
-                  {usersChat && (<>
-                  {usersChat.avatar !== "." ? <img src={avatar} alt="" />: <img src={usersChat?.avatar} alt="" /> }
-                  <p>{usersChat.login}</p>
-                  </>)}
-                </div> */}
-                    {/* <button onClick={()=>{
+                {userPerm["DELETE_CHAT"] &&  <img src={deletepmg} alt="" onClick={()=>{
                       dispatch(fetchDeleteServerChatRoom({server_chat_room_id: chatserverid, server_id: serverid}))
                       .then(()=>navigate(`/server/${serverid}`))
                       .then(()=>{dispatch(fetchGetServerChatRooms(serverid))})
-                      }}>удалить</button> */}
+                      }}/>
+                  }
+               
 
                       
               </div>

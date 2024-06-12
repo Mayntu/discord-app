@@ -54,6 +54,18 @@ export const changeMessageN=(messageArray:{ [key: string]: IMessage[]},messageUs
                       }
                 })
     }
+
+
+    if(id.chatserverid){
+      dispatch(fetchGetchangeServerMessage({message_uuid: messageUser.uuid,new_content:newContent}))
+      .then((res:any)=>{
+        if(res.payload.result){
+          dispatch(ChangeNewMessage({id:messageUser.from_user_id,content: newContent,uuid:messageUser.uuid}))
+          dispatch(addMessage(""))
+        }
+  })
+  }
+
 }
 
 

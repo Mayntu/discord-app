@@ -29,7 +29,7 @@ const NewMessage:FC<MessageProps>=({media,content,hasRead,classUser,uuid,time,bl
     const navigate = useNavigate()
     const [audio,setAudio] = useState<boolean>(false)
     const [hasReadState,sethasReadState]  = useState<boolean>(hasRead || false)
-    const {chatid} = useParams()
+    const {chatid,chatserverid} = useParams()
     const fetchMessage=async(str:string)=>{
       const res = await $api.get(str)
       if(res.data.result){
@@ -37,6 +37,16 @@ const NewMessage:FC<MessageProps>=({media,content,hasRead,classUser,uuid,time,bl
       }
     }
     const isMeduleSet=()=>{
+      if(chatserverid){
+        if(messageUser.uuid){
+          dispatch(addMessage(""))
+        }else if(gif){
+          dispatch(addMessage({uuid,content,blockId,media:gif}))
+        }else{
+          
+          dispatch(addMessage({uuid,content,blockId,media}))
+        }
+      }else{
         if(NoMe.uuid ==classUser ){
           console.log(NoMe)
         }else{
@@ -49,6 +59,8 @@ const NewMessage:FC<MessageProps>=({media,content,hasRead,classUser,uuid,time,bl
             dispatch(addMessage({uuid,content,blockId,media}))
           }
         }
+      }
+        
      
       }
     function isURL(str:string) {

@@ -1,12 +1,12 @@
-import  { FC, useEffect, useRef, useState } from 'react'
+import  { FC, useEffect,  useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock'
 import { NavLink, Outlet, useNavigate, useParams } from 'react-router-dom'
-import { fetchCheckServerUser, fetchCreateServerAudioChatRoom, fetchCreateServerChat, fetchDejoinServer,  fetchGetServer, fetchGetServerChatRooms, fetchgetServerAudioChatRooms, fetchpostChangeServersTitle, fetchpostInvitationLink,fetchСhangeServersAvatar } from '../store/actionServer'
+import { fetchCheckServerUser, fetchCreateServerAudioChatRoom, fetchCreateServerChat, fetchDejoinServer,  fetchGetServer, fetchGetServerChatRooms, fetchgetServerAudioChatRooms} from '../store/actionServer'
 import ModuleTest from './Module'
 
 import "../css/chat_meassage.css"
 import ServerRolePanel from './ServerRolePanel'
-import { fetchGetAllPermissions, fetchPostGetServersMembers, fetchgetServerMembersRolePermissions, fetchgetServersRoles } from '../store/acthionServerUser'
+import { fetchGetAllPermissions,  fetchgetServerMembersRolePermissions, fetchgetServersRoles } from '../store/acthionServerUser'
 import vector from "../assets/Vector.png"
 import chatli from "../assets/chat-server.png"
 import chatlivoice from "../assets/voice-chat.png"
@@ -19,15 +19,10 @@ const ServerChatList:FC=()=> {
     const {serverid}= useParams()
     const [chatName,setChatName] = useState<string>("")
     const navigate = useNavigate()
-
-  
-  
-  
+    const {userPerm}= useAppSelector((state)=>state.server)
     const [isAdmin,setIsAdmin] = useState<boolean>(false)
     const serverRooms = useAppSelector(state=>state.server.serverChatSRooms)
     const serverRoomsVoice = useAppSelector(state=>state.server.serverChatSRoomsVoice)
-   
-  
     const [isCreateServerRoom, setIsCreateServerRoom] = useState<boolean>(false)
     const [isCreateServerRoomVoice, setIsCreateServerRoomVOice] = useState<boolean>(false)
     const [isPer,setIsPer] = useState<boolean>(false)
@@ -64,11 +59,6 @@ const ServerChatList:FC=()=> {
           }}/>
           <p>Сервер тест</p>
        </div>
-        {/* <button onClick={deleteServer}>dalete server</button>
-        <button onClick={()=>setIsModule(true)}>изменить имя сервера</button>
-        <button onClick={()=>{setIsModuleAvatar(true)}}>изменить аватар сервера</button> */}
-        {/* <button onClick={()=>{setIsPer(true)}}>permession</button> */}
-       
       </> 
       : 
       <button onClick={()=>{serverid && dispatch(fetchDejoinServer(serverid)).then(()=>navigate("/chat")).then(()=>{dispatch(fetchGetServer())})}}>exit server</button>}
@@ -78,7 +68,7 @@ const ServerChatList:FC=()=> {
         
     
         <p>ТЕКСТОВЫЕ КАНАЛЫ 
-          {isAdmin && <span onClick={()=>{setIsCreateServerRoom(true)}} className='add-server-room'>+</span>}
+          {userPerm["CREATE_CHAT"] && <span onClick={()=>{setIsCreateServerRoom(true)}} className='add-server-room'>+</span>}
         </p>
        
         {serverRooms.length !==0 && serverRooms.map(room=>(
@@ -96,7 +86,7 @@ const ServerChatList:FC=()=> {
        <div className="block-chat-link">
 
         <p>ГОЛОСОВЫЕ КАНАЛЫ 
-            {isAdmin && <span onClick={()=>{setIsCreateServerRoomVOice(true)}} className='add-server-room'>+</span>}
+            {userPerm["CREATE_CHAT"] && <span onClick={()=>{setIsCreateServerRoomVOice(true)}} className='add-server-room'>+</span>}
           </p>
           {serverRoomsVoice && serverRoomsVoice.length !==0 && serverRoomsVoice.map(room=>(
           <NavLink to={`/server/${serverid}/voice/${room.uuid}`} key={room.uuid}
