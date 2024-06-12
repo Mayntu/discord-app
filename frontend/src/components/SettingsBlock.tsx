@@ -6,7 +6,7 @@ import iconCamera from "../assets/camera.png"
 import { Outlet, useNavigate } from 'react-router-dom'
 import { setIsAuth } from '../store/AuthSlice'
 import {fetchUser,fetchMedia, fetchChangeUsersLogin } from '../store/acthion'
-import avatar from "../assets/sonic.jpg"
+import avatar from "../assets/sonic.png"
 import ModuleTest from './Module'
 
 // interface SettingsBlockProps{

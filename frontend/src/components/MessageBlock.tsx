@@ -1,5 +1,5 @@
 import  { FC  } from 'react'
-import avatar from "../assets/sonic.jpg"
+import avatar from "../assets/sonic.png"
 import { useAppSelector } from '../hooks/redux-hoock'
 
 import "../css/message_container.css"

@@ -455,3 +455,28 @@
     align-items: center;
     
   }
+
+  .center{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100vh;
+    font-weight: 500;
+    font-size: 20px;
+    color: var(--font-color-1);
+  }
+
+  .block-act{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+  }
+
+  .block-act>button{
+    background-color: #333333;
+    color: var(--font-color-1);
+    font-size: 24px;
+    font-weight: 500;
+  }

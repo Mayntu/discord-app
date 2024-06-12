@@ -1,8 +1,8 @@
 import  { FC, useEffect, useState} from 'react'
 import { IUserChatT } from '../models/IUserChat'
-import avatar from "../assets/sonic.jpg"
-import {  NavLink, useParams } from 'react-router-dom'
-import { socket } from '../socket'
+import avatar from "../assets/sonic.png"
+import {  NavLink } from 'react-router-dom'
+
 import "../css/chat_meassage.css"
 
 
@@ -17,7 +17,7 @@ interface ChatListItemProps{
 
 const ChatListItem: FC<ChatListItemProps>=({chatId,chatsUser})=> {
   const [noMe,setNoME] = useState<IUserChatT>()
-  const {chatid} = useParams()
+
 
 
   const findNoMe=()=>{

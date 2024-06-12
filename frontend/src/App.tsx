@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from './hooks/redux-hoock'
 import { setIsAuth } from './store/AuthSlice'
-import { Outlet,  useLocation,  useNavigate } from 'react-router-dom'
+import { Outlet,  useLocation,  useNavigate, useParams } from 'react-router-dom'
 import {  fetchUser } from './store/acthion'
 import ServerContainer from './components/ServerContainer'
 import "./css/module.css"
@@ -19,7 +19,7 @@ function App() {
   const [isSocketChat,setisSocketChat] = useState<boolean>(true)
   const {usersConnect} = useAppSelector(state=>state.chats)
   const {socketChat} = useAppSelector(state=>state.chats)
-  
+  const {serverid} = useParams()
  
   useEffect(()=>{
     if(localStorage.getItem("token")){
@@ -56,6 +56,7 @@ function App() {
         })
       }
     }
+   
   },[socketChat])
 
   useEffect(()=>{

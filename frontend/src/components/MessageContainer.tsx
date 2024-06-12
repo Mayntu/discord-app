@@ -3,7 +3,7 @@ import { useNavigate, useParams, } from 'react-router-dom'
 import { socket } from '../socket';
 import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock';
 import { fetchDeleteUser } from '../store/acthion';
-import avatar from "../assets/sonic.jpg"
+import avatar from "../assets/sonic.png"
 import callIcon from "../assets/Mask group.png"
 import { IMessage, IUserChatT } from '../models/IUserChat';
 import { fetchDeleteServerChatRoom, fetchDeleteServersMessage, fetchGetServerChatRoomMessages, fetchGetServerChatRooms, } from '../store/actionServer';
@@ -449,7 +449,7 @@ const isChangemessage=()=>{
               {file &&  arrayURL.map(i=>(<img src={i} key={i}/>)) }
             </div>
             {messageUser.uuid &&   
-            <div> 
+            <div className='block-act'> 
               <button onClick={()=>dispatch(addMessage(""))}>закрыть</button>
               <button onClick={()=>{
                 chatid &&  dispatch(fetchDeleteChatMessage(messageUser.uuid)).then(()=>{dispatch(fetchGetChatMessage({chat_id:chatid,count:limit}))}).then(()=>dispatch(addMessage("")))
@@ -491,7 +491,7 @@ const isChangemessage=()=>{
                 {file &&  arrayURL.map(i=>(<img src={i} key={i}/>)) }
                 </div>
                 {messageUser.uuid &&   
-                  <div> 
+                  <div className='block-act'> 
                     {userPerm["DELETE_MSGS"] && 
                      <button onClick={()=>{
                       console.log(messageUser.uuid)
@@ -518,7 +518,7 @@ const isChangemessage=()=>{
               </div>
             </>  
             }
-            {!chatid && !chatserverid && <div className="message-container"><p>Hello add chat</p></div>}
+            {!chatid && !chatserverid && <div className="message-container"><p className='center'>Здесь пока ничего нет...</p></div>}
      
            
      
