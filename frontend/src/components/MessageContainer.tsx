@@ -19,6 +19,7 @@ import MessageBlock from './MessageBlock';
 import { v4 as uuidv4 } from 'uuid';
 import { TmessageBlocks } from '../hooks/useCreateMessageBlock';
 import deletepmg from "../assets/delete.png"
+import icon4 from "../assets/icon4.png"
 
 
 const  MessageContainer : FC=()=> {
@@ -476,6 +477,7 @@ const isChangemessage=()=>{
             <div className="server-message-container ">
               <div className="message-container">
                 <div className="status-bar">
+                  <img src={icon4}/>
                 {userPerm["DELETE_CHAT"] &&  <img src={deletepmg} alt="" onClick={()=>{
                       dispatch(fetchDeleteServerChatRoom({server_chat_room_id: chatserverid, server_id: serverid}))
                       .then(()=>navigate(`/server/${serverid}`))

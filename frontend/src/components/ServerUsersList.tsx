@@ -4,8 +4,9 @@ import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock'
 import { useParams } from 'react-router-dom'
 import serveruserImg from "../assets/server-user.png"
 import avatar from "../assets/sonic.png"
-import { fetchPostAddUserRole, fetchPostGetServersMembers } from '../store/acthionServerUser'
+import { fetchPostAddUserRole, fetchPostDeleteRole, fetchPostGetServersMembers } from '../store/acthionServerUser'
 import dleteRole from "../assets/deleterole.png"
+import { online } from '../store/ServerSlice'
 
 
 const ServerUsersList:FC=()=> {
@@ -17,23 +18,14 @@ const ServerUsersList:FC=()=> {
   const [user,setUser] = useState()
   
   
-  const [userInStatus,setUserInStatus]  = useState<boolean>(false)
   const usersConnect = useAppSelector(state=>state.chats.usersConnect)
 
 
   useEffect(()=>{
-    
-    if(usersConnect && usersServer){
-      console.log(usersConnect,"con")
-      console.log(usersServer,"con")
-     if(usersConnect.find((i)=>i==usersServer[usersServer.findIndex(k=>k.user_uuid ==i)]))
-      {
-      console.log("sssssssssssssssuoauoauihushc")
-       setUserInStatus(true)
-     }else{
-       setUserInStatus(false)
-     }
+    if(usersConnect.length !==0){
+      dispatch(online(usersConnect))
     }
+   
  },[usersConnect,usersServer])
   
 
@@ -95,7 +87,7 @@ const ServerUsersList:FC=()=> {
                </>
               ))}
 
-                <img src={dleteRole} alt="" />
+                <img src={dleteRole} alt="" onClick={()=>{dispatch(fetchPostDeleteRole({server_uuid:serverid,role_uuid:i.uuid}))}} />
               </div>}
     </div>
     

@@ -26,6 +26,7 @@ const ServerChatList:FC=()=> {
     const [isCreateServerRoom, setIsCreateServerRoom] = useState<boolean>(false)
     const [isCreateServerRoomVoice, setIsCreateServerRoomVOice] = useState<boolean>(false)
     const [isPer,setIsPer] = useState<boolean>(false)
+    const [chek,setChek] = useState<boolean>(false)
 
     useEffect(()=>{
       if(serverid){
@@ -33,8 +34,6 @@ const ServerChatList:FC=()=> {
         dispatch(fetchGetServerChatRooms(serverid)) 
         dispatch(fetchgetServerAudioChatRooms(serverid))
         dispatch(fetchCheckServerUser(serverid)).then(res=>{setIsAdmin(res.payload.is_owner)})
-        // dispatch(fetchPostGetServersMembers(serverid))
-        // dispatch(fetchPostCheckUserPermission({server_uuid:serverid,permission:"CREATE_PRIVATE_CHAT"}))
         dispatch(fetchgetServersRoles(serverid))
         dispatch(fetchGetAllPermissions())
         dispatch(fetchgetServerMembersRolePermissions(serverid))
@@ -109,13 +108,18 @@ const ServerChatList:FC=()=> {
     
         {isCreateServerRoom && 
         <ModuleTest isModule={setIsCreateServerRoom}>
+          <div className="input-con">
           <input type="text" onChange={(e)=>{setChatName(e.target.value)}} value={chatName}/>
+          
+          </div>
+          <input type="checkbox" value={chek} onChange={(e)=>setChek(e.target.checked)}/>
           <button onClick={()=>{ 
              if(serverid && chatName){
             dispatch(fetchCreateServerChat({title: chatName,uuid_server : serverid}))
             .then(()=>{dispatch(fetchGetServerChatRooms(serverid))})
             setChatName("")
             setIsCreateServerRoom(false)
+            
         }}}>создать чат</button>
         </ModuleTest>
         }

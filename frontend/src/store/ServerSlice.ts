@@ -13,7 +13,9 @@ type TServerSlice = {
     permession : any,
     ServersRoles : any[],
     userPerm : any,
-    userRole: any
+    userRole: any,
+    serverName :string
+    chatName : string
 }
 
 const initialState: TServerSlice= {
@@ -25,7 +27,9 @@ const initialState: TServerSlice= {
     permession: [],
     ServersRoles: [],
     userPerm: {},
-    userRole: {}
+    userRole: {},
+    serverName : "",
+    chatName : ""
     
 }
 
@@ -36,7 +40,16 @@ const serverSlice = createSlice({
     name: "serverSlice",
     initialState,
     reducers:{
-        
+        online(state,{payload}:PayloadAction<any>){
+            state.UserInServer.map(i=>{
+                if(payload.find(s=>s == i.user_uuid)){
+                    console.log("sssssssssss")
+                    i.status = true
+                }else{
+                    i.status = false
+                }
+            })
+        }
     },
     extraReducers: (builder:  ActionReducerMapBuilder<any>)=>{
         builder.addCase(fetchGetServer.fulfilled,(state,{payload}: PayloadAction<IServer[]>)=>{
@@ -85,6 +98,6 @@ const serverSlice = createSlice({
 })
 
 
-export const {} =  serverSlice.actions
+export const {online} =  serverSlice.actions
 
 export default  serverSlice.reducer
