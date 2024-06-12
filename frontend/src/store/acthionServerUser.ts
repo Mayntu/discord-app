@@ -155,3 +155,18 @@ export const fetchgetServersRoles = createAsyncThunk(
     }
   },
 )
+
+//getServerMembersRolePermissionsIsAvailable
+
+export const fetchgetServerMembersRolePermissions = createAsyncThunk(
+  'server/fetchgetServerMembersRolePermissions',
+  async (payload:string, thunkAPI) => {
+    try {
+      const response = await  ServerUsersService.getServerMembersRolePermissionsIsAvailable(payload)
+      console.log(response.data,"fetchgetServerMembersRolePermissions")
+      return response.data
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error?.message)
+    }
+  },
+)

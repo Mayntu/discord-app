@@ -65,4 +65,9 @@ export class ServerUsersService{
         static async getServersRoles(server_uuid:string):Promise<AxiosResponse<any>>{
             return $api.post<any>("api/v1/getServersRoles",{server_uuid})
         }
+
+      //api/v1/getServerMembersRolePermissionsIsAvailable
+      static async getServerMembersRolePermissionsIsAvailable(server_uuid:string):Promise<AxiosResponse<any>>{
+        return $api.post<any>("api/v1/getServerMembersRolePermissionsIsAvailable",{server_uuid})
+    }    
 }  

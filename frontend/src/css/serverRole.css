@@ -44,7 +44,7 @@
 }
 
 .setting-block-panel-role{
-    background-color: rgb(44, 36, 24);
+    /* background-color: rgb(44, 36, 24); */
     width: 50%;
     display: flex;
     flex-direction: column;

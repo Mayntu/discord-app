@@ -482,13 +482,13 @@ const isChangemessage=()=>{
                   <p>{usersChat.login}</p>
                   </>)}
                 </div> */}
-                    <button onClick={()=>{
+                    {/* <button onClick={()=>{
                       dispatch(fetchDeleteServerChatRoom({server_chat_room_id: chatserverid, server_id: serverid}))
                       .then(()=>navigate(`/server/${serverid}`))
                       .then(()=>{dispatch(fetchGetServerChatRooms(serverid))})
-                      }}>удалить</button>
+                      }}>удалить</button> */}
 
-                      <img/>
+                      
               </div>
                 <div className="get-message-cantainer" ref={messageContainer} >
                 {BlockNewMessage.length !==0 ? BlockNewMessage.map((messageBlock)=><MessageBlock key={messageBlock.idBlock} messageBlock={messageBlock.userBlock}  Blockid={messageBlock.idBlock}></MessageBlock>) : null}  
