@@ -98,9 +98,9 @@ export const fetchCreateServerChat = createAsyncThunk(
 
   export const fetchDeleteServersMessage = createAsyncThunk(
     'server/fetchDeleteServersMessage',
-    async (payload:string, thunkAPI) => {
+    async (payload:any, thunkAPI) => {
       try {
-        const response = await ServerService.postDeleteServersMessage(payload)
+        const response = await ServerService.postDeleteServersMessage(payload.ms,payload.server)
         console.log(response.data,"fetchDeleteServer")
         return response.data
       } catch (error: any) {

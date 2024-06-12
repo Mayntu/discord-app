@@ -38,8 +38,8 @@ export class ServerService{
         return $api.post<any>("api/v1/getServerChatRoomMessages",{chat_id,count:10})
     }
 
-    static async postDeleteServersMessage(server_message_uuid: string):Promise<AxiosResponse<any>>{
-        return $api.post<any>("api/v1/deleteServersMessage",{server_message_uuid})
+    static async postDeleteServersMessage(server_message_uuid: string,server_id:string):Promise<AxiosResponse<any>>{
+        return $api.post<any>("api/v1/deleteServersMessage",{server_message_uuid,server_id})
     }
 
 

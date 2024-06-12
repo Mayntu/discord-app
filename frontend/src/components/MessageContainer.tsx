@@ -457,11 +457,8 @@ const isChangemessage=()=>{
               </button>
               {messageUser.media.length == 0  &&  <button onClick={()=>setIsModule(true)}>изменить</button>}
                 {isModule && isChangemessage()}
-            
-              
             </div>
         }
-          
             <InputMessage 
               sendMessage={sendMessage} 
               setFile={setFile} 
@@ -485,9 +482,6 @@ const isChangemessage=()=>{
                       .then(()=>{dispatch(fetchGetServerChatRooms(serverid))})
                       }}/>
                   }
-               
-
-                      
               </div>
                 <div className="get-message-cantainer" ref={messageContainer} >
                 {BlockNewMessage.length !==0 ? BlockNewMessage.map((messageBlock)=><MessageBlock key={messageBlock.idBlock} messageBlock={messageBlock.userBlock}  Blockid={messageBlock.idBlock}></MessageBlock>) : null}  
@@ -498,10 +492,14 @@ const isChangemessage=()=>{
                 </div>
                 {messageUser.uuid &&   
                   <div> 
-                    <button onClick={()=>{
-                      chatserverid && dispatch(fetchDeleteServersMessage(messageUser.uuid)).then(()=>{dispatch(fetchGetServerChatRoomMessages(chatserverid))}).then(()=>dispatch(addMessage("")))
+                    {userPerm["DELETE_MSGS"] && 
+                     <button onClick={()=>{
+                      console.log(messageUser.uuid)
+                      chatserverid && dispatch(fetchDeleteServersMessage({ms:messageUser.uuid,server:serverid})).then(()=>{dispatch(fetchGetServerChatRoomMessages(chatserverid))}).then(()=>dispatch(addMessage("")))
                       }}>удалить
                     </button>
+                    }
+                   {/* {userMe.uuid ==} */}
                     <button onClick={()=>setIsModule(true)}>Изменить</button>
                     {isModule && isChangemessage()}
                   </div>
