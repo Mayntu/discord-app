@@ -3,7 +3,7 @@ import  { FC, useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '../hooks/redux-hoock'
 import { fetchGetServersUsers } from '../store/actionServer'
 import { useParams } from 'react-router-dom'
-
+import serveruserImg from "../assets/server-user.png"
 import avatar from "../assets/sonic.jpg"
 const ServerUsersList:FC=()=> {
   const dispatch = useAppDispatch()
@@ -16,17 +16,22 @@ const ServerUsersList:FC=()=> {
 
   return (
     <div className="message-container-server-user">
-      <p>Server Users</p>
+      <div className="server-users">
+        <img src={serveruserImg} alt="" />
+        <p>Участники</p>
+      </div>
+     
       {usersServer.map((i)=>(
-      <div className='chat-container' key={i.uuid}>
+      <div className='chat-container-server' key={i.uuid}>
         <div className="avatar">
             <img src={i?.avatar ? "http://localhost:5173/public/"+ i.avatar : avatar} alt="" title={i?.login} />
         </div>
         <div className="content-chat" title={i?.login}>
-          {i?.status ? <div className="status"></div> : <div className="status-red"></div>}
-            <div className="row-content-chat">
+          
+        
                 {i?.login} {i?.status}
-            </div>
+          
+            {i?.status ? <div className="status"></div> : <div className="status-red"></div>}
         </div>
     </div>))}
     </div>

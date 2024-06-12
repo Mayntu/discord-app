@@ -61,8 +61,10 @@
   }
   
   .message-container-server-user{
-    background-color: #101115;
-    width: 280px;
+    background-color: #333333;
+    width: 300px;
+    display: flex;
+    flex-direction: column;
   }
   .user-chat{
     display: flex;

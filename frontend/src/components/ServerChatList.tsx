@@ -7,7 +7,9 @@ import avatar from "../assets/sonic.jpg"
 import "../css/chat_meassage.css"
 import ServerRolePanel from './ServerRolePanel'
 import { fetchPostCheckUserPermission, fetchPostGetServersMembers, fetchgetServersRoles } from '../store/acthionServerUser'
-
+import vector from "../assets/Vector.png"
+import chatli from "../assets/chat-server.png"
+import chatlivoice from "../assets/voice-chat.png"
 
 
 
@@ -76,45 +78,59 @@ const ServerChatList:FC=()=> {
      <div className='chat-list-container'>
       {isAdmin ? 
        <>
+       <div className="setting-server">
+        <img src={vector} alt="" onClick={()=>{
+            navigate(`/server/${serverid}/set`)
+          }}/>
+          <p>Сервер тест</p>
+       </div>
         {/* <button onClick={deleteServer}>dalete server</button>
         <button onClick={()=>setIsModule(true)}>изменить имя сервера</button>
         <button onClick={()=>{setIsModuleAvatar(true)}}>изменить аватар сервера</button> */}
-        <button onClick={()=>{setIsPer(true)}}>permession</button>
-        <button onClick={()=>{
-          navigate(`/server/${serverid}/set`)
-        }}>setting</button>
+        {/* <button onClick={()=>{setIsPer(true)}}>permession</button> */}
+       
       </> 
       : 
       <button onClick={()=>{serverid && dispatch(fetchDejoinServer(serverid)).then(()=>navigate("/chat")).then(()=>{dispatch(fetchGetServer())})}}>exit server</button>}
      
-      <button onClick={inviteServer}>пригласить</button>
+      {/* <button onClick={inviteServer}>пригласить</button> */}
+      <div className="block-chat-link">
+        
+    
         <p>ТЕКСТОВЫЕ КАНАЛЫ 
           {isAdmin && <span onClick={()=>{setIsCreateServerRoom(true)}} className='add-server-room'>+</span>}
         </p>
        
-        {serverRooms && serverRooms.length && serverRooms.map(room=>(
+        {serverRooms.length !==0 && serverRooms.map(room=>(
         <NavLink to={`/server/${serverid}/${room.uuid}`} key={room.uuid}
         className={({ isActive, isPending }) =>
           isPending ? "pending-link" : isActive ? "active " : "active-link"
         }
         >
+          <img src={chatli} alt="" />
           <div className='server-chat-block'><p>{room.title}</p></div>
         </NavLink>
         ))}
+       </div>
 
+       <div className="block-chat-link">
 
         <p>ГОЛОСОВЫЕ КАНАЛЫ 
-          {isAdmin && <span onClick={()=>{setIsCreateServerRoomVOice(true)}} className='add-server-room'>+</span>}
-        </p>
-        {serverRoomsVoice && serverRoomsVoice.length && serverRoomsVoice.map(room=>(
-        <NavLink to={`/server/${serverid}/voice/${room.uuid}`} key={room.uuid}
-        className={({ isActive, isPending }) =>
-          isPending ? "pending-link" : isActive ? "active " : "active-link"
-        }
-        >
-          <div className='server-chat-block'><p>{room.title}</p></div>
-        </NavLink>
-        ))}
+            {isAdmin && <span onClick={()=>{setIsCreateServerRoomVOice(true)}} className='add-server-room'>+</span>}
+          </p>
+          {serverRoomsVoice && serverRoomsVoice.length !==0 && serverRoomsVoice.map(room=>(
+          <NavLink to={`/server/${serverid}/voice/${room.uuid}`} key={room.uuid}
+              className={({ isActive, isPending }) =>
+            isPending ? "pending-link" : isActive ? "active " : "active-link"
+          }
+          >
+             <img src={chatlivoice} alt="" />
+            <div className='server-chat-block'><p>{room.title}</p></div>
+          </NavLink>
+          ))}
+
+       </div>
+     
         
 
      </div>
