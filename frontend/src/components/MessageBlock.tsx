@@ -34,6 +34,8 @@ const  MessageBlock: FC<MessageProps>=({messageBlock,Blockid})=> {
         messageBlock== me.uuid  ? 
           me.avatar == "" ? (<img src={"http://localhost:5173/"+avatar} alt="" />) :   (<img src={"http://localhost:5173/public/"+me.avatar} alt="" />) 
           :  
+          NoMe.avatar ?(<img src={"http://localhost:5173/"+avatar} alt="" />)
+          : 
           NoMe.avatar == "" ? (<img src={"http://localhost:5173/"+avatar} alt="" />) :   (<img src={"http://localhost:5173/public/"+NoMe.avatar} alt="" />)
         }
         <div className="login-message">

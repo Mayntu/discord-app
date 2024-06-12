@@ -27,7 +27,7 @@ const ServerUsersList:FC=()=> {
       </div>
      
       {usersServer.map((i)=>(
-      <div className='chat-container-server' key={i.uuid} onClick={()=>setIsRole(!isRole)}>
+      <div className='chat-container-server' key={i.uuid} onClick={()=>setIsRole(!isRole)} >
         <div className="avatar">
             <img src={i?.avatar ? "http://localhost:5173/public/"+ i.avatar : avatar} alt="" title={i?.login} />
         </div>

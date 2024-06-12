@@ -72,13 +72,13 @@ const serverSlice = createSlice({
         })
         .addCase(fetchCheckServerUser.fulfilled,(state,{payload}: PayloadAction<any>)=>{
             console.log(payload)
-            // state.ServersRoles = payload.server_roles
+            state.ServersRoles = payload.server_roles
 
         })
         .addCase(fetchPostGetServersMembers.fulfilled,(state,{payload}: PayloadAction<any>)=>{
             console.log(payload)
             state.UserInServer = payload.users
-            // state.ServersRoles = payload.server_roles
+          
 
         })
     }
