@@ -7,7 +7,7 @@ import store from './store/index.ts'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import MessageContainer from './components/MessageContainer.tsx'
 import LoginForm from './components/LoginForm.tsx'
-import Test from './components/Test.tsx'
+
 import ChatList from './components/ChatList.tsx'
 import ServerChatList from './components/ServerChatList.tsx'
 import SettingsBlock from './components/SettingsBlock.tsx'
@@ -21,7 +21,7 @@ const router = createBrowserRouter([
     path: "/",
     element : <App/>,
     children:[
-      {path: "/test", element: <Test/>},
+    
       {path: "/chat",element: <ChatList/>,children:[
         {index: true,element: <MessageContainer/>},
         {path: ":chatid",element: <MessageContainer/>}
@@ -45,15 +45,6 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <LoginForm/>,
-  },{
-    path: "/test",
-    element: <Test/>,
-    // children: [
-    //   {path: "/:roomid", element: <Test/>}
-    // ]
-  },{
-    path: "/test/:roomID",
-    element: <Test/>
   },
  
 ])

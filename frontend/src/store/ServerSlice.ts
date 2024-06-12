@@ -26,7 +26,7 @@ const initialState: TServerSlice= {
     ServersRoles: [],
     userPerm: {},
     userRole: {}
-    // allServersRoles
+    
 }
 
 
@@ -78,7 +78,7 @@ const serverSlice = createSlice({
         .addCase(fetchPostGetServersMembers.fulfilled,(state,{payload}: PayloadAction<any>)=>{
             console.log(payload)
             state.UserInServer = payload.users
-          
+            // state.ServersRoles = payload.server_roles
 
         })
     }
