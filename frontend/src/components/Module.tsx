@@ -23,7 +23,7 @@ const ModuleTest:FC<ModuleProps>=({children,isModule})=> {
          
       </div>
   )
-  return  createPortal(modal,document.getElementById("modals"))
+  return  createPortal(modal,document.getElementById("modals")!)
 }
 
 

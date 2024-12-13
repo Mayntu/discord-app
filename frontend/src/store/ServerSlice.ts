@@ -8,7 +8,7 @@ type TServerSlice = {
     serversUser : IServer[],
     serverChatSRooms: IServerChatRoom[],
     serverChatMessages: IServerChatNessage[],
-    UserInServer : any[]
+    UserInServer : TGetServersUsers[]
     serverChatSRoomsVoice : any[],
     permession : any,
     ServersRoles : any[],
@@ -40,7 +40,8 @@ const serverSlice = createSlice({
     name: "serverSlice",
     initialState,
     reducers:{
-        online(state,{payload}:PayloadAction<any>){
+        online(state,{payload}:PayloadAction<string[]>){
+            console.log(payload,"server")
             state.UserInServer.map(i=>{
                 if(payload.find(s=>s == i.user_uuid)){
                     console.log("sssssssssss")
@@ -58,40 +59,38 @@ const serverSlice = createSlice({
             state.serverChatSRooms = payload
         }).addCase(fetchGetServerChatRoomMessages.fulfilled,((state,{payload}: PayloadAction<IServerChatNessage[]>)=>{
             state.serverChatMessages = payload
-        })).addCase(fetchGetServersUsers.fulfilled,(state,{payload}: PayloadAction<any>)=>{
+        })).addCase(fetchGetServersUsers.fulfilled,(state,{payload}: PayloadAction<TfetchGetServersUsers>)=>{
+            console.log(payload.users,"payload.users")
             state.UserInServer = payload.users
         }).addCase(fetchgetServerAudioChatRooms.fulfilled,(state,{payload}: PayloadAction<any>)=>{
             state.serverChatSRoomsVoice = payload
         }).addCase(fetchGetAllPermissions.fulfilled,(state,{payload}: PayloadAction<any>)=>{
-            console.log(payload.permissions)
+         
             state.permession = payload.permissions
         }).addCase(fetchgetServersRoles.fulfilled,(state,{payload}: PayloadAction<any>)=>{
-            console.log(payload,"role")
+         
             state.ServersRoles = payload.server_roles
 
-        }).addCase(fetchgetServerMembersRolePermissions.fulfilled,(state,{payload}: PayloadAction<any>)=>{
-            
+        }).addCase(fetchgetServerMembersRolePermissions.fulfilled,(state,{payload}: PayloadAction<TfetchgetServerMembersRolePermissions>)=>{
             if(payload.permissions.length !== 0){
-                 let sr = {}
+                 let sr:TServeMembersRolePermissions = {} as TServeMembersRolePermissions
                  for(let i=0;i<payload.permissions.length;i++){
                     sr[payload.permissions[i].key] = payload.permissions[i].is_available
                  }
-                 console.log(sr,"sr")
                  state.userPerm = sr
             }
           
-            // state.ServersRoles = payload.server_roles
+  
 
         })
         .addCase(fetchCheckServerUser.fulfilled,(state,{payload}: PayloadAction<any>)=>{
-            console.log(payload)
             state.ServersRoles = payload.server_roles
 
         })
-        .addCase(fetchPostGetServersMembers.fulfilled,(state,{payload}: PayloadAction<any>)=>{
-            console.log(payload)
+        .addCase(fetchPostGetServersMembers.fulfilled,(state,{payload}: PayloadAction<TfetchGetServersUsers>)=>{
+            console.log(payload.users,"payload.users")
             state.UserInServer = payload.users
-            // state.ServersRoles = payload.server_roles
+        
 
         })
     }
